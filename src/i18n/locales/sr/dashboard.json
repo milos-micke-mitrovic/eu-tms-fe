@@ -1,0 +1,11 @@
+{
+  "title": "Početna",
+  "activeRoutes": "Aktivni nalozi",
+  "monthlyExpenses": "Troškovi ovog meseca",
+  "monthlyRevenue": "Prihod ovog meseca",
+  "expiringDocs": "Dokumenta koja ističu",
+  "expiringPermits": "Dozvole koje ističu",
+  "overdueInvoices": "Neplaćene fakture",
+  "expensesByCategory": "Troškovi po kategorijama",
+  "expenseTrend": "Trend troškova"
+}

@@ -1,0 +1,14 @@
+{
+  "title": "Internal Fuel Station",
+  "addTank": "New Tank",
+  "addTransaction": "New Transaction",
+  "tankName": "Tank Name",
+  "capacity": "Capacity (l)",
+  "currentLevel": "Current Level (l)",
+  "fuelType": "Fuel Type",
+  "refill": "Refill Tank",
+  "dispense": "Dispense to Vehicle",
+  "liters": "Liters",
+  "pricePerLiter": "Price per Liter",
+  "odometer": "Odometer"
+}

@@ -1,0 +1,11 @@
+:root {
+  /* Border Radius (shadcn base) */
+  --radius: 0.625rem;
+
+  /* Additional radius tokens */
+  --radius-sm: 0.25rem;
+  --radius-md: 0.375rem;
+  --radius-lg: 0.5rem;
+  --radius-xl: 0.75rem;
+  --radius-full: 9999px;
+}

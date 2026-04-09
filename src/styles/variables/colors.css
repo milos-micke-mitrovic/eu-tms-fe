@@ -1,0 +1,132 @@
+/*
+ * Shadcn UI Color Tokens
+ * These tokens are used by shadcn components.
+ * They reference brand colors where applicable.
+ */
+
+:root {
+  /* Background & Foreground - use brand neutrals */
+  --background: hsl(var(--brand-white));
+  --foreground: hsl(var(--brand-neutral-900));
+
+  /* Card */
+  --card: hsl(var(--brand-white));
+  --card-foreground: hsl(var(--brand-neutral-900));
+
+  /* Popover */
+  --popover: hsl(var(--brand-white));
+  --popover-foreground: hsl(var(--brand-neutral-900));
+
+  /* Primary - main interactive elements */
+  --primary: hsl(var(--brand-primary));
+  --primary-foreground: hsl(var(--brand-primary-foreground));
+
+  /* Secondary - less prominent actions */
+  --secondary: hsl(var(--brand-neutral-100));
+  --secondary-foreground: hsl(var(--brand-neutral-900));
+
+  /* Muted - subdued backgrounds and text */
+  --muted: hsl(var(--brand-neutral-100));
+  --muted-foreground: hsl(var(--brand-neutral-500));
+
+  /* Accent - highlights, hover states */
+  --accent: hsl(var(--brand-neutral-100));
+  --accent-foreground: hsl(var(--brand-neutral-900));
+
+  /* Destructive - errors, delete actions */
+  --destructive: hsl(var(--brand-error));
+  --destructive-foreground: hsl(var(--brand-error-foreground));
+
+  /* Success - confirmations, positive actions */
+  --success: hsl(var(--brand-success));
+  --success-foreground: hsl(var(--brand-success-foreground));
+
+  /* Warning - caution states */
+  --warning: hsl(var(--brand-warning));
+  --warning-foreground: hsl(var(--brand-warning-foreground));
+
+  /* Info - informational states */
+  --info: hsl(var(--brand-info));
+  --info-foreground: hsl(var(--brand-info-foreground));
+
+  /* Border & Input */
+  --border: hsl(var(--brand-neutral-200));
+  --input: hsl(var(--brand-neutral-200));
+  --ring: hsl(var(--brand-primary));
+
+  /* Chart colors - for data visualization */
+  --chart-1: hsl(var(--brand-primary));
+  --chart-2: hsl(var(--brand-success));
+  --chart-3: hsl(var(--brand-warning));
+  --chart-4: hsl(var(--brand-info));
+  --chart-5: hsl(var(--brand-error));
+
+  /* Sidebar */
+  --sidebar: hsl(var(--brand-neutral-50));
+  --sidebar-foreground: hsl(var(--brand-neutral-900));
+  --sidebar-primary: hsl(var(--brand-primary));
+  --sidebar-primary-foreground: hsl(var(--brand-primary-foreground));
+  --sidebar-accent: hsl(var(--brand-neutral-200));
+  --sidebar-accent-foreground: hsl(var(--brand-neutral-900));
+  --sidebar-border: hsl(var(--brand-neutral-200));
+  --sidebar-ring: hsl(var(--brand-primary));
+
+  /* Overlay */
+  --overlay: hsl(0 0% 0% / 0.5);
+}
+
+.dark {
+  --background: hsl(var(--brand-neutral-950));
+  --foreground: hsl(var(--brand-neutral-50));
+
+  --card: hsl(var(--brand-neutral-900));
+  --card-foreground: hsl(var(--brand-neutral-50));
+
+  --popover: hsl(var(--brand-neutral-900));
+  --popover-foreground: hsl(var(--brand-neutral-50));
+
+  --primary: hsl(173 80% 45%);
+  --primary-foreground: hsl(0 0% 0%);
+
+  --secondary: hsl(var(--brand-neutral-800));
+  --secondary-foreground: hsl(var(--brand-neutral-50));
+
+  --muted: hsl(var(--brand-neutral-800));
+  --muted-foreground: hsl(var(--brand-neutral-400));
+
+  --accent: hsl(var(--brand-neutral-800));
+  --accent-foreground: hsl(var(--brand-neutral-50));
+
+  --destructive: hsl(0 62% 50%);
+  --destructive-foreground: hsl(var(--brand-neutral-50));
+
+  --success: hsl(142 71% 40%);
+  --success-foreground: hsl(var(--brand-neutral-50));
+
+  --warning: hsl(38 92% 50%);
+  --warning-foreground: hsl(0 0% 0%);
+
+  --info: hsl(199 89% 48%);
+  --info-foreground: hsl(var(--brand-neutral-50));
+
+  --border: hsl(var(--brand-neutral-800));
+  --input: hsl(var(--brand-neutral-800));
+  --ring: hsl(173 80% 45%);
+
+  --chart-1: hsl(173 80% 45%);
+  --chart-2: hsl(142 71% 40%);
+  --chart-3: hsl(38 92% 50%);
+  --chart-4: hsl(199 89% 48%);
+  --chart-5: hsl(0 62% 50%);
+
+  --sidebar: hsl(var(--brand-neutral-900));
+  --sidebar-foreground: hsl(var(--brand-neutral-50));
+  --sidebar-primary: hsl(173 80% 45%);
+  --sidebar-primary-foreground: hsl(0 0% 0%);
+  --sidebar-accent: hsl(var(--brand-neutral-800));
+  --sidebar-accent-foreground: hsl(var(--brand-neutral-50));
+  --sidebar-border: hsl(var(--brand-neutral-800));
+  --sidebar-ring: hsl(173 80% 45%);
+
+  --overlay: hsl(0 0% 0% / 0.7);
+}

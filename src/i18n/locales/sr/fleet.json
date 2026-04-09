@@ -1,0 +1,125 @@
+{
+  "vehicles": {
+    "title": "Vozila",
+    "addNew": "Novo vozilo",
+    "regNumber": "Reg. oznaka",
+    "make": "Marka",
+    "model": "Model",
+    "year": "Godište",
+    "type": "Tip",
+    "status": "Status",
+    "fuelType": "Gorivo",
+    "capacity": "Nosivost (kg)",
+    "volume": "Zapremina (m³)",
+    "consumption": "Potrošnja (l/100km)",
+    "odometer": "Kilometraža",
+    "driver": "Vozač",
+    "documents": "Dokumenta",
+    "vin": "VIN broj",
+    "ownership": "Vlasništvo",
+    "vehicleTypes": {
+      "TRUCK": "Kamion",
+      "TRACTOR": "Tegljač",
+      "TRAILER": "Prikolica",
+      "SEMI_TRAILER": "Poluprikolica"
+    },
+    "fuelTypes": {
+      "DIESEL": "Dizel",
+      "PETROL": "Benzin",
+      "LPG": "TNG",
+      "CNG": "KPG",
+      "ELECTRIC": "Električni"
+    },
+    "statuses": {
+      "ACTIVE": "Aktivan",
+      "IN_SERVICE": "Na servisu",
+      "INACTIVE": "Neaktivan"
+    },
+    "ownershipTypes": {
+      "OWNED": "Sopstveno",
+      "LEASED": "Lizing",
+      "RENTED": "Iznajmljeno"
+    }
+  },
+  "drivers": {
+    "title": "Vozači",
+    "addNew": "Novi vozač",
+    "firstName": "Ime",
+    "lastName": "Prezime",
+    "jmbg": "JMBG",
+    "phone": "Telefon",
+    "email": "Email",
+    "birthDate": "Datum rođenja",
+    "license": "Vozačka dozvola",
+    "licenseNumber": "Broj dozvole",
+    "categories": "Kategorije",
+    "adr": "ADR sertifikat",
+    "adrExpiry": "ADR važi do",
+    "healthCheck": "Zdravstveni pregled",
+    "healthCheckExpiry": "Pregled važi do",
+    "employment": "Datum zaposlenja",
+    "vehicle": "Vozilo",
+    "statuses": {
+      "ACTIVE": "Aktivan",
+      "ON_LEAVE": "Na odmoru",
+      "INACTIVE": "Neaktivan"
+    }
+  },
+  "trailers": {
+    "title": "Prikolice",
+    "addNew": "Nova prikolica",
+    "regNumber": "Reg. oznaka",
+    "type": "Tip",
+    "length": "Dužina (m)",
+    "capacity": "Nosivost (kg)",
+    "year": "Godište",
+    "ownership": "Vlasništvo",
+    "status": "Status",
+    "trailerTypes": {
+      "CURTAIN": "Cerada",
+      "BOX": "Sandučar",
+      "REFRIGERATED": "Frigo",
+      "FLATBED": "Platforma",
+      "TANK": "Cisterna",
+      "CONTAINER": "Kontejner"
+    },
+    "statuses": {
+      "ACTIVE": "Aktivan",
+      "IN_SERVICE": "Na servisu",
+      "INACTIVE": "Neaktivan"
+    },
+    "ownershipTypes": {
+      "OWNED": "Sopstveno",
+      "LEASED": "Lizing",
+      "RENTED": "Iznajmljeno"
+    }
+  },
+  "documents": {
+    "title": "Dokumenta",
+    "upload": "Otpremi dokument",
+    "type": "Tip dokumenta",
+    "expiry": "Rok važenja",
+    "notes": "Napomena",
+    "noDocuments": "Nema dokumenata",
+    "vehicleTypes": {
+      "REGISTRATION": "Registracija",
+      "INSURANCE": "Osiguranje",
+      "TECHNICAL_INSPECTION": "Tehnički pregled",
+      "ATP_CERTIFICATE": "ATP sertifikat",
+      "ADR_CERTIFICATE": "ADR sertifikat",
+      "OTHER": "Ostalo"
+    },
+    "driverTypes": {
+      "DRIVERS_LICENSE": "Vozačka dozvola",
+      "MEDICAL_CERTIFICATE": "Lekarski pregled",
+      "PASSPORT": "Pasoš",
+      "ID_CARD": "Lična karta",
+      "ADR_CERTIFICATE": "ADR sertifikat",
+      "OTHER": "Ostalo"
+    },
+    "expiryWarning": {
+      "expired": "Isteklo",
+      "expiringSoon": "Ističe za {{days}} dana"
+    }
+  }
+}

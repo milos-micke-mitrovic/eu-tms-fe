@@ -1,0 +1,171 @@
+{
+  "app": {
+    "name": "EU TMS",
+    "loading": "Učitavanje...",
+    "error": "Došlo je do greške"
+  },
+  "actions": {
+    "save": "Sačuvaj",
+    "cancel": "Otkaži",
+    "delete": "Obriši",
+    "edit": "Izmeni",
+    "create": "Kreiraj",
+    "submit": "Potvrdi",
+    "confirm": "Potvrdi",
+    "close": "Zatvori",
+    "back": "Nazad",
+    "next": "Dalje",
+    "search": "Pretraži",
+    "filter": "Filtriraj",
+    "clear": "Očisti",
+    "refresh": "Osveži",
+    "export": "Izvezi",
+    "import": "Uvezi",
+    "add": "Dodaj"
+  },
+  "selectDate": "Izaberite datum",
+  "selectTime": "Izaberite vreme",
+  "status": {
+    "active": "Aktivan",
+    "inactive": "Neaktivan",
+    "pending": "Na čekanju",
+    "completed": "Završen",
+    "cancelled": "Otkazan"
+  },
+  "validation": {
+    "required": "Ovo polje je obavezno",
+    "email": "Unesite ispravnu email adresu",
+    "invalidEmail": "Neispravna email adresa",
+    "minLength": "Mora imati najmanje {{min}} karaktera",
+    "maxLength": "Mora imati najviše {{max}} karaktera"
+  },
+  "pagination": {
+    "previous": "Prethodna",
+    "next": "Sledeća",
+    "page": "Strana {{page}} od {{total}}",
+    "rowsPerPage": "Redova po strani",
+    "showing": "Prikazano {{from}}-{{to}} od {{total}}",
+    "showingEmpty": "Nema rezultata",
+    "showingSingle": "Prikazano 1 od 1",
+    "items": "stavki",
+    "item": "stavka",
+    "goToFirstPage": "Idi na prvu stranu",
+    "goToPreviousPage": "Idi na prethodnu stranu",
+    "goToNextPage": "Idi na sledeću stranu",
+    "goToLastPage": "Idi na poslednju stranu"
+  },
+  "table": {
+    "noData": "Nema dostupnih podataka",
+    "loading": "Učitavanje podataka...",
+    "noResults": "Nema rezultata."
+  },
+  "errors": {
+    "generic": "Došlo je do greške. Pokušajte ponovo.",
+    "network": "Greška u mreži. Proverite konekciju.",
+    "notFound": "Resurs nije pronađen.",
+    "unauthorized": "Nemate ovlašćenje za ovu akciju.",
+    "uploadFailed": "Otpremanje nije uspelo"
+  },
+  "success": {
+    "saved": "Uspešno sačuvano",
+    "deleted": "Uspešno obrisano",
+    "created": "Uspešno kreirano"
+  },
+  "notFound": {
+    "message": "Stranica koju tražite ne postoji.",
+    "goHome": "Početna strana"
+  },
+  "errorBoundary": {
+    "title": "Došlo je do greške",
+    "message": "Došlo je do neočekivane greške. Pokušajte ponovo ili kontaktirajte podršku.",
+    "retry": "Pokušajte ponovo"
+  },
+  "fileUpload": {
+    "upload": "Otpremi",
+    "uploading": "Otpremanje...",
+    "dropFiles_one": "Prevucite fajl ovde",
+    "dropFiles_other": "Prevucite fajlove ovde",
+    "clickToUpload_one": "Kliknite za otpremanje ili prevucite fajl",
+    "clickToUpload_other": "Kliknite za otpremanje ili prevucite fajlove",
+    "clickToReplace": "Kliknite za zamenu",
+    "clickToAddMore": "Kliknite za dodavanje",
+    "removeFile": "Ukloni fajl",
+    "fileTooLarge": "Fajl je prevelik. Maksimalna veličina: {{size}}MB",
+    "maxFilesAllowed": "Maksimalno {{count}} fajlova dozvoljeno"
+  },
+  "imageUpload": {
+    "upload": "Otpremi",
+    "change": "Promeni",
+    "removeImage": "Ukloni sliku",
+    "imagePreview": "Pregled slike",
+    "invalidFormat": "Neispravan format. Dozvoljeno: {{formats}}",
+    "fileTooLarge": "Fajl je prevelik. Maksimalna veličina: {{size}}MB"
+  },
+  "calendar": {
+    "months": {
+      "january": "Januar",
+      "february": "Februar",
+      "march": "Mart",
+      "april": "April",
+      "may": "Maj",
+      "june": "Jun",
+      "july": "Jul",
+      "august": "Avgust",
+      "september": "Septembar",
+      "october": "Oktobar",
+      "november": "Novembar",
+      "december": "Decembar"
+    },
+    "selectMonth": "Izaberite mesec",
+    "selectYear": "Izaberite godinu",
+    "previousMonth": "Prethodni mesec",
+    "nextMonth": "Sledeći mesec"
+  },
+  "datePicker": {
+    "clearDate": "Očisti datum"
+  },
+  "timePicker": {
+    "clearTime": "Očisti vreme",
+    "am": "AM",
+    "pm": "PM"
+  },
+  "locationPicker": {
+    "pickOnMap": "Izaberite na mapi",
+    "selectLocation": "Izaberite lokaciju",
+    "searchPlaceholder": "Pretražite adresu...",
+    "clearSearch": "Očisti pretragu",
+    "searching": "Pretraživanje...",
+    "noResults": "Nema rezultata",
+    "selectedLocation": "Izabrana lokacija",
+    "gettingAddress": "Preuzimanje adrese...",
+    "helpText": "Kliknite na mapu ili pretražite adresu za izbor lokacije",
+    "confirmLocation": "Potvrdi lokaciju"
+  },
+  "select": {
+    "placeholder": "Izaberite...",
+    "searchPlaceholder": "Pretraži...",
+    "noResults": "Nema rezultata.",
+    "clearSelection": "Očisti izbor",
+    "clearAll": "Očisti sve",
+    "remove": "Ukloni {{label}}",
+    "create": "Kreiraj \"{{value}}\"",
+    "createNew": "Kreiraj novo",
+    "typeCustomValue": "Unesite vrednost...",
+    "typeToCreate": "Unesite naziv i pritisnite Enter"
+  },
+  "sidebar": {
+    "title": "Bočni meni",
+    "description": "Prikazuje bočni meni.",
+    "toggle": "Prikaži/sakrij meni"
+  },
+  "unsavedChanges": {
+    "title": "Nesačuvane promene",
+    "description": "Imate nesačuvane promene. Da li ste sigurni da želite da zatvorite?",
+    "confirm": "Odbaci",
+    "cancel": "Nastavi izmene"
+  },
+  "deleteConfirm": {
+    "title": "Potvrda brisanja",
+    "description": "Da li ste sigurni da želite da obrišete? Ova akcija se ne može poništiti."
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "title": "Partners",
+  "addNew": "New Partner",
+  "name": "Name",
+  "pib": "Tax ID (PIB)",
+  "maticniBroj": "Company Number",
+  "address": "Address",
+  "city": "City",
+  "country": "Country",
+  "zipCode": "ZIP Code",
+  "bankAccount": "Bank Account",
+  "phone": "Phone",
+  "email": "Email",
+  "contactPerson": "Contact Person",
+  "type": "Partner Type",
+  "notes": "Notes",
+  "partnerTypes": {
+    "CLIENT": "Client",
+    "SUPPLIER": "Supplier",
+    "BOTH": "Both"
+  }
+}

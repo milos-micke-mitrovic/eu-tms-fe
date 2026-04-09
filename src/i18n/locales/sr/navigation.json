@@ -1,0 +1,19 @@
+{
+  "sidebar": {
+    "dashboard": "Početna",
+    "routes": "Nalozi",
+    "expenses": "Troškovi",
+    "vehicles": "Vozila",
+    "drivers": "Vozači",
+    "trailers": "Prikolice",
+    "partners": "Partneri",
+    "fuel": "Gorivo",
+    "permits": "Dozvole",
+    "reports": "Izveštaji",
+    "notifications": "Obaveštenja",
+    "settings": "Podešavanja"
+  },
+  "breadcrumbs": {
+    "home": "Početna"
+  }
+}

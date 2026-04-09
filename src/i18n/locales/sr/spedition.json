@@ -1,0 +1,57 @@
+{
+  "routes": {
+    "title": "Transportni nalozi",
+    "addNew": "Novi nalog",
+    "routeNumber": "Broj naloga",
+    "routeType": "Tip",
+    "domestic": "Domaći",
+    "international": "Međunarodni",
+    "partner": "Klijent",
+    "vehicle": "Vozilo",
+    "driver": "Vozač",
+    "departure": "Polazak",
+    "return": "Povratak",
+    "cargo": "Roba",
+    "weight": "Težina (kg)",
+    "volume": "Zapremina (m³)",
+    "price": "Cena",
+    "distance": "Rastojanje (km)",
+    "status": {
+      "CREATED": "Kreiran",
+      "DISPATCHED": "Dispečovan",
+      "IN_TRANSIT": "U toku",
+      "COMPLETED": "Završen",
+      "INVOICED": "Fakturisan",
+      "PAID": "Plaćen",
+      "CANCELLED": "Otkazan"
+    }
+  },
+  "expenses": {
+    "title": "Troškovi",
+    "addNew": "Novi trošak",
+    "category": "Kategorija",
+    "amount": "Iznos",
+    "currency": "Valuta",
+    "date": "Datum",
+    "description": "Opis",
+    "receipt": "Račun",
+    "total": "Ukupno troškovi",
+    "profit": "Zarada",
+    "categories": {
+      "FUEL": "Gorivo",
+      "TOLL_DOMESTIC": "Putarina (domaća)",
+      "TOLL_INTERNATIONAL": "Putarina (inostrana)",
+      "PER_DIEM": "Dnevnica",
+      "PARKING": "Parking",
+      "VIGNETTE": "Vinjeta",
+      "CUSTOMS": "Carina",
+      "BORDER_FEE": "Granična taksa",
+      "FERRY": "Trajekt",
+      "MAINTENANCE": "Servis",
+      "WASH": "Pranje",
+      "PHONE": "Telefon",
+      "FINE": "Kazna",
+      "OTHER": "Ostalo"
+    }
+  }
+}

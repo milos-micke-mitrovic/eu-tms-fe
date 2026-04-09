@@ -1,0 +1,19 @@
+{
+  "sidebar": {
+    "dashboard": "Dashboard",
+    "routes": "Routes",
+    "expenses": "Expenses",
+    "vehicles": "Vehicles",
+    "drivers": "Drivers",
+    "trailers": "Trailers",
+    "partners": "Partners",
+    "fuel": "Fuel",
+    "permits": "Permits",
+    "reports": "Reports",
+    "notifications": "Notifications",
+    "settings": "Settings"
+  },
+  "breadcrumbs": {
+    "home": "Home"
+  }
+}

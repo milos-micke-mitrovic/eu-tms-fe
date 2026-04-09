@@ -1,0 +1,22 @@
+{
+  "title": "Partneri",
+  "addNew": "Novi partner",
+  "name": "Naziv",
+  "pib": "PIB",
+  "maticniBroj": "Matični broj",
+  "address": "Adresa",
+  "city": "Grad",
+  "country": "Država",
+  "zipCode": "Poštanski broj",
+  "bankAccount": "Žiro račun",
+  "phone": "Telefon",
+  "email": "Email",
+  "contactPerson": "Kontakt osoba",
+  "type": "Tip partnera",
+  "notes": "Napomena",
+  "partnerTypes": {
+    "CLIENT": "Klijent",
+    "SUPPLIER": "Dobavljač",
+    "BOTH": "Oba"
+  }
+}

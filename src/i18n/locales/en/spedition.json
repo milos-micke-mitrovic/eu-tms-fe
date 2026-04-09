@@ -1,0 +1,57 @@
+{
+  "routes": {
+    "title": "Transport Orders",
+    "addNew": "New Order",
+    "routeNumber": "Order Number",
+    "routeType": "Type",
+    "domestic": "Domestic",
+    "international": "International",
+    "partner": "Client",
+    "vehicle": "Vehicle",
+    "driver": "Driver",
+    "departure": "Departure",
+    "return": "Return",
+    "cargo": "Cargo",
+    "weight": "Weight (kg)",
+    "volume": "Volume (m³)",
+    "price": "Price",
+    "distance": "Distance (km)",
+    "status": {
+      "CREATED": "Created",
+      "DISPATCHED": "Dispatched",
+      "IN_TRANSIT": "In Transit",
+      "COMPLETED": "Completed",
+      "INVOICED": "Invoiced",
+      "PAID": "Paid",
+      "CANCELLED": "Cancelled"
+    }
+  },
+  "expenses": {
+    "title": "Expenses",
+    "addNew": "New Expense",
+    "category": "Category",
+    "amount": "Amount",
+    "currency": "Currency",
+    "date": "Date",
+    "description": "Description",
+    "receipt": "Receipt",
+    "total": "Total Expenses",
+    "profit": "Profit",
+    "categories": {
+      "FUEL": "Fuel",
+      "TOLL_DOMESTIC": "Toll (Domestic)",
+      "TOLL_INTERNATIONAL": "Toll (International)",
+      "PER_DIEM": "Per Diem",
+      "PARKING": "Parking",
+      "VIGNETTE": "Vignette",
+      "CUSTOMS": "Customs",
+      "BORDER_FEE": "Border Fee",
+      "FERRY": "Ferry",
+      "MAINTENANCE": "Maintenance",
+      "WASH": "Wash",
+      "PHONE": "Phone",
+      "FINE": "Fine",
+      "OTHER": "Other"
+    }
+  }
+}

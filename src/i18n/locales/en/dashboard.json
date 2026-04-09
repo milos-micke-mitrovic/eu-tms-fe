@@ -1,0 +1,11 @@
+{
+  "title": "Dashboard",
+  "activeRoutes": "Active Routes",
+  "monthlyExpenses": "Monthly Expenses",
+  "monthlyRevenue": "Monthly Revenue",
+  "expiringDocs": "Expiring Documents",
+  "expiringPermits": "Expiring Permits",
+  "overdueInvoices": "Overdue Invoices",
+  "expensesByCategory": "Expenses by Category",
+  "expenseTrend": "Expense Trend"
+}

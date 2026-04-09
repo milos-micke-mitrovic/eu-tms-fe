@@ -1,0 +1,125 @@
+{
+  "vehicles": {
+    "title": "Vehicles",
+    "addNew": "New Vehicle",
+    "regNumber": "Reg. Number",
+    "make": "Make",
+    "model": "Model",
+    "year": "Year",
+    "type": "Type",
+    "status": "Status",
+    "fuelType": "Fuel",
+    "capacity": "Capacity (kg)",
+    "volume": "Volume (m³)",
+    "consumption": "Consumption (l/100km)",
+    "odometer": "Odometer",
+    "driver": "Driver",
+    "documents": "Documents",
+    "vin": "VIN Number",
+    "ownership": "Ownership",
+    "vehicleTypes": {
+      "TRUCK": "Truck",
+      "TRACTOR": "Tractor",
+      "TRAILER": "Trailer",
+      "SEMI_TRAILER": "Semi-trailer"
+    },
+    "fuelTypes": {
+      "DIESEL": "Diesel",
+      "PETROL": "Petrol",
+      "LPG": "LPG",
+      "CNG": "CNG",
+      "ELECTRIC": "Electric"
+    },
+    "statuses": {
+      "ACTIVE": "Active",
+      "IN_SERVICE": "In Service",
+      "INACTIVE": "Inactive"
+    },
+    "ownershipTypes": {
+      "OWNED": "Owned",
+      "LEASED": "Leased",
+      "RENTED": "Rented"
+    }
+  },
+  "drivers": {
+    "title": "Drivers",
+    "addNew": "New Driver",
+    "firstName": "First Name",
+    "lastName": "Last Name",
+    "jmbg": "JMBG",
+    "phone": "Phone",
+    "email": "Email",
+    "birthDate": "Date of Birth",
+    "license": "Driver's License",
+    "licenseNumber": "License Number",
+    "categories": "Categories",
+    "adr": "ADR Certificate",
+    "adrExpiry": "ADR Valid Until",
+    "healthCheck": "Health Check",
+    "healthCheckExpiry": "Health Check Valid Until",
+    "employment": "Employment Date",
+    "vehicle": "Vehicle",
+    "statuses": {
+      "ACTIVE": "Active",
+      "ON_LEAVE": "On Leave",
+      "INACTIVE": "Inactive"
+    }
+  },
+  "trailers": {
+    "title": "Trailers",
+    "addNew": "New Trailer",
+    "regNumber": "Reg. Number",
+    "type": "Type",
+    "length": "Length (m)",
+    "capacity": "Capacity (kg)",
+    "year": "Year",
+    "ownership": "Ownership",
+    "status": "Status",
+    "trailerTypes": {
+      "CURTAIN": "Curtain",
+      "BOX": "Box",
+      "REFRIGERATED": "Refrigerated",
+      "FLATBED": "Flatbed",
+      "TANK": "Tank",
+      "CONTAINER": "Container"
+    },
+    "statuses": {
+      "ACTIVE": "Active",
+      "IN_SERVICE": "In Service",
+      "INACTIVE": "Inactive"
+    },
+    "ownershipTypes": {
+      "OWNED": "Owned",
+      "LEASED": "Leased",
+      "RENTED": "Rented"
+    }
+  },
+  "documents": {
+    "title": "Documents",
+    "upload": "Upload Document",
+    "type": "Document Type",
+    "expiry": "Expiry Date",
+    "notes": "Notes",
+    "noDocuments": "No documents",
+    "vehicleTypes": {
+      "REGISTRATION": "Registration",
+      "INSURANCE": "Insurance",
+      "TECHNICAL_INSPECTION": "Technical Inspection",
+      "ATP_CERTIFICATE": "ATP Certificate",
+      "ADR_CERTIFICATE": "ADR Certificate",
+      "OTHER": "Other"
+    },
+    "driverTypes": {
+      "DRIVERS_LICENSE": "Driver's License",
+      "MEDICAL_CERTIFICATE": "Medical Certificate",
+      "PASSPORT": "Passport",
+      "ID_CARD": "ID Card",
+      "ADR_CERTIFICATE": "ADR Certificate",
+      "OTHER": "Other"
+    },
+    "expiryWarning": {
+      "expired": "Expired",
+      "expiringSoon": "Expires in {{days}} days"
+    }
+  }
+}

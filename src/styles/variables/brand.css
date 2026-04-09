@@ -1,0 +1,48 @@
+/*
+ * Brand Colors
+ * Define your design system colors here.
+ * All other color tokens should reference these.
+ */
+
+:root {
+  /* Primary - Main brand color (teal) */
+  --brand-primary: 173 80% 40%;
+  --brand-primary-foreground: 0 0% 100%;
+
+  /* Secondary - Complementary color (dark slate) */
+  --brand-secondary: 200 25% 23%;
+  --brand-secondary-foreground: 0 0% 100%;
+
+  /* Success - Positive actions, confirmations */
+  --brand-success: 142 71% 45%;
+  --brand-success-foreground: 0 0% 100%;
+
+  /* Warning - Caution, attention needed */
+  --brand-warning: 38 92% 50%;
+  --brand-warning-foreground: 0 0% 0%;
+
+  /* Error/Destructive - Errors, deletions */
+  --brand-error: 0 84% 60%;
+  --brand-error-foreground: 0 0% 100%;
+
+  /* Info - Informational messages */
+  --brand-info: 199 89% 48%;
+  --brand-info-foreground: 0 0% 100%;
+
+  /* Neutrals - Grays for text, borders, backgrounds */
+  --brand-neutral-50: 0 0% 98%;
+  --brand-neutral-100: 0 0% 96%;
+  --brand-neutral-200: 0 0% 90%;
+  --brand-neutral-300: 0 0% 83%;
+  --brand-neutral-400: 0 0% 64%;
+  --brand-neutral-500: 0 0% 45%;
+  --brand-neutral-600: 0 0% 32%;
+  --brand-neutral-700: 0 0% 25%;
+  --brand-neutral-800: 0 0% 15%;
+  --brand-neutral-900: 0 0% 9%;
+  --brand-neutral-950: 0 0% 4%;
+
+  /* White & Black */
+  --brand-white: 0 0% 100%;
+  --brand-black: 0 0% 0%;
+}

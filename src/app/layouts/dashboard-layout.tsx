@@ -1,0 +1,30 @@
+import { Outlet } from 'react-router-dom'
+import { SidebarProvider, SidebarInset, SidebarTrigger } from '@/shared/ui'
+import { AppSidebar } from './app-sidebar'
+import { RouteGuard } from '@/app/routes/route-guard'
+import { NotificationBell } from '@/features/notifications/components/notification-bell'
+import { LanguageSwitcher } from '@/shared/components/language-switcher'
+import { ThemeToggle } from '@/shared/components/theme-toggle'
+
+export function DashboardLayout() {
+  return (
+    <RouteGuard requireAuth={true}>
+      <SidebarProvider>
+        <AppSidebar />
+        <SidebarInset className="overflow-hidden">
+          <header className="flex h-14 shrink-0 items-center gap-2 border-b px-4">
+            <SidebarTrigger />
+            <div className="ml-auto flex items-center gap-1">
+              <ThemeToggle />
+              <LanguageSwitcher />
+              <NotificationBell />
+            </div>
+          </header>
+          <div className="flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden p-4">
+            <Outlet />
+          </div>
+        </SidebarInset>
+      </SidebarProvider>
+    </RouteGuard>
+  )
+}

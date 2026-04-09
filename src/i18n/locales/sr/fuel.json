@@ -1,0 +1,14 @@
+{
+  "title": "Interna pumpa",
+  "addTank": "Nova cisterna",
+  "addTransaction": "Novo točenje",
+  "tankName": "Naziv cisterne",
+  "capacity": "Kapacitet (l)",
+  "currentLevel": "Trenutni nivo (l)",
+  "fuelType": "Tip goriva",
+  "refill": "Dopuna cisterne",
+  "dispense": "Točenje u vozilo",
+  "liters": "Litara",
+  "pricePerLiter": "Cena po litru",
+  "odometer": "Kilometraža"
+}

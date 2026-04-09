@@ -1,0 +1,29 @@
+:root {
+  /* Z-Index Layers */
+  --z-dropdown: 50;
+  --z-sticky: 100;
+  --z-fixed: 200;
+  --z-modal-backdrop: 300;
+  --z-modal: 400;
+  --z-popover: 500;
+  --z-tooltip: 600;
+  --z-toast: 700;
+
+  /* Spacing */
+  --spacing-page: 1.5rem;
+  --spacing-section: 2rem;
+  --spacing-card: 1rem;
+
+  /* Content Width */
+  --content-max-width: 1400px;
+  --sidebar-width: 280px;
+  --sidebar-collapsed-width: 64px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  :root {
+    --spacing-page: 1rem;
+    --spacing-section: 1.5rem;
+  }
+}
