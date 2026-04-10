@@ -23,7 +23,15 @@ export {
 export { Tabs, TabsContent, TabsList, TabsTrigger } from './tabs'
 
 // Select
-export { Select, MultiSelect, AutocompleteInput, type SelectOption, type MultiSelectOption, type AutocompleteInputProps, type AutocompleteOption } from './select'
+export {
+  Select,
+  MultiSelect,
+  AutocompleteInput,
+  type SelectOption,
+  type MultiSelectOption,
+  type AutocompleteInputProps,
+  type AutocompleteOption,
+} from './select'
 
 // Date & Time
 export { Calendar, DatePicker, DateTimePicker, TimePicker } from './date-time'
@@ -31,8 +39,8 @@ export { Calendar, DatePicker, DateTimePicker, TimePicker } from './date-time'
 // Upload
 export { FileUpload, ImageUpload } from './upload'
 
-// Location
-export { LocationPicker } from './location'
+// Location — lazy-loaded, import directly from '@/shared/ui/location' when needed
+// export { LocationPicker } from './location'
 
 // Overlay
 export {

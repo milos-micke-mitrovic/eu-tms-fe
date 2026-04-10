@@ -1,7 +1,8 @@
 @import 'tailwindcss';
 @import 'tw-animate-css';
 @import './variables/index.css';
-@import 'leaflet/dist/leaflet.css';
+/* leaflet CSS — import in location-picker when needed */
+/* @import 'leaflet/dist/leaflet.css'; */
 
 /*
  * Tailwind Theme Configuration
@@ -164,10 +165,10 @@
  */
 @layer base {
   button:not(:disabled),
-  [role="button"]:not(:disabled),
-  [role="tab"],
-  [role="menuitem"],
-  [role="option"],
+  [role='button']:not(:disabled),
+  [role='tab'],
+  [role='menuitem'],
+  [role='option'],
   [data-radix-collection-item],
   summary {
     cursor: pointer;
