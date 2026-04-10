@@ -5,6 +5,7 @@ import { AppProviders } from './app/providers/app-providers'
 import { router } from './app/routes/router'
 import '@fontsource-variable/inter'
 import '@/i18n'
+import '@/lib/zod-i18n'
 import '@/styles/globals.css'
 
 createRoot(document.getElementById('root')!).render(

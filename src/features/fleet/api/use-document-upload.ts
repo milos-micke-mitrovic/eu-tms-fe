@@ -11,29 +11,40 @@ function getToken(): string | null {
   try {
     const stored = localStorage.getItem(AUTH_STORAGE_KEY)
     if (stored) return JSON.parse(stored).token
-  } catch { /* */ }
+  } catch {
+    /* */
+  }
   return null
 }
 
 type UploadParams = {
   entityType: 'vehicles' | 'drivers'
-  entityId: number
+  entityId: string
   file: File
   metadata: DocumentUploadRequest
 }
 
-async function uploadDocument({ entityType, entityId, file, metadata }: UploadParams) {
+async function uploadDocument({
+  entityType,
+  entityId,
+  file,
+  metadata,
+}: UploadParams) {
   const formData = new FormData()
   formData.append('file', file)
   formData.append('documentType', metadata.documentType)
-  if (metadata.expirationDate) formData.append('expirationDate', metadata.expirationDate)
+  if (metadata.expirationDate)
+    formData.append('expirationDate', metadata.expirationDate)
   if (metadata.notes) formData.append('notes', metadata.notes)
 
-  const response = await fetch(`${API_BASE_URL}/${entityType}/${entityId}/documents`, {
-    method: 'POST',
-    headers: { Authorization: `Bearer ${getToken()}` },
-    body: formData,
-  })
+  const response = await fetch(
+    `${API_BASE_URL}/${entityType}/${entityId}/documents`,
+    {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${getToken()}` },
+      body: formData,
+    }
+  )
 
   if (!response.ok) {
     const error = await response.json().catch(() => null)

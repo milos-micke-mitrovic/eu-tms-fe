@@ -1,10 +1,27 @@
 import { gql } from '@apollo/client'
 import { useQuery } from '@apollo/client/react'
-import type { DriverFilter, Driver } from '../types'
+import type { GetDriversQuery, GetDriverQuery } from '@/generated/graphql'
+import type { DriverFilter } from '../types'
 
 export const GET_DRIVERS = gql`
-  query GetDrivers($status: String, $companyId: ID, $search: String, $sortBy: String, $sortDir: String, $page: Int, $size: Int) {
-    drivers(status: $status, companyId: $companyId, search: $search, sortBy: $sortBy, sortDir: $sortDir, page: $page, size: $size) {
+  query GetDrivers(
+    $status: String
+    $companyId: ID
+    $search: String
+    $sortBy: String
+    $sortDir: String
+    $page: Int
+    $size: Int
+  ) {
+    drivers(
+      status: $status
+      companyId: $companyId
+      search: $search
+      sortBy: $sortBy
+      sortDir: $sortDir
+      page: $page
+      size: $size
+    ) {
       content {
         id
         firstName
@@ -55,23 +72,15 @@ export const GET_DRIVER = gql`
   }
 `
 
-type DriversPage = {
-  content: Driver[]
-  totalElements: number
-  totalPages: number
-  number: number
-  size: number
-}
-
 export function useDrivers(filter: DriverFilter) {
-  return useQuery<{ drivers: DriversPage }>(GET_DRIVERS, {
+  return useQuery<GetDriversQuery>(GET_DRIVERS, {
     variables: filter,
   })
 }
 
-export function useDriver(id: number | null) {
-  return useQuery<{ driver: Driver | null }>(GET_DRIVER, {
-    variables: { id: String(id) },
+export function useDriver(id: string | null) {
+  return useQuery<GetDriverQuery>(GET_DRIVER, {
+    variables: { id },
     skip: !id,
   })
 }

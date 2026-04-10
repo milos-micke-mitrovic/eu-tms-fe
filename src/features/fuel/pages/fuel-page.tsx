@@ -19,8 +19,10 @@ export function FuelPage() {
 
   const [tankFormOpen, setTankFormOpen] = useState(false)
   const [transactionOpen, setTransactionOpen] = useState(false)
-  const [selectedTankId, setSelectedTankId] = useState<number>(0)
-  const [transactionType, setTransactionType] = useState<'REFILL' | 'DISPENSE'>('DISPENSE')
+  const [selectedTankId, setSelectedTankId] = useState<string>('')
+  const [transactionType, setTransactionType] = useState<'REFILL' | 'DISPENSE'>(
+    'DISPENSE'
+  )
 
   const handleRefill = (tank: FuelTank) => {
     setSelectedTankId(tank.id)
@@ -42,7 +44,8 @@ export function FuelPage() {
         title={t('title')}
         action={
           <Button onClick={() => setTankFormOpen(true)}>
-            <Plus className="mr-2 size-4" />{t('addTank')}
+            <Plus className="mr-2 size-4" />
+            {t('addTank')}
           </Button>
         }
       />
@@ -52,19 +55,32 @@ export function FuelPage() {
         <EmptyState
           icon={Fuel}
           title={t('common:table.noData')}
-          description={t("common:actions.addFirst")}
-          action={<Button size="sm" onClick={() => setTankFormOpen(true)}><Plus className="mr-2 size-4" />{t('addTank')}</Button>}
+          description={t('common:actions.addFirst')}
+          action={
+            <Button size="sm" onClick={() => setTankFormOpen(true)}>
+              <Plus className="mr-2 size-4" />
+              {t('addTank')}
+            </Button>
+          }
         />
       ) : (
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {tanks.map((tank) => (
-            <FuelTankCard key={tank.id} tank={tank} onRefill={handleRefill} onDispense={handleDispense} />
+            <FuelTankCard
+              key={tank.id}
+              tank={tank}
+              onRefill={handleRefill}
+              onDispense={handleDispense}
+            />
           ))}
         </div>
       )}
 
-      <FuelTankForm open={tankFormOpen} onClose={() => setTankFormOpen(false)} />
-      {selectedTankId > 0 && (
+      <FuelTankForm
+        open={tankFormOpen}
+        onClose={() => setTankFormOpen(false)}
+      />
+      {selectedTankId && (
         <FuelTransactionForm
           open={transactionOpen}
           onClose={() => setTransactionOpen(false)}

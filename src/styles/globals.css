@@ -115,6 +115,14 @@
       'rlig' 1,
       'calt' 1;
   }
+
+  /* Give inputs a visible background in dark mode */
+  .dark input,
+  .dark textarea,
+  .dark select,
+  .dark [data-slot='select-trigger'] {
+    background-color: hsl(0 0% 7%);
+  }
 }
 
 /*

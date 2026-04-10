@@ -57,5 +57,31 @@
       "FINE": "Kazna",
       "OTHER": "Ostalo"
     }
+  },
+  "cmr": {
+    "title": "CMR",
+    "generate": "Generiši CMR",
+    "language": "Jezik",
+    "download": "Preuzmi PDF",
+    "noDocuments": "CMR nije generisan",
+    "generated": "CMR generisan"
+  },
+  "travelOrder": {
+    "title": "Putni nalog",
+    "create": "Kreiraj putni nalog",
+    "download": "Preuzmi PDF",
+    "noOrder": "Putni nalog nije kreiran",
+    "created": "Putni nalog kreiran",
+    "orderNumber": "Broj naloga",
+    "destination": "Destinacija",
+    "purpose": "Svrha",
+    "advances": "Avansi",
+    "actuals": "Stvarni troškovi"
+  },
+  "perDiem": {
+    "calculate": "Izračunaj dnevnice",
+    "confirmTitle": "Izračunaj dnevnice",
+    "confirmDescription": "Ovo će izračunati dnevnice po zemljama na osnovu stopova i dodati ih u troškove. Nastavi?",
+    "calculated": "Dnevnice izračunate i dodate u troškove"
   }
 }

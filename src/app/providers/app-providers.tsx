@@ -4,7 +4,8 @@ import { ApolloProvider } from '@apollo/client/react'
 import { Toaster, toast } from 'sonner'
 import { apolloClient } from '@/shared/api/apollo-client'
 import { getApiErrorMessage } from '@/shared/utils'
-import { ThemeProvider } from '@/shared/components/theme-provider'
+import { HttpError } from '@/shared/api/http-client'
+import { ThemeProvider, useTheme } from '@/shared/components/theme-provider'
 import { AuthProvider } from '@/features/auth'
 import i18n from '@/i18n'
 
@@ -18,7 +19,20 @@ const queryClient = new QueryClient({
     mutations: {
       retry: 0,
       onError: (error) => {
-        const message = getApiErrorMessage(error, i18n.t('common:errors.generic'))
+        if (error instanceof HttpError) {
+          if (error.status === 403) {
+            toast.error(i18n.t('common:errors.unauthorized'))
+            return
+          }
+          if (error.status === 404) {
+            toast.error(i18n.t('common:errors.notFound'))
+            return
+          }
+        }
+        const message = getApiErrorMessage(
+          error,
+          i18n.t('common:errors.generic')
+        )
         toast.error(message)
       },
     },
@@ -29,6 +43,13 @@ type AppProvidersProps = {
   children: ReactNode
 }
 
+function ThemedToaster() {
+  const { theme } = useTheme()
+  return (
+    <Toaster position="bottom-right" richColors closeButton theme={theme} />
+  )
+}
+
 export function AppProviders({ children }: AppProvidersProps) {
   return (
     <ThemeProvider>
@@ -36,7 +57,7 @@ export function AppProviders({ children }: AppProvidersProps) {
         <ApolloProvider client={apolloClient}>
           <AuthProvider>
             {children}
-            <Toaster position="top-right" richColors closeButton />
+            <ThemedToaster />
           </AuthProvider>
         </ApolloProvider>
       </QueryClientProvider>

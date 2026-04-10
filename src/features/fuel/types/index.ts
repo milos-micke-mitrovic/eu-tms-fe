@@ -1,14 +1,7 @@
-export type FuelTank = {
-  id: number
-  name: string
-  capacityLiters: number
-  currentLevelLiters: number
-  fuelType: string
-  percentFull: number | null
-  location: string | null
-  createdAt: string
-}
+// ── Re-export generated types as single source of truth ─────
+export type { FuelTank } from '@/generated/graphql'
 
+// ── REST-only types (not in GraphQL schema) ─────────────────
 export type FuelTankRequest = {
   name: string
   capacityLiters: number

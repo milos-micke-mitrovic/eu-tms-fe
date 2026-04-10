@@ -76,10 +76,10 @@
 }
 
 .dark {
-  --background: hsl(var(--brand-neutral-950));
+  --background: hsl(0 0% 7%);
   --foreground: hsl(var(--brand-neutral-50));
 
-  --card: hsl(var(--brand-neutral-900));
+  --card: hsl(0 0% 10%);
   --card-foreground: hsl(var(--brand-neutral-50));
 
   --popover: hsl(var(--brand-neutral-900));
@@ -109,8 +109,8 @@
   --info: hsl(199 89% 48%);
   --info-foreground: hsl(var(--brand-neutral-50));
 
-  --border: hsl(var(--brand-neutral-800));
-  --input: hsl(var(--brand-neutral-800));
+  --border: hsl(0 0% 18%);
+  --input: hsl(0 0% 18%);
   --ring: hsl(173 80% 45%);
 
   --chart-1: hsl(173 80% 45%);

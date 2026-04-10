@@ -5,7 +5,8 @@ import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 import { httpClient } from '@/shared/api/http-client'
 import { apolloClient } from '@/shared/api/apollo-client'
-import type { ExpenseRequest, ExpenseSummaryItem } from '../types'
+import type { ExpenseSummaryQuery } from '@/generated/graphql'
+import type { ExpenseRequest } from '../types'
 
 export const GET_EXPENSE_SUMMARY = gql`
   query ExpenseSummary($from: Date!, $to: Date!, $groupBy: String!) {
@@ -17,7 +18,7 @@ export const GET_EXPENSE_SUMMARY = gql`
 `
 
 export function useExpenseSummary(from: string, to: string, groupBy: string) {
-  return useQuery<{ expenseSummary: ExpenseSummaryItem[] }>(GET_EXPENSE_SUMMARY, {
+  return useQuery<ExpenseSummaryQuery>(GET_EXPENSE_SUMMARY, {
     variables: { from, to, groupBy },
     skip: !from || !to,
   })
@@ -26,8 +27,7 @@ export function useExpenseSummary(from: string, to: string, groupBy: string) {
 export function useCreateExpense() {
   const { t } = useTranslation()
   return useMutation({
-    mutationFn: (data: ExpenseRequest) =>
-      httpClient.post('/expenses', data),
+    mutationFn: (data: ExpenseRequest) => httpClient.post('/expenses', data),
     onSuccess: () => {
       apolloClient.refetchQueries({ include: ['GetRoute', 'ExpenseSummary'] })
       toast.success(t('common:success.created'))
@@ -38,7 +38,7 @@ export function useCreateExpense() {
 export function useUpdateExpense() {
   const { t } = useTranslation()
   return useMutation({
-    mutationFn: ({ id, data }: { id: number; data: ExpenseRequest }) =>
+    mutationFn: ({ id, data }: { id: string; data: ExpenseRequest }) =>
       httpClient.put(`/expenses/${id}`, data),
     onSuccess: () => {
       apolloClient.refetchQueries({ include: ['GetRoute', 'ExpenseSummary'] })
@@ -50,7 +50,7 @@ export function useUpdateExpense() {
 export function useDeleteExpense() {
   const { t } = useTranslation()
   return useMutation({
-    mutationFn: (id: number) => httpClient.delete(`/expenses/${id}`),
+    mutationFn: (id: string) => httpClient.delete(`/expenses/${id}`),
     onSuccess: () => {
       apolloClient.refetchQueries({ include: ['GetRoute', 'ExpenseSummary'] })
       toast.success(t('common:success.deleted'))

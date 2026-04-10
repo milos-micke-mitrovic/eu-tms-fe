@@ -12,7 +12,7 @@ import {
 } from '@tanstack/react-table'
 import { useState, useRef, useEffect, type ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Inbox } from 'lucide-react'
+import { Inbox, SearchX } from 'lucide-react'
 import {
   Table,
   TableBody,
@@ -44,6 +44,8 @@ type DataTableProps<TData, TValue> = {
   emptyText?: string
   emptyDescription?: string
   emptyAction?: ReactNode
+  isFiltered?: boolean
+  onClearFilters?: () => void
   onRowClick?: (row: TData) => void
 }
 
@@ -66,6 +68,8 @@ export function DataTable<TData, TValue>({
   emptyText,
   emptyDescription,
   emptyAction,
+  isFiltered = false,
+  onClearFilters,
   onRowClick,
 }: DataTableProps<TData, TValue>) {
   const { t } = useTranslation('common')
@@ -89,7 +93,8 @@ export function DataTable<TData, TValue>({
   }, [data, isTableLoading])
 
   // Use previous data while loading, current data otherwise
-  const displayData = isTableLoading && data.length === 0 ? previousDataRef.current : data
+  const displayData =
+    isTableLoading && data.length === 0 ? previousDataRef.current : data
 
   const table = useReactTable({
     data: displayData,
@@ -124,7 +129,7 @@ export function DataTable<TData, TValue>({
   const showEmptyState = !isTableLoading && !table.getRowModel().rows?.length
 
   return (
-    <div className="flex min-h-0 max-h-full flex-col gap-4">
+    <div className="flex max-h-full min-h-0 flex-col gap-4">
       <div className="relative min-h-0 overflow-auto rounded-md border">
         <Table>
           <TableHeader className="bg-background sticky top-0 z-10">
@@ -173,7 +178,7 @@ export function DataTable<TData, TValue>({
         </Table>
         {/* Loading overlay with backdrop */}
         {isTableLoading && (
-          <div className="absolute inset-0 top-10 flex items-center justify-center bg-background/60">
+          <div className="bg-background/60 absolute inset-0 top-10 flex items-center justify-center">
             <Spinner />
           </div>
         )}
@@ -182,13 +187,32 @@ export function DataTable<TData, TValue>({
           <div className="pointer-events-none absolute inset-0 top-10 flex items-center justify-center">
             <div className="flex flex-col items-center gap-2">
               <div className="bg-muted mb-1 rounded-full p-3">
-                <Inbox className="text-muted-foreground size-6" />
+                {isFiltered ? (
+                  <SearchX className="text-muted-foreground size-6" />
+                ) : (
+                  <Inbox className="text-muted-foreground size-6" />
+                )}
               </div>
-              <BodySmall className="font-medium">{resolvedEmptyText}</BodySmall>
-              {emptyDescription && (
-                <Caption className="text-muted-foreground max-w-xs text-center">{emptyDescription}</Caption>
+              <BodySmall className="font-medium">
+                {isFiltered ? t('table.noResults') : resolvedEmptyText}
+              </BodySmall>
+              {!isFiltered && emptyDescription && (
+                <Caption className="text-muted-foreground max-w-xs text-center">
+                  {emptyDescription}
+                </Caption>
               )}
-              {emptyAction && <div className="pointer-events-auto mt-2">{emptyAction}</div>}
+              <div className="pointer-events-auto mt-2">
+                {isFiltered && onClearFilters ? (
+                  <button
+                    onClick={onClearFilters}
+                    className="text-primary text-sm font-medium hover:underline"
+                  >
+                    {t('actions.clear')}
+                  </button>
+                ) : (
+                  emptyAction
+                )}
+              </div>
             </div>
           </div>
         )}

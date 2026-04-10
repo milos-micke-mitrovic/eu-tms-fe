@@ -1,10 +1,25 @@
 import { gql } from '@apollo/client'
 import { useQuery } from '@apollo/client/react'
-import type { PartnerFilter, Partner } from '../types'
+import type { GetPartnersQuery } from '@/generated/graphql'
+import type { PartnerFilter } from '../types'
 
 export const GET_PARTNERS = gql`
-  query GetPartners($search: String, $partnerType: String, $sortBy: String, $sortDir: String, $page: Int, $size: Int) {
-    partners(search: $search, partnerType: $partnerType, sortBy: $sortBy, sortDir: $sortDir, page: $page, size: $size) {
+  query GetPartners(
+    $search: String
+    $partnerType: String
+    $sortBy: String
+    $sortDir: String
+    $page: Int
+    $size: Int
+  ) {
+    partners(
+      search: $search
+      partnerType: $partnerType
+      sortBy: $sortBy
+      sortDir: $sortDir
+      page: $page
+      size: $size
+    ) {
       content {
         id
         name
@@ -23,16 +38,8 @@ export const GET_PARTNERS = gql`
   }
 `
 
-type PartnersPage = {
-  content: Partner[]
-  totalElements: number
-  totalPages: number
-  number: number
-  size: number
-}
-
 export function usePartners(filter: PartnerFilter) {
-  return useQuery<{ partners: PartnersPage }>(GET_PARTNERS, {
+  return useQuery<GetPartnersQuery>(GET_PARTNERS, {
     variables: filter,
   })
 }

@@ -5,7 +5,6 @@ import { useTranslation } from 'react-i18next'
 import { Check, ChevronDown, X, Plus } from 'lucide-react'
 
 import { cn } from '@/shared/utils'
-import { IconButton } from '../button'
 import { Label } from '../label'
 import { Caption, BodySmall } from '../typography'
 import { Popover, PopoverContent, PopoverTrigger } from '../overlay/popover'
@@ -17,11 +16,7 @@ import {
   CommandItem,
   CommandList,
 } from '../overlay/command'
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from '../overlay/tooltip'
+import { Tooltip, TooltipContent, TooltipTrigger } from '../overlay/tooltip'
 
 type Option = {
   value: string
@@ -75,21 +70,25 @@ function Select({
   const [isCreating, setIsCreating] = useState(false)
 
   const resolvedPlaceholder = placeholder ?? t('select.placeholder')
-  const resolvedSearchPlaceholder = searchPlaceholder ?? t('select.searchPlaceholder')
+  const resolvedSearchPlaceholder =
+    searchPlaceholder ?? t('select.searchPlaceholder')
   const resolvedEmptyText = emptyText ?? t('select.noResults')
   const selectId = id || name
 
   // For creatable, also check if value matches a custom typed value
   const selectedOption = options.find((opt) => opt.value === value)
-  const displayLabel = selectedOption?.label || (value && creatable ? value : undefined)
+  const displayLabel =
+    selectedOption?.label || (value && creatable ? value : undefined)
   const showClearButton = clearable && value && !disabled
 
   // Check if search value matches any existing option (case-insensitive)
   const searchMatchesOption = options.some(
-    (opt) => opt.label.toLowerCase() === searchValue.toLowerCase() ||
-             opt.value.toLowerCase() === searchValue.toLowerCase()
+    (opt) =>
+      opt.label.toLowerCase() === searchValue.toLowerCase() ||
+      opt.value.toLowerCase() === searchValue.toLowerCase()
   )
-  const showCreateValueOption = isCreating && searchValue.trim() && !searchMatchesOption
+  const showCreateValueOption =
+    isCreating && searchValue.trim() && !searchMatchesOption
 
   // Reset creating mode when popover closes
   const handleOpenChange = (isOpen: boolean) => {
@@ -120,30 +119,30 @@ function Select({
         >
           {displayLabel ? (
             <Tooltip delayDuration={500}>
-              <TooltipTrigger asChild>
-                <BodySmall as="span" truncate className="min-w-0">
-                  {displayLabel}
-                </BodySmall>
+              <TooltipTrigger asChild onClick={(e) => e.preventDefault()}>
+                <span className="min-w-0 truncate text-sm">{displayLabel}</span>
               </TooltipTrigger>
               <TooltipContent>{displayLabel}</TooltipContent>
             </Tooltip>
           ) : (
-            <BodySmall as="span" truncate className="min-w-0">{resolvedPlaceholder}</BodySmall>
+            <BodySmall as="span" truncate className="min-w-0">
+              {resolvedPlaceholder}
+            </BodySmall>
           )}
           <div className="flex items-center gap-1">
             {showClearButton && (
-              <IconButton
-                type="button"
-                variant="ghost"
-                size="xs"
-                icon={<X />}
+              <span
+                role="button"
+                tabIndex={-1}
                 aria-label={t('select.clearSelection')}
                 onClick={(e) => {
                   e.stopPropagation()
                   onChange?.('')
                 }}
-                className="text-muted-foreground hover:text-foreground"
-              />
+                className="text-muted-foreground hover:text-foreground inline-flex size-5 items-center justify-center rounded-sm"
+              >
+                <X className="size-3" />
+              </span>
             )}
             <ChevronDown className="size-4 shrink-0 opacity-50" />
           </div>
@@ -156,15 +155,24 @@ function Select({
         <Command shouldFilter={!isCreating}>
           {(searchable || isCreating) && (
             <CommandInput
-              placeholder={isCreating ? t('select.typeCustomValue') : resolvedSearchPlaceholder}
+              placeholder={
+                isCreating
+                  ? t('select.typeCustomValue')
+                  : resolvedSearchPlaceholder
+              }
               className="h-9"
               value={searchValue}
-              onValueChange={(v) => { setSearchValue(v); onSearchChange?.(v) }}
+              onValueChange={(v) => {
+                setSearchValue(v)
+                onSearchChange?.(v)
+              }}
               autoFocus={isCreating}
             />
           )}
           <CommandList>
-            {!showCreateValueOption && !isCreating && <CommandEmpty>{resolvedEmptyText}</CommandEmpty>}
+            {!showCreateValueOption && !isCreating && (
+              <CommandEmpty>{resolvedEmptyText}</CommandEmpty>
+            )}
             {isCreating && !showCreateValueOption && (
               <CommandEmpty>{t('select.typeToCreate')}</CommandEmpty>
             )}
@@ -186,29 +194,36 @@ function Select({
                   </BodySmall>
                 </CommandItem>
               )}
-              {!isCreating && options
-                .filter((option) =>
-                  !searchable || !searchValue ||
-                  option.label.toLowerCase().includes(searchValue.toLowerCase())
-                )
-                .map((option) => (
-                  <CommandItem
-                    key={option.value}
-                    value={option.label}
-                    disabled={option.disabled}
-                    onSelect={() => {
-                      onChange?.(option.value)
-                      setSearchValue('')
-                      setOpen(false)
-                    }}
-                    title={option.label}
-                  >
-                    <BodySmall as="span" truncate>{option.label}</BodySmall>
-                    {value === option.value && (
-                      <Check className="ml-auto size-4" />
-                    )}
-                  </CommandItem>
-                ))}
+              {!isCreating &&
+                options
+                  .filter(
+                    (option) =>
+                      !searchable ||
+                      !searchValue ||
+                      option.label
+                        .toLowerCase()
+                        .includes(searchValue.toLowerCase())
+                  )
+                  .map((option) => (
+                    <CommandItem
+                      key={option.value}
+                      value={option.label}
+                      disabled={option.disabled}
+                      onSelect={() => {
+                        onChange?.(option.value)
+                        setSearchValue('')
+                        setOpen(false)
+                      }}
+                      title={option.label}
+                    >
+                      <BodySmall as="span" truncate>
+                        {option.label}
+                      </BodySmall>
+                      {value === option.value && (
+                        <Check className="ml-auto size-4" />
+                      )}
+                    </CommandItem>
+                  ))}
               {creatable && !isCreating && (
                 <CommandItem
                   value="__create_new__"
@@ -232,7 +247,7 @@ function Select({
   }
 
   return (
-    <div className={cn('flex flex-col gap-1.5 min-w-0', className)}>
+    <div className={cn('flex min-w-0 flex-col gap-1.5', className)}>
       {label && (
         <Label htmlFor={selectId} className={cn(error && 'text-destructive')}>
           {label}

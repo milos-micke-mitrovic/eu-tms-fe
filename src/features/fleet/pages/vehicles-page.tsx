@@ -3,17 +3,16 @@ import type { PaginationState } from '@tanstack/react-table'
 import { useTranslation } from 'react-i18next'
 import { Plus } from 'lucide-react'
 import { usePageTitle, useDebounce, useTableSort } from '@/shared/hooks'
-import { PageHeader } from '@/shared/components'
+import { PageHeader, SearchInput } from '@/shared/components'
 import { ConfirmDialog } from '@/shared/ui/overlay/confirm-dialog'
 import { Button } from '@/shared/ui/button'
-import { Input } from '@/shared/ui/input'
 import { Select } from '@/shared/ui/select'
 import { useVehicles } from '../api/use-vehicles'
 import { useDeleteVehicle } from '../api/use-vehicle-mutations'
 import { VehicleTable } from '../components/vehicle-table'
 import { VehicleForm } from '../components/vehicle-form'
 import { VehicleDetailSheet } from '../components/vehicle-detail-sheet'
-import type { Vehicle, VehicleFilter } from '../types'
+import type { VehicleListItem, VehicleFilter } from '../types'
 
 export function VehiclesPage() {
   const { t } = useTranslation('fleet')
@@ -26,14 +25,19 @@ export function VehiclesPage() {
   const [typeFilter, setTypeFilter] = useState<string>('')
 
   // Pagination + sorting state
-  const [pagination, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize: 20 })
+  const [pagination, setPagination] = useState<PaginationState>({
+    pageIndex: 0,
+    pageSize: 20,
+  })
   const { sorting, onSortingChange, sortBy, sortDir } = useTableSort()
 
   // Sheet state
   const [formOpen, setFormOpen] = useState(false)
-  const [editingVehicle, setEditingVehicle] = useState<Vehicle | null>(null)
-  const [detailVehicleId, setDetailVehicleId] = useState<number | null>(null)
-  const [deleteTarget, setDeleteTarget] = useState<Vehicle | null>(null)
+  const [editingVehicle, setEditingVehicle] = useState<VehicleListItem | null>(
+    null
+  )
+  const [detailVehicleId, setDetailVehicleId] = useState<string | null>(null)
+  const [deleteTarget, setDeleteTarget] = useState<VehicleListItem | null>(null)
 
   // Queries
   const filter: VehicleFilter = {
@@ -50,18 +54,25 @@ export function VehiclesPage() {
 
   const vehicles = data?.vehicles
 
+  const isFiltered = !!debouncedSearch || !!statusFilter || !!typeFilter
+  const clearFilters = () => {
+    setSearch('')
+    setStatusFilter('')
+    setTypeFilter('')
+  }
+
   // Handlers
   const handleCreate = () => {
     setEditingVehicle(null)
     setFormOpen(true)
   }
 
-  const handleEdit = useCallback((vehicle: Vehicle) => {
+  const handleEdit = useCallback((vehicle: VehicleListItem) => {
     setEditingVehicle(vehicle)
     setFormOpen(true)
   }, [])
 
-  const handleDelete = useCallback((vehicle: Vehicle) => {
+  const handleDelete = useCallback((vehicle: VehicleListItem) => {
     setDeleteTarget(vehicle)
   }, [])
 
@@ -72,19 +83,17 @@ export function VehiclesPage() {
     }
   }
 
-  const handleRowClick = useCallback((vehicle: Vehicle) => {
+  const handleRowClick = useCallback((vehicle: VehicleListItem) => {
     setDetailVehicleId(vehicle.id)
   }, [])
 
   const statusOptions = [
-    { value: '', label: t('common:actions.clear') },
     { value: 'ACTIVE', label: t('vehicles.statuses.ACTIVE') },
     { value: 'IN_SERVICE', label: t('vehicles.statuses.IN_SERVICE') },
     { value: 'INACTIVE', label: t('vehicles.statuses.INACTIVE') },
   ]
 
   const vehicleTypeOptions = [
-    { value: '', label: t('common:actions.clear') },
     { value: 'TRUCK', label: t('vehicles.vehicleTypes.TRUCK') },
     { value: 'TRACTOR', label: t('vehicles.vehicleTypes.TRACTOR') },
     { value: 'TRAILER', label: t('vehicles.vehicleTypes.TRAILER') },
@@ -92,7 +101,7 @@ export function VehiclesPage() {
   ]
 
   return (
-    <div className="flex min-h-0 max-h-full flex-col gap-6">
+    <div className="flex max-h-full min-h-0 flex-col gap-6">
       <PageHeader
         title={t('vehicles.title')}
         action={
@@ -105,10 +114,10 @@ export function VehiclesPage() {
 
       {/* Filters */}
       <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
-        <Input
-          placeholder={t('common:actions.search')}
+        <SearchInput
           value={search}
-          onChange={(e) => setSearch(e.target.value)}
+          onChange={setSearch}
+          placeholder={t('common:actions.search')}
           className="w-full sm:w-64"
         />
         <Select
@@ -140,9 +149,12 @@ export function VehiclesPage() {
         onEdit={handleEdit}
         onDelete={handleDelete}
         onRowClick={handleRowClick}
+        isFiltered={isFiltered}
+        onClearFilters={clearFilters}
         emptyAction={
           <Button size="sm" onClick={handleCreate}>
-            <Plus className="mr-2 size-4" />{t('vehicles.addNew')}
+            <Plus className="mr-2 size-4" />
+            {t('vehicles.addNew')}
           </Button>
         }
       />

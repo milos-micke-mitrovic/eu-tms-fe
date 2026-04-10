@@ -10,6 +10,8 @@ import {
   Container,
   Handshake,
   Fuel,
+  FileText,
+  Coins,
   Bell,
 } from 'lucide-react'
 import { Logo } from '@/shared/components'
@@ -42,6 +44,8 @@ const navItems = [
   { key: 'trailers', path: '/trailers', icon: Container },
   { key: 'partners', path: '/partners', icon: Handshake },
   { key: 'fuel', path: '/fuel', icon: Fuel },
+  { key: 'invoices', path: '/invoices', icon: FileText },
+  { key: 'exchangeRates', path: '/exchange-rates', icon: Coins },
   { key: 'notifications', path: '/notifications', icon: Bell },
 ] as const
 
@@ -66,8 +70,12 @@ export function AppSidebar() {
 
   return (
     <Sidebar>
-      <SidebarHeader className={`h-14 justify-center border-b ${isCollapsed ? 'px-1' : 'px-4'}`}>
-        <div className={`flex items-center ${isCollapsed ? 'justify-center' : 'gap-2'}`}>
+      <SidebarHeader
+        className={`h-14 justify-center border-b ${isCollapsed ? 'px-1' : 'px-4'}`}
+      >
+        <div
+          className={`flex items-center ${isCollapsed ? 'justify-center' : 'gap-2'}`}
+        >
           <Logo size={isCollapsed ? 'md' : 'lg'} className="shrink-0" />
           {!isCollapsed && <H4>{t('common:app.name')}</H4>}
         </div>
@@ -80,7 +88,10 @@ export function AppSidebar() {
                 <SidebarMenuItem key={key}>
                   <SidebarMenuButton
                     asChild
-                    isActive={pathname === path || (path !== '/dashboard' && pathname.startsWith(path))}
+                    isActive={
+                      pathname === path ||
+                      (path !== '/dashboard' && pathname.startsWith(path))
+                    }
                     tooltip={t(`sidebar.${key}`)}
                   >
                     <NavLink to={path}>

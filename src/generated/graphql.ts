@@ -409,6 +409,98 @@ export type VehiclePage = {
   totalPages: Scalars['Int']['output']
 }
 
+export type GetExchangeRatesQueryVariables = Exact<{
+  date?: InputMaybe<Scalars['Date']['input']>
+}>
+
+export type GetExchangeRatesQuery = {
+  exchangeRates: Array<{
+    currencyCode: string
+    rateToRsd: number
+    rateDate: string
+  }>
+}
+
+export type GetInvoicesQueryVariables = Exact<{
+  status?: InputMaybe<Scalars['String']['input']>
+  partnerId?: InputMaybe<Scalars['ID']['input']>
+  dateFrom?: InputMaybe<Scalars['Date']['input']>
+  dateTo?: InputMaybe<Scalars['Date']['input']>
+  search?: InputMaybe<Scalars['String']['input']>
+  sortBy?: InputMaybe<Scalars['String']['input']>
+  sortDir?: InputMaybe<Scalars['String']['input']>
+  page?: InputMaybe<Scalars['Int']['input']>
+  size?: InputMaybe<Scalars['Int']['input']>
+}>
+
+export type GetInvoicesQuery = {
+  invoices: {
+    totalElements: number
+    totalPages: number
+    number: number
+    size: number
+    content: Array<{
+      id: string
+      invoiceNumber: string
+      paymentStatus: string
+      invoiceDate: string
+      dueDate: string
+      currency: string
+      total: number
+      partner?: { id: string; name: string; pib?: string | null } | null
+    }>
+  }
+}
+
+export type GetInvoiceQueryVariables = Exact<{
+  id: Scalars['ID']['input']
+}>
+
+export type GetInvoiceQuery = {
+  invoice?: {
+    id: string
+    invoiceNumber: string
+    partnerId: string
+    invoiceDate: string
+    dueDate: string
+    currency: string
+    subtotal: number
+    vatRate: number
+    vatAmount: number
+    total: number
+    paymentStatus: string
+    relatedRouteIds?: Array<string | null> | null
+    notes?: string | null
+    createdAt?: string | null
+    partner?: {
+      id: string
+      name: string
+      pib?: string | null
+      city?: string | null
+      address?: string | null
+    } | null
+    items: Array<{
+      id: string
+      description: string
+      quantity: number
+      unit?: string | null
+      unitPrice: number
+      total: number
+    }>
+  } | null
+}
+
+export type GetPerDiemRatesQueryVariables = Exact<{ [key: string]: never }>
+
+export type GetPerDiemRatesQuery = {
+  perDiemRates: Array<{
+    countryCode: string
+    countryNameSr: string
+    dailyAmount: number
+    currency: string
+  }>
+}
+
 export type GetDriversQueryVariables = Exact<{
   status?: InputMaybe<Scalars['String']['input']>
   companyId?: InputMaybe<Scalars['ID']['input']>

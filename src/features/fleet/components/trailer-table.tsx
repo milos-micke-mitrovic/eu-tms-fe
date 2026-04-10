@@ -1,5 +1,9 @@
 import { useMemo } from 'react'
-import type { ColumnDef, PaginationState, SortingState } from '@tanstack/react-table'
+import type {
+  ColumnDef,
+  PaginationState,
+  SortingState,
+} from '@tanstack/react-table'
 import { useTranslation } from 'react-i18next'
 import { MoreHorizontal, Pencil, Trash2 } from 'lucide-react'
 import { DataTable } from '@/shared/ui/data-table'
@@ -14,10 +18,10 @@ import {
 } from '@/shared/ui/overlay/dropdown-menu'
 import { BodySmall } from '@/shared/ui/typography'
 import type { ReactNode } from 'react'
-import type { Trailer, TrailerStatus } from '../types'
+import type { TrailerListItem, TrailerStatus } from '../types'
 
 type TrailerTableProps = {
-  data: Trailer[]
+  data: TrailerListItem[]
   isLoading: boolean
   pageCount: number
   totalCount: number
@@ -26,12 +30,17 @@ type TrailerTableProps = {
   onPaginationChange: (pagination: PaginationState) => void
   sorting?: SortingState
   onSortingChange?: (sorting: SortingState) => void
-  onEdit: (trailer: Trailer) => void
-  onDelete: (trailer: Trailer) => void
+  onEdit: (trailer: TrailerListItem) => void
+  onDelete: (trailer: TrailerListItem) => void
   emptyAction?: ReactNode
+  isFiltered?: boolean
+  onClearFilters?: () => void
 }
 
-const statusVariant: Record<TrailerStatus, 'default' | 'secondary' | 'outline'> = {
+const statusVariant: Record<
+  TrailerStatus,
+  'default' | 'secondary' | 'outline'
+> = {
   ACTIVE: 'default',
   IN_SERVICE: 'secondary',
   INACTIVE: 'outline',
@@ -50,21 +59,32 @@ export function TrailerTable({
   onEdit,
   onDelete,
   emptyAction,
+  isFiltered,
+  onClearFilters,
 }: TrailerTableProps) {
   const { t } = useTranslation('fleet')
 
-  const columns = useMemo<ColumnDef<Trailer>[]>(
+  const columns = useMemo<ColumnDef<TrailerListItem>[]>(
     () => [
       {
         accessorKey: 'regNumber',
-        header: ({ column }) => <DataTableColumnHeader column={column} title={t('trailers.regNumber')} />,
+        header: ({ column }) => (
+          <DataTableColumnHeader
+            column={column}
+            title={t('trailers.regNumber')}
+          />
+        ),
         cell: ({ row }) => (
-          <BodySmall className="font-medium">{row.original.regNumber}</BodySmall>
+          <BodySmall className="font-medium">
+            {row.original.regNumber}
+          </BodySmall>
         ),
       },
       {
         accessorKey: 'type',
-        header: ({ column }) => <DataTableColumnHeader column={column} title={t('trailers.type')} />,
+        header: ({ column }) => (
+          <DataTableColumnHeader column={column} title={t('trailers.type')} />
+        ),
         cell: ({ row }) => t(`trailers.trailerTypes.${row.original.type}`),
       },
       {
@@ -74,14 +94,21 @@ export function TrailerTable({
       },
       {
         accessorKey: 'capacityKg',
-        header: ({ column }) => <DataTableColumnHeader column={column} title={t('trailers.capacity')} />,
+        header: ({ column }) => (
+          <DataTableColumnHeader
+            column={column}
+            title={t('trailers.capacity')}
+          />
+        ),
         cell: ({ row }) => row.original.capacityKg ?? '—',
       },
       {
         accessorKey: 'status',
-        header: ({ column }) => <DataTableColumnHeader column={column} title={t('trailers.status')} />,
+        header: ({ column }) => (
+          <DataTableColumnHeader column={column} title={t('trailers.status')} />
+        ),
         cell: ({ row }) => (
-          <Badge variant={statusVariant[row.original.status]}>
+          <Badge variant={statusVariant[row.original.status as TrailerStatus]}>
             {t(`trailers.statuses.${row.original.status}`)}
           </Badge>
         ),
@@ -131,6 +158,8 @@ export function TrailerTable({
       pageSize={pageSize}
       onPaginationChange={onPaginationChange}
       emptyAction={emptyAction}
+      isFiltered={isFiltered}
+      onClearFilters={onClearFilters}
     />
   )
 }

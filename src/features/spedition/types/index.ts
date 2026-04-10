@@ -1,36 +1,63 @@
-// ── Route ─────────────────────────────────────────────────
+// ── Re-export generated types as single source of truth ─────
+export type {
+  Route,
+  RoutePage,
+  RouteStop,
+  RouteExpense,
+  ExpenseSummaryItem,
+} from '@/generated/graphql'
 
-export type RouteStatus = 'CREATED' | 'DISPATCHED' | 'IN_TRANSIT' | 'COMPLETED' | 'INVOICED' | 'PAID' | 'CANCELLED'
+// ── Query result element types ──────────────────────────────
+import type { GetRoutesQuery, GetRouteQuery } from '@/generated/graphql'
+
+/** A route row as returned by the list query */
+export type RouteListItem = GetRoutesQuery['routes']['content'][number]
+/** A route as returned by the detail query */
+export type RouteDetail = NonNullable<GetRouteQuery['route']>
+
+// ── Union literal types (more specific than generated `string`) ──
+export type RouteStatus =
+  | 'CREATED'
+  | 'DISPATCHED'
+  | 'IN_TRANSIT'
+  | 'COMPLETED'
+  | 'INVOICED'
+  | 'PAID'
+  | 'CANCELLED'
 export type RouteType = 'DOMESTIC' | 'INTERNATIONAL'
+export type StopType =
+  | 'LOADING'
+  | 'UNLOADING'
+  | 'BORDER'
+  | 'CUSTOMS'
+  | 'REST'
+  | 'FUEL'
+  | 'OTHER'
 
-export type Route = {
-  id: number
-  internalNumber: string
-  routeType: RouteType
-  status: RouteStatus
-  partnerId: number | null
-  partner: { id: number; name: string; pib: string; city: string } | null
-  vehicleId: number | null
-  vehicle: { id: number; regNumber: string; make: string; model: string } | null
-  driverId: number | null
-  driver: { id: number; firstName: string; lastName: string; phone: string } | null
-  trailerId: number | null
-  departureDate: string | null
-  returnDate: string | null
-  cargoDescription: string | null
-  cargoWeightKg: number | null
-  cargoVolumeM3: number | null
-  price: number | null
-  currency: string
-  distanceKm: number | null
-  notes: string | null
-  stops: RouteStop[]
-  expenses: RouteExpense[]
-  totalExpenseRsd: number | null
-  profit: number | null
-  createdAt: string
-}
+export type ExpenseCategory =
+  | 'FUEL'
+  | 'TOLL_DOMESTIC'
+  | 'TOLL_INTERNATIONAL'
+  | 'PER_DIEM'
+  | 'PARKING'
+  | 'VIGNETTE'
+  | 'CUSTOMS'
+  | 'BORDER_FEE'
+  | 'FERRY'
+  | 'MAINTENANCE'
+  | 'WASH'
+  | 'PHONE'
+  | 'FINE'
+  | 'OTHER'
 
+export type ExpenseStatus =
+  | 'MANUAL'
+  | 'AUTO'
+  | 'SUGGESTED'
+  | 'CONFIRMED'
+  | 'REJECTED'
+
+// ── Request types (REST-only) ───────────────────────────────
 export type RouteRequest = {
   routeType: string
   partnerId: number | null
@@ -49,36 +76,6 @@ export type RouteRequest = {
   stops?: RouteStopRequest[]
 }
 
-export type RouteFilter = {
-  status?: string
-  routeType?: string
-  partnerId?: string
-  search?: string
-  sortBy?: string
-  sortDir?: string
-  page?: number
-  size?: number
-}
-
-// ── Route Stop ───────────────────────────────────────────
-
-export type StopType = 'LOADING' | 'UNLOADING' | 'BORDER' | 'CUSTOMS' | 'REST' | 'FUEL' | 'OTHER'
-
-export type RouteStop = {
-  id: number
-  stopOrder: number
-  stopType: StopType
-  address: string | null
-  city: string | null
-  countryCode: string
-  zipCode: string | null
-  plannedArrival: string | null
-  actualArrival: string | null
-  plannedDeparture: string | null
-  actualDeparture: string | null
-  notes: string | null
-}
-
 export type RouteStopRequest = {
   stopOrder: number
   stopType: string
@@ -89,28 +86,6 @@ export type RouteStopRequest = {
   plannedArrival?: string | null
   plannedDeparture?: string | null
   notes?: string
-}
-
-// ── Expense ──────────────────────────────────────────────
-
-export type ExpenseCategory =
-  | 'FUEL' | 'TOLL_DOMESTIC' | 'TOLL_INTERNATIONAL' | 'PER_DIEM'
-  | 'PARKING' | 'VIGNETTE' | 'CUSTOMS' | 'BORDER_FEE'
-  | 'FERRY' | 'MAINTENANCE' | 'WASH' | 'PHONE' | 'FINE' | 'OTHER'
-
-export type ExpenseStatus = 'MANUAL' | 'AUTO' | 'SUGGESTED' | 'CONFIRMED' | 'REJECTED'
-
-export type RouteExpense = {
-  id: number
-  category: ExpenseCategory
-  amount: number
-  currency: string
-  exchangeRate: number | null
-  amountRsd: number | null
-  description: string | null
-  expenseDate: string
-  status: ExpenseStatus
-  createdAt: string
 }
 
 export type ExpenseRequest = {
@@ -124,7 +99,14 @@ export type ExpenseRequest = {
   expenseDate: string
 }
 
-export type ExpenseSummaryItem = {
-  key: string
-  totalAmountRsd: number
+// ── Filter types ────────────────────────────────────────────
+export type RouteFilter = {
+  status?: string
+  routeType?: string
+  partnerId?: string
+  search?: string
+  sortBy?: string
+  sortDir?: string
+  page?: number
+  size?: number
 }

@@ -2,31 +2,58 @@ import { useEffect, useState, useCallback } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useTranslation } from 'react-i18next'
-import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/shared/ui/overlay/sheet'
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+} from '@/shared/ui/overlay/sheet'
 import { Button } from '@/shared/ui/button'
 import { Input } from '@/shared/ui/input'
 import { Textarea } from '@/shared/ui/textarea'
 import { Select } from '@/shared/ui/select'
 import { AutocompleteInput } from '@/shared/ui/select/autocomplete-input'
 import { DatePicker } from '@/shared/ui/date-time/date-picker'
-import { Separator } from '@/shared/ui/separator'
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/ui/form'
-import { BodySmall } from '@/shared/ui/typography'
+import { SectionDivider } from '@/shared/components'
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/shared/ui/form'
+
 import { usePartners } from '@/features/partners/api/use-partners'
 import { useVehicles } from '@/features/fleet/api/use-vehicles'
 import { useDrivers } from '@/features/fleet/api/use-drivers'
 import { useTrailers } from '@/features/fleet/api/use-trailers'
 import { CURRENCIES } from '../constants'
-import type { Route, RouteRequest } from '../types'
+import type { RouteListItem, RouteRequest } from '../types'
 import { useCreateRoute, useUpdateRoute } from '../api/use-route-mutations'
 import { routeSchema, type RouteFormData } from '../schemas'
 
-type RouteFormProps = { open: boolean; onClose: () => void; route?: Route | null }
+type RouteFormProps = {
+  open: boolean
+  onClose: () => void
+  route?: RouteListItem | null
+}
 
 const defaultValues: RouteFormData = {
-  routeType: 'INTERNATIONAL', partnerId: 0, vehicleId: null, driverId: null, trailerId: null,
-  departureDate: '', returnDate: '', cargoDescription: '', cargoWeightKg: null, cargoVolumeM3: null,
-  price: null, currency: 'EUR', distanceKm: null, notes: '',
+  routeType: 'INTERNATIONAL',
+  partnerId: 0,
+  vehicleId: null,
+  driverId: null,
+  trailerId: null,
+  departureDate: '',
+  returnDate: '',
+  cargoDescription: '',
+  cargoWeightKg: null,
+  cargoVolumeM3: null,
+  price: null,
+  currency: 'EUR',
+  distanceKm: null,
+  notes: '',
 }
 
 export function RouteForm({ open, onClose, route }: RouteFormProps) {
@@ -37,15 +64,30 @@ export function RouteForm({ open, onClose, route }: RouteFormProps) {
   const isPending = createMutation.isPending || updateMutation.isPending
 
   const [partnerSearch, setPartnerSearch] = useState('')
-  const { data: partnersData, loading: partnersLoading } = usePartners({ search: partnerSearch, size: 50 })
+  const { data: partnersData, loading: partnersLoading } = usePartners({
+    search: partnerSearch,
+    size: 50,
+  })
   const { data: vehiclesData } = useVehicles({ status: 'ACTIVE', size: 100 })
   const { data: driversData } = useDrivers({ status: 'ACTIVE', size: 100 })
   const { data: trailersData } = useTrailers({ page: 0, size: 100 })
 
-  const partnerOptions = (partnersData?.partners?.content ?? []).map((p) => ({ value: String(p.id), label: `${p.name}${p.pib ? ` (PIB: ${p.pib})` : ''}` }))
-  const vehicleOptions = (vehiclesData?.vehicles?.content ?? []).map((v) => ({ value: String(v.id), label: `${v.regNumber} — ${v.make} ${v.model}` }))
-  const driverOptions = (driversData?.drivers?.content ?? []).map((d) => ({ value: String(d.id), label: `${d.firstName} ${d.lastName}` }))
-  const trailerOptions = (trailersData?.trailers?.content ?? []).map((tr) => ({ value: String(tr.id), label: tr.regNumber }))
+  const partnerOptions = (partnersData?.partners?.content ?? []).map((p) => ({
+    value: String(p.id),
+    label: `${p.name}${p.pib ? ` (PIB: ${p.pib})` : ''}`,
+  }))
+  const vehicleOptions = (vehiclesData?.vehicles?.content ?? []).map((v) => ({
+    value: String(v.id),
+    label: `${v.regNumber} — ${v.make} ${v.model}`,
+  }))
+  const driverOptions = (driversData?.drivers?.content ?? []).map((d) => ({
+    value: String(d.id),
+    label: `${d.firstName} ${d.lastName}`,
+  }))
+  const trailerOptions = (trailersData?.trailers?.content ?? []).map((tr) => ({
+    value: String(tr.id),
+    label: tr.regNumber,
+  }))
   const currencyOptions = CURRENCIES.map((c) => ({ value: c, label: c }))
 
   const form = useForm<RouteFormData>({
@@ -59,13 +101,22 @@ export function RouteForm({ open, onClose, route }: RouteFormProps) {
   useEffect(() => {
     if (route) {
       form.reset({
-        routeType: route.routeType, partnerId: route.partnerId ?? 0,
-        vehicleId: route.vehicleId, driverId: route.driverId, trailerId: route.trailerId,
-        departureDate: route.departureDate ?? '', returnDate: route.returnDate ?? '',
-        cargoDescription: route.cargoDescription ?? '', cargoWeightKg: route.cargoWeightKg,
-        cargoVolumeM3: route.cargoVolumeM3, price: route.price, currency: route.currency ?? 'EUR',
-        distanceKm: route.distanceKm, notes: route.notes ?? '',
+        routeType: route.routeType as 'DOMESTIC' | 'INTERNATIONAL',
+        partnerId: Number(route.partner?.id) || 0,
+        vehicleId: route.vehicle ? Number(route.vehicle.id) : null,
+        driverId: route.driver ? Number(route.driver.id) : null,
+        trailerId: null,
+        departureDate: route.departureDate ?? '',
+        returnDate: route.returnDate ?? '',
+        cargoDescription: '',
+        cargoWeightKg: null,
+        cargoVolumeM3: null,
+        price: route.price ?? null,
+        currency: route.currency ?? 'EUR',
+        distanceKm: null,
+        notes: '',
       })
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- syncing label with route prop
       setPartnerLabel(route.partner?.name ?? '')
     } else {
       form.reset(defaultValues)
@@ -75,107 +126,344 @@ export function RouteForm({ open, onClose, route }: RouteFormProps) {
 
   const onSubmit = async (data: RouteFormData) => {
     const request: RouteRequest = {
-      routeType: data.routeType, partnerId: data.partnerId || null,
-      vehicleId: data.vehicleId ?? null, driverId: data.driverId ?? null, trailerId: data.trailerId ?? null,
-      departureDate: data.departureDate || undefined, returnDate: data.returnDate || undefined,
-      cargoDescription: data.cargoDescription, cargoWeightKg: data.cargoWeightKg ?? undefined,
-      cargoVolumeM3: data.cargoVolumeM3 ?? undefined, price: data.price ?? undefined,
-      currency: data.currency, distanceKm: data.distanceKm ?? undefined, notes: data.notes || undefined,
+      routeType: data.routeType,
+      partnerId: data.partnerId || null,
+      vehicleId: data.vehicleId ?? null,
+      driverId: data.driverId ?? null,
+      trailerId: data.trailerId ?? null,
+      departureDate: data.departureDate || undefined,
+      returnDate: data.returnDate || undefined,
+      cargoDescription: data.cargoDescription,
+      cargoWeightKg: data.cargoWeightKg ?? undefined,
+      cargoVolumeM3: data.cargoVolumeM3 ?? undefined,
+      price: data.price ?? undefined,
+      currency: data.currency,
+      distanceKm: data.distanceKm ?? undefined,
+      notes: data.notes || undefined,
     }
-    if (isEditing) await updateMutation.mutateAsync({ id: route.id, data: request })
+    if (isEditing)
+      await updateMutation.mutateAsync({ id: route.id, data: request })
     else await createMutation.mutateAsync(request)
     onClose()
   }
 
-  const handlePartnerSearch = useCallback((q: string) => setPartnerSearch(q), [])
+  const handlePartnerSearch = useCallback(
+    (q: string) => setPartnerSearch(q),
+    []
+  )
 
   return (
     <Sheet open={open} onOpenChange={(isOpen) => !isOpen && onClose()}>
       <SheetContent className="sm:max-w-xl">
-        <Form form={form} onSubmit={onSubmit} className="flex flex-1 flex-col overflow-hidden">
-          <SheetHeader actions={
-            <Button type="submit" size="sm" disabled={isPending}>
-              {isPending ? t('common:app.loading') : t('common:actions.save')}
-            </Button>
-          }>
-            <SheetTitle>{isEditing ? `${t('common:actions.edit')} ${route.internalNumber}` : t('routes.addNew')}</SheetTitle>
+        <Form
+          form={form}
+          onSubmit={onSubmit}
+          className="flex flex-1 flex-col overflow-hidden"
+        >
+          <SheetHeader
+            actions={
+              <Button type="submit" size="sm" disabled={isPending}>
+                {isPending ? t('common:app.loading') : t('common:actions.save')}
+              </Button>
+            }
+          >
+            <SheetTitle>
+              {isEditing
+                ? `${t('common:actions.edit')} ${route.internalNumber}`
+                : t('routes.addNew')}
+            </SheetTitle>
           </SheetHeader>
-          <div className="flex-1 overflow-y-auto p-4 space-y-6">
-          {/* Section: Osnovno */}
-          <div>
-            <BodySmall className="mb-3 font-medium">{t('common:actions.basic')}</BodySmall>
-            <div className="space-y-4">
-              <FormField control={form.control} name="routeType" render={({ field }) => (
-                <FormItem><FormLabel required>{t('routes.routeType')}</FormLabel><Select options={[{ value: 'DOMESTIC', label: t('routes.domestic') }, { value: 'INTERNATIONAL', label: t('routes.international') }]} value={field.value} onChange={field.onChange} /><FormMessage /></FormItem>
-              )} />
-              <FormField control={form.control} name="partnerId" render={({ field }) => (
-                <FormItem><FormLabel required>{t('routes.partner')}</FormLabel><AutocompleteInput value={String(field.value || '')} onChange={(v) => field.onChange(Number(v) || 0)} options={partnerOptions} onSearchChange={handlePartnerSearch} placeholder={t('common:actions.search')} loading={partnersLoading} initialLabel={partnerLabel} /><FormMessage /></FormItem>
-              )} />
-              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                <FormField control={form.control} name="vehicleId" render={({ field }) => (
-                  <FormItem><FormLabel>{t('routes.vehicle')}</FormLabel><Select options={vehicleOptions} value={field.value ? String(field.value) : undefined} onChange={(v) => field.onChange(v ? Number(v) : null)} clearable placeholder={t('common:select.placeholder')} searchable /><FormMessage /></FormItem>
-                )} />
-                <FormField control={form.control} name="driverId" render={({ field }) => (
-                  <FormItem><FormLabel>{t('routes.driver')}</FormLabel><Select options={driverOptions} value={field.value ? String(field.value) : undefined} onChange={(v) => field.onChange(v ? Number(v) : null)} clearable placeholder={t('common:select.placeholder')} searchable /><FormMessage /></FormItem>
-                )} />
+          <div className="flex-1 space-y-6 overflow-y-auto p-4">
+            {/* Section: Osnovno */}
+            <div>
+              <SectionDivider title={t('common:actions.basic')} />
+              <div className="space-y-4">
+                <FormField
+                  control={form.control}
+                  name="routeType"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel required>{t('routes.routeType')}</FormLabel>
+                      <Select
+                        options={[
+                          { value: 'DOMESTIC', label: t('routes.domestic') },
+                          {
+                            value: 'INTERNATIONAL',
+                            label: t('routes.international'),
+                          },
+                        ]}
+                        value={field.value}
+                        onChange={field.onChange}
+                      />
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="partnerId"
+                  render={({ field, fieldState }) => (
+                    <FormItem>
+                      <FormLabel required>{t('routes.partner')}</FormLabel>
+                      <AutocompleteInput
+                        value={String(field.value || '')}
+                        onChange={(v) => field.onChange(Number(v) || 0)}
+                        options={partnerOptions}
+                        onSearchChange={handlePartnerSearch}
+                        placeholder={t('common:actions.search')}
+                        loading={partnersLoading}
+                        initialLabel={partnerLabel}
+                        error={!!fieldState.error}
+                      />
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                  <FormField
+                    control={form.control}
+                    name="vehicleId"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>{t('routes.vehicle')}</FormLabel>
+                        <Select
+                          options={vehicleOptions}
+                          value={field.value ? String(field.value) : undefined}
+                          onChange={(v) => field.onChange(v ? Number(v) : null)}
+                          clearable
+                          placeholder={t('common:select.placeholder')}
+                          searchable
+                        />
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="driverId"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>{t('routes.driver')}</FormLabel>
+                        <Select
+                          options={driverOptions}
+                          value={field.value ? String(field.value) : undefined}
+                          onChange={(v) => field.onChange(v ? Number(v) : null)}
+                          clearable
+                          placeholder={t('common:select.placeholder')}
+                          searchable
+                        />
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+                <FormField
+                  control={form.control}
+                  name="trailerId"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>{t('common:actions.trailer')}</FormLabel>
+                      <Select
+                        options={trailerOptions}
+                        value={field.value ? String(field.value) : undefined}
+                        onChange={(v) => field.onChange(v ? Number(v) : null)}
+                        clearable
+                        placeholder={t('common:select.placeholder')}
+                        searchable
+                      />
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
               </div>
-              <FormField control={form.control} name="trailerId" render={({ field }) => (
-                <FormItem><FormLabel>{t('common:actions.trailer')}</FormLabel><Select options={trailerOptions} value={field.value ? String(field.value) : undefined} onChange={(v) => field.onChange(v ? Number(v) : null)} clearable placeholder={t('common:select.placeholder')} searchable /><FormMessage /></FormItem>
-              )} />
             </div>
-          </div>
 
-          <Separator />
-
-          {/* Section: Roba */}
-          <div>
-            <BodySmall className="mb-3 font-medium">{t('routes.cargo')}</BodySmall>
-            <div className="space-y-4">
-              <FormField control={form.control} name="cargoDescription" render={({ field }) => (
-                <FormItem><FormLabel required>{t('routes.cargo')}</FormLabel><FormControl><Textarea rows={2} {...field} value={field.value ?? ''} /></FormControl><FormMessage /></FormItem>
-              )} />
-              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                <FormField control={form.control} name="cargoWeightKg" render={({ field }) => (
-                  <FormItem><FormLabel>{t('routes.weight')}</FormLabel><FormControl><Input type="number" value={field.value ?? ''} onChange={(e) => field.onChange(e.target.value ? Number(e.target.value) : null)} /></FormControl><FormMessage /></FormItem>
-                )} />
-                <FormField control={form.control} name="cargoVolumeM3" render={({ field }) => (
-                  <FormItem><FormLabel>{t('routes.volume')}</FormLabel><FormControl><Input type="number" step="0.1" value={field.value ?? ''} onChange={(e) => field.onChange(e.target.value ? Number(e.target.value) : null)} /></FormControl><FormMessage /></FormItem>
-                )} />
+            {/* Section: Roba */}
+            <div>
+              <SectionDivider title={t('routes.cargo')} />
+              <div className="space-y-4">
+                <FormField
+                  control={form.control}
+                  name="cargoDescription"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel required>{t('routes.cargo')}</FormLabel>
+                      <FormControl>
+                        <Textarea
+                          rows={2}
+                          {...field}
+                          value={field.value ?? ''}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                  <FormField
+                    control={form.control}
+                    name="cargoWeightKg"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>{t('routes.weight')}</FormLabel>
+                        <FormControl>
+                          <Input
+                            type="number"
+                            value={field.value ?? ''}
+                            onChange={(e) =>
+                              field.onChange(
+                                e.target.value ? Number(e.target.value) : null
+                              )
+                            }
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="cargoVolumeM3"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>{t('routes.volume')}</FormLabel>
+                        <FormControl>
+                          <Input
+                            type="number"
+                            step="0.1"
+                            value={field.value ?? ''}
+                            onChange={(e) =>
+                              field.onChange(
+                                e.target.value ? Number(e.target.value) : null
+                              )
+                            }
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
               </div>
             </div>
-          </div>
 
-          <Separator />
-
-          {/* Section: Transport */}
-          <div>
-            <BodySmall className="mb-3 font-medium">{t('common:actions.transport')}</BodySmall>
-            <div className="space-y-4">
-              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                <FormField control={form.control} name="departureDate" render={({ field }) => (
-                  <FormItem><FormLabel>{t('routes.departure')}</FormLabel><DatePicker value={field.value ?? undefined} onChange={(d) => field.onChange(d ?? '')} returnFormat="iso" clearable /><FormMessage /></FormItem>
-                )} />
-                <FormField control={form.control} name="returnDate" render={({ field }) => (
-                  <FormItem><FormLabel>{t('routes.return')}</FormLabel><DatePicker value={field.value ?? undefined} onChange={(d) => field.onChange(d ?? '')} returnFormat="iso" clearable /><FormMessage /></FormItem>
-                )} />
+            {/* Section: Transport */}
+            <div>
+              <SectionDivider title={t('common:actions.transport')} />
+              <div className="space-y-4">
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                  <FormField
+                    control={form.control}
+                    name="departureDate"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>{t('routes.departure')}</FormLabel>
+                        <DatePicker
+                          value={field.value ?? undefined}
+                          onChange={(d) => field.onChange(d ?? '')}
+                          returnFormat="iso"
+                          clearable
+                        />
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="returnDate"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>{t('routes.return')}</FormLabel>
+                        <DatePicker
+                          value={field.value ?? undefined}
+                          onChange={(d) => field.onChange(d ?? '')}
+                          returnFormat="iso"
+                          clearable
+                        />
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+                  <FormField
+                    control={form.control}
+                    name="price"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>{t('routes.price')}</FormLabel>
+                        <FormControl>
+                          <Input
+                            type="number"
+                            step="0.01"
+                            value={field.value ?? ''}
+                            onChange={(e) =>
+                              field.onChange(
+                                e.target.value ? Number(e.target.value) : null
+                              )
+                            }
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="currency"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>{t('expenses.currency')}</FormLabel>
+                        <Select
+                          options={currencyOptions}
+                          value={field.value}
+                          onChange={field.onChange}
+                        />
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="distanceKm"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>{t('routes.distance')}</FormLabel>
+                        <FormControl>
+                          <Input
+                            type="number"
+                            value={field.value ?? ''}
+                            onChange={(e) =>
+                              field.onChange(
+                                e.target.value ? Number(e.target.value) : null
+                              )
+                            }
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+                <FormField
+                  control={form.control}
+                  name="notes"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>{t('common:actions.notes')}</FormLabel>
+                      <FormControl>
+                        <Textarea
+                          rows={2}
+                          {...field}
+                          value={field.value ?? ''}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
               </div>
-              <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-                <FormField control={form.control} name="price" render={({ field }) => (
-                  <FormItem><FormLabel>{t('routes.price')}</FormLabel><FormControl><Input type="number" step="0.01" value={field.value ?? ''} onChange={(e) => field.onChange(e.target.value ? Number(e.target.value) : null)} /></FormControl><FormMessage /></FormItem>
-                )} />
-                <FormField control={form.control} name="currency" render={({ field }) => (
-                  <FormItem><FormLabel>{t('expenses.currency')}</FormLabel><Select options={currencyOptions} value={field.value} onChange={field.onChange} /><FormMessage /></FormItem>
-                )} />
-                <FormField control={form.control} name="distanceKm" render={({ field }) => (
-                  <FormItem><FormLabel>{t('routes.distance')}</FormLabel><FormControl><Input type="number" value={field.value ?? ''} onChange={(e) => field.onChange(e.target.value ? Number(e.target.value) : null)} /></FormControl><FormMessage /></FormItem>
-                )} />
-              </div>
-              <FormField control={form.control} name="notes" render={({ field }) => (
-                <FormItem><FormLabel>{t('common:actions.notes')}</FormLabel><FormControl><Textarea rows={2} {...field} value={field.value ?? ''} /></FormControl><FormMessage /></FormItem>
-              )} />
             </div>
-          </div>
-
           </div>
         </Form>
       </SheetContent>

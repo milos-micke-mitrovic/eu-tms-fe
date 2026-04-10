@@ -5,32 +5,47 @@ import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 import { httpClient } from '@/shared/api/http-client'
 import { apolloClient } from '@/shared/api/apollo-client'
-import type { FuelTank, FuelTankRequest, FuelTransaction, FuelTransactionRequest } from '../types'
+import type { GetFuelTanksQuery } from '@/generated/graphql'
+import type {
+  FuelTank,
+  FuelTankRequest,
+  FuelTransaction,
+  FuelTransactionRequest,
+} from '../types'
 
 // GraphQL for reading tanks
 export const GET_FUEL_TANKS = gql`
   query GetFuelTanks {
     fuelTanks {
-      id name capacityLiters currentLevelLiters fuelType location percentFull
+      id
+      name
+      capacityLiters
+      currentLevelLiters
+      fuelType
+      location
+      percentFull
     }
   }
 `
 
 export function useFuelTanks() {
-  return useApolloQuery<{ fuelTanks: FuelTank[] }>(GET_FUEL_TANKS)
+  return useApolloQuery<GetFuelTanksQuery>(GET_FUEL_TANKS)
 }
 
 // REST for transactions (simple list, no GraphQL needed)
 const fuelKeys = {
   all: ['fuel'] as const,
-  transactions: (tankId?: number) => [...fuelKeys.all, 'transactions', tankId] as const,
+  transactions: (tankId?: number) =>
+    [...fuelKeys.all, 'transactions', tankId] as const,
 }
 
 export function useFuelTransactions(tankId?: number) {
   return useQuery({
     queryKey: fuelKeys.transactions(tankId),
     queryFn: () => {
-      const url = tankId ? `/fuel-tanks/${tankId}/transactions` : '/fuel-tanks/transactions'
+      const url = tankId
+        ? `/fuel-tanks/${tankId}/transactions`
+        : '/fuel-tanks/transactions'
       return httpClient.get<FuelTransaction[]>(url)
     },
     enabled: tankId !== undefined,

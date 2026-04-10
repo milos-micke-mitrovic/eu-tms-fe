@@ -1,0 +1,69 @@
+{
+  "invoices": {
+    "title": "Fakture",
+    "create": "Nova faktura",
+    "edit": "Izmeni fakturu",
+    "invoiceNumber": "Broj fakture",
+    "partner": "Partner",
+    "issueDate": "Datum izdavanja",
+    "dueDate": "Datum dospeća",
+    "totalAmount": "Ukupan iznos",
+    "currency": "Valuta",
+    "totalAmountRsd": "Ukupno (RSD)",
+    "status": "Status",
+    "notes": "Napomene",
+    "items": "Stavke",
+    "addItem": "Dodaj stavku",
+    "description": "Opis",
+    "quantity": "Količina",
+    "unitPrice": "Jedinična cena",
+    "amount": "Iznos",
+    "statuses": {
+      "DRAFT": "Nacrt",
+      "SENT": "Poslata",
+      "PAID": "Plaćena",
+      "CANCELLED": "Stornirana",
+      "OVERDUE": "Dospela"
+    },
+    "actions": {
+      "markSent": "Označi kao poslatu",
+      "markPaid": "Označi kao plaćenu",
+      "cancel": "Storniraj",
+      "downloadPdf": "Preuzmi PDF",
+      "downloadXml": "Preuzmi XML"
+    },
+    "confirm": {
+      "delete": "Da li ste sigurni da želite da obrišete ovu fakturu?",
+      "cancel": "Da li ste sigurni da želite da stornirate ovu fakturu?"
+    }
+  },
+  "exchangeRates": {
+    "title": "Kursna lista NBS",
+    "date": "Datum",
+    "currencyCode": "Valuta",
+    "rateToRsd": "Kurs",
+    "rateDate": "Datum kursa",
+    "converter": {
+      "title": "Konvertor valuta",
+      "amount": "Iznos",
+      "fromCurrency": "Iz valute",
+      "toCurrency": "U valutu",
+      "convert": "Preračunaj",
+      "result": "Rezultat",
+      "rate": "Kurs"
+    }
+  },
+  "perDiem": {
+    "title": "Dnevnice",
+    "country": "Država",
+    "dailyAmount": "Dnevni iznos",
+    "currency": "Valuta",
+    "hours": "Sati",
+    "days": "Dana",
+    "totalAmount": "Ukupno",
+    "totalAmountRsd": "Ukupno (RSD)",
+    "calculate": "Izračunaj",
+    "calculateAndSave": "Izračunaj i sačuvaj",
+    "total": "Ukupno dnevnice"
+  }
+}

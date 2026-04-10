@@ -57,5 +57,31 @@
       "FINE": "Fine",
       "OTHER": "Other"
     }
+  },
+  "cmr": {
+    "title": "CMR",
+    "generate": "Generate CMR",
+    "language": "Language",
+    "download": "Download PDF",
+    "noDocuments": "No CMR generated",
+    "generated": "CMR generated"
+  },
+  "travelOrder": {
+    "title": "Travel Order",
+    "create": "Create Travel Order",
+    "download": "Download PDF",
+    "noOrder": "No travel order created",
+    "created": "Travel order created",
+    "orderNumber": "Order Number",
+    "destination": "Destination",
+    "purpose": "Purpose",
+    "advances": "Advances",
+    "actuals": "Actual Costs"
+  },
+  "perDiem": {
+    "calculate": "Calculate Per Diem",
+    "confirmTitle": "Calculate Per Diem",
+    "confirmDescription": "This will calculate per diem by country based on stops and add them to expenses. Continue?",
+    "calculated": "Per diem calculated and added to expenses"
   }
 }

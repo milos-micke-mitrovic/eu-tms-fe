@@ -16,7 +16,15 @@ import {
   decodeJwt,
   jwtPayloadToUser,
 } from '@/features/auth'
-import { Mail, Lock, Truck, Route, BarChart3, Shield, ArrowRight } from 'lucide-react'
+import {
+  Mail,
+  Lock,
+  Truck,
+  Route,
+  BarChart3,
+  Shield,
+  ArrowRight,
+} from 'lucide-react'
 import { ThemeToggle } from '@/shared/components/theme-toggle'
 import { LanguageSwitcher } from '@/shared/components/language-switcher'
 import {
@@ -71,8 +79,15 @@ export function LoginPage() {
         password: values.password,
       })
       const payload = decodeJwt(response.accessToken)
-      if (!payload) { toast.error(t('login.error.generic')); return }
-      const user = jwtPayloadToUser(payload)
+      if (!payload) {
+        toast.error(t('login.error.generic'))
+        return
+      }
+      const user = {
+        ...jwtPayloadToUser(payload),
+        firstName: response.firstName ?? payload.first_name ?? '',
+        lastName: response.lastName ?? payload.last_name ?? '',
+      }
       login(user, response.accessToken, response.refreshToken)
       toast.success(t('login.welcomeBack', { name: getUserDisplayName(user) }))
       navigate(getDefaultRoute(user))
@@ -88,10 +103,10 @@ export function LoginPage() {
   return (
     <div className="relative flex min-h-screen">
       {/* Background pattern — subtle grid */}
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(#d1d5db_1px,transparent_1px)] opacity-40 [background-size:24px_24px] dark:bg-[radial-gradient(#4b5563_1px,transparent_1px)]" />
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(#d1d5db_1px,transparent_1px)] [background-size:24px_24px] opacity-40 dark:bg-[radial-gradient(#4b5563_1px,transparent_1px)]" />
 
       {/* Top-right controls */}
-      <div className="absolute right-4 top-4 z-10 flex items-center gap-1">
+      <div className="absolute top-4 right-4 z-10 flex items-center gap-1">
         <ThemeToggle />
         <LanguageSwitcher />
       </div>
@@ -101,7 +116,7 @@ export function LoginPage() {
         {/* Gradient background */}
         <div className="from-primary via-primary/95 to-primary/80 absolute inset-0 bg-gradient-to-br" />
         {/* Decorative circles */}
-        <div className="bg-primary-foreground/5 absolute -right-32 -top-32 size-96 rounded-full" />
+        <div className="bg-primary-foreground/5 absolute -top-32 -right-32 size-96 rounded-full" />
         <div className="bg-primary-foreground/5 absolute -bottom-24 -left-24 size-72 rounded-full" />
         <div className="bg-primary-foreground/5 absolute right-24 bottom-32 size-48 rounded-full" />
 
@@ -112,8 +127,12 @@ export function LoginPage() {
               <Logo size="md" className="text-primary-foreground" />
             </div>
             <div>
-              <H4 className="text-primary-foreground tracking-tight">{t('common:app.name')}</H4>
-              <Caption className="text-primary-foreground/50 font-mono">v0.1.0</Caption>
+              <H4 className="text-primary-foreground tracking-tight">
+                {t('common:app.name')}
+              </H4>
+              <Caption className="text-primary-foreground/50 font-mono">
+                v0.1.0
+              </Caption>
             </div>
           </div>
 
@@ -160,8 +179,12 @@ export function LoginPage() {
         <div className="bg-background w-full max-w-[420px] rounded-2xl border p-8 shadow-xl dark:border-white/10 dark:shadow-[0_8px_40px_rgba(255,255,255,0.06)]">
           {/* Welcome */}
           <div className="mb-8">
-            <Body className="text-foreground text-2xl font-bold tracking-tight">{t('login.title')}</Body>
-            <BodySmall className="text-muted-foreground mt-2">{t('login.subtitle')}</BodySmall>
+            <Body className="text-foreground text-2xl font-bold tracking-tight">
+              {t('login.title')}
+            </Body>
+            <BodySmall className="text-muted-foreground mt-2">
+              {t('login.subtitle')}
+            </BodySmall>
           </div>
 
           {/* Form */}
@@ -171,7 +194,7 @@ export function LoginPage() {
               name="email"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                  <FormLabel className="text-muted-foreground text-xs font-semibold tracking-wider uppercase">
                     {t('login.email')}
                   </FormLabel>
                   <FormControl>
@@ -195,7 +218,7 @@ export function LoginPage() {
               name="password"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                  <FormLabel className="text-muted-foreground text-xs font-semibold tracking-wider uppercase">
                     {t('login.password')}
                   </FormLabel>
                   <FormControl>
@@ -231,7 +254,9 @@ export function LoginPage() {
 
           {/* Hint */}
           <div className="mt-10 rounded-xl border border-dashed p-4 text-center">
-            <Caption className="text-muted-foreground">{t('login.info.hint')}</Caption>
+            <Caption className="text-muted-foreground">
+              {t('login.info.hint')}
+            </Caption>
           </div>
         </div>
       </div>

@@ -1,5 +1,9 @@
 import { useMemo } from 'react'
-import type { ColumnDef, PaginationState, SortingState } from '@tanstack/react-table'
+import type {
+  ColumnDef,
+  PaginationState,
+  SortingState,
+} from '@tanstack/react-table'
 import { useTranslation } from 'react-i18next'
 import { MoreHorizontal, Pencil, Trash2 } from 'lucide-react'
 import { DataTable } from '@/shared/ui/data-table'
@@ -14,10 +18,10 @@ import {
 } from '@/shared/ui/overlay/dropdown-menu'
 import { BodySmall } from '@/shared/ui/typography'
 import type { ReactNode } from 'react'
-import type { Partner, PartnerType } from '../types'
+import type { PartnerListItem, PartnerType } from '../types'
 
 type PartnerTableProps = {
-  data: Partner[]
+  data: PartnerListItem[]
   isLoading: boolean
   pageCount: number
   totalCount: number
@@ -26,9 +30,11 @@ type PartnerTableProps = {
   onPaginationChange: (pagination: PaginationState) => void
   sorting?: SortingState
   onSortingChange?: (sorting: SortingState) => void
-  onEdit: (partner: Partner) => void
-  onDelete: (partner: Partner) => void
+  onEdit: (partner: PartnerListItem) => void
+  onDelete: (partner: PartnerListItem) => void
   emptyAction?: ReactNode
+  isFiltered?: boolean
+  onClearFilters?: () => void
 }
 
 const typeVariant: Record<PartnerType, 'default' | 'secondary' | 'outline'> = {
@@ -38,44 +44,89 @@ const typeVariant: Record<PartnerType, 'default' | 'secondary' | 'outline'> = {
 }
 
 export function PartnerTable({
-  data, isLoading, pageCount, totalCount, pageIndex, pageSize,
-  onPaginationChange, sorting, onSortingChange, onEdit, onDelete, emptyAction,
+  data,
+  isLoading,
+  pageCount,
+  totalCount,
+  pageIndex,
+  pageSize,
+  onPaginationChange,
+  sorting,
+  onSortingChange,
+  onEdit,
+  onDelete,
+  emptyAction,
+  isFiltered,
+  onClearFilters,
 }: PartnerTableProps) {
   const { t } = useTranslation('partners')
 
-  const columns = useMemo<ColumnDef<Partner>[]>(
+  const columns = useMemo<ColumnDef<PartnerListItem>[]>(
     () => [
       {
         accessorKey: 'name',
-        header: ({ column }) => <DataTableColumnHeader column={column} title={t('name')} />,
-        cell: ({ row }) => <BodySmall className="font-medium">{row.original.name}</BodySmall>,
+        header: ({ column }) => (
+          <DataTableColumnHeader column={column} title={t('name')} />
+        ),
+        cell: ({ row }) => (
+          <BodySmall className="font-medium">{row.original.name}</BodySmall>
+        ),
       },
-      { accessorKey: 'pib', header: ({ column }) => <DataTableColumnHeader column={column} title={t('pib')} />, cell: ({ row }) => row.original.pib ?? '—' },
-      { accessorKey: 'city', header: ({ column }) => <DataTableColumnHeader column={column} title={t('city')} />, cell: ({ row }) => row.original.city ?? '—' },
+      {
+        accessorKey: 'pib',
+        header: ({ column }) => (
+          <DataTableColumnHeader column={column} title={t('pib')} />
+        ),
+        cell: ({ row }) => row.original.pib ?? '—',
+      },
+      {
+        accessorKey: 'city',
+        header: ({ column }) => (
+          <DataTableColumnHeader column={column} title={t('city')} />
+        ),
+        cell: ({ row }) => row.original.city ?? '—',
+      },
       {
         accessorKey: 'partnerType',
-        header: ({ column }) => <DataTableColumnHeader column={column} title={t('type')} />,
+        header: ({ column }) => (
+          <DataTableColumnHeader column={column} title={t('type')} />
+        ),
         cell: ({ row }) => (
-          <Badge variant={typeVariant[row.original.partnerType]}>
+          <Badge variant={typeVariant[row.original.partnerType as PartnerType]}>
             {t(`partnerTypes.${row.original.partnerType}`)}
           </Badge>
         ),
       },
-      { accessorKey: 'phone', header: t('phone'), cell: ({ row }) => row.original.phone ?? '—' },
-      { accessorKey: 'email', header: t('email'), cell: ({ row }) => row.original.email ?? '—' },
+      {
+        accessorKey: 'phone',
+        header: t('phone'),
+        cell: ({ row }) => row.original.phone ?? '—',
+      },
+      {
+        accessorKey: 'email',
+        header: t('email'),
+        cell: ({ row }) => row.original.email ?? '—',
+      },
       {
         id: 'actions',
         cell: ({ row }) => (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="icon" className="size-8"><MoreHorizontal className="size-4" /></Button>
+              <Button variant="ghost" size="icon" className="size-8">
+                <MoreHorizontal className="size-4" />
+              </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuItem onClick={() => onEdit(row.original)}>
-                <Pencil className="mr-2 size-4" />{t('common:actions.edit')}
+                <Pencil className="mr-2 size-4" />
+                {t('common:actions.edit')}
               </DropdownMenuItem>
-              <DropdownMenuItem className="text-destructive" onClick={() => onDelete(row.original)}>
-                <Trash2 className="mr-2 size-4" />{t('common:actions.delete')}
+              <DropdownMenuItem
+                className="text-destructive"
+                onClick={() => onDelete(row.original)}
+              >
+                <Trash2 className="mr-2 size-4" />
+                {t('common:actions.delete')}
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
@@ -87,6 +138,22 @@ export function PartnerTable({
   )
 
   return (
-    <DataTable columns={columns} data={data} isLoading={isLoading} manualPagination manualSorting sorting={sorting} onSortingChange={onSortingChange} pageCount={pageCount} totalCount={totalCount} pageIndex={pageIndex} pageSize={pageSize} onPaginationChange={onPaginationChange} emptyAction={emptyAction} />
+    <DataTable
+      columns={columns}
+      data={data}
+      isLoading={isLoading}
+      manualPagination
+      manualSorting
+      sorting={sorting}
+      onSortingChange={onSortingChange}
+      pageCount={pageCount}
+      totalCount={totalCount}
+      pageIndex={pageIndex}
+      pageSize={pageSize}
+      onPaginationChange={onPaginationChange}
+      emptyAction={emptyAction}
+      isFiltered={isFiltered}
+      onClearFilters={onClearFilters}
+    />
   )
 }

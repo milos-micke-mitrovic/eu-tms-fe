@@ -19,14 +19,17 @@ import {
   FormLabel,
   FormMessage,
 } from '@/shared/ui/form'
-import type { Vehicle, VehicleRequest } from '../types'
-import { useCreateVehicle, useUpdateVehicle } from '../api/use-vehicle-mutations'
+import type { VehicleListItem, VehicleRequest } from '../types'
+import {
+  useCreateVehicle,
+  useUpdateVehicle,
+} from '../api/use-vehicle-mutations'
 import { vehicleSchema, type VehicleFormData } from '../schemas'
 
 type VehicleFormProps = {
   open: boolean
   onClose: () => void
-  vehicle?: Vehicle | null
+  vehicle?: VehicleListItem | null
 }
 
 const defaultValues: VehicleFormData = {
@@ -62,17 +65,18 @@ export function VehicleForm({ open, onClose, vehicle }: VehicleFormProps) {
     if (vehicle) {
       form.reset({
         regNumber: vehicle.regNumber,
-        make: vehicle.make,
-        model: vehicle.model,
-        year: vehicle.year,
-        vin: vehicle.vin,
-        vehicleType: vehicle.vehicleType,
-        fuelType: vehicle.fuelType,
-        ownership: vehicle.ownership,
-        cargoCapacityKg: vehicle.cargoCapacityKg,
-        cargoVolumeM3: vehicle.cargoVolumeM3,
-        avgConsumptionL100km: vehicle.avgConsumptionL100km,
-        odometerKm: vehicle.odometerKm,
+        make: vehicle.make ?? '',
+        model: vehicle.model ?? '',
+        year: vehicle.year ?? null,
+        vin: null,
+        vehicleType: vehicle.vehicleType as VehicleRequest['vehicleType'],
+        fuelType: vehicle.fuelType as VehicleRequest['fuelType'],
+        ownership:
+          (vehicle.ownership as VehicleRequest['ownership']) ?? 'OWNED',
+        cargoCapacityKg: null,
+        cargoVolumeM3: null,
+        avgConsumptionL100km: null,
+        odometerKm: vehicle.odometerKm ?? null,
       })
     } else {
       form.reset(defaultValues)
@@ -111,236 +115,254 @@ export function VehicleForm({ open, onClose, vehicle }: VehicleFormProps) {
     ['DIESEL', 'PETROL', 'LPG', 'CNG', 'ELECTRIC'] as const
   ).map((v) => ({ value: v, label: t(`vehicles.fuelTypes.${v}`) }))
 
-  const ownershipOptions = (
-    ['OWNED', 'LEASED', 'RENTED'] as const
-  ).map((v) => ({ value: v, label: t(`vehicles.ownershipTypes.${v}`) }))
+  const ownershipOptions = (['OWNED', 'LEASED', 'RENTED'] as const).map(
+    (v) => ({ value: v, label: t(`vehicles.ownershipTypes.${v}`) })
+  )
 
   return (
     <Sheet open={open} onOpenChange={(isOpen) => !isOpen && onClose()}>
       <SheetContent className="sm:max-w-lg">
-        <Form form={form} onSubmit={onSubmit} className="flex flex-1 flex-col overflow-hidden">
-          <SheetHeader actions={
-            <Button type="submit" size="sm" disabled={isPending}>
-              {isPending ? t('common:app.loading') : t('common:actions.save')}
-            </Button>
-          }>
+        <Form
+          form={form}
+          onSubmit={onSubmit}
+          className="flex flex-1 flex-col overflow-hidden"
+        >
+          <SheetHeader
+            actions={
+              <Button type="submit" size="sm" disabled={isPending}>
+                {isPending ? t('common:app.loading') : t('common:actions.save')}
+              </Button>
+            }
+          >
             <SheetTitle>
               {isEditing ? t('common:actions.edit') : t('vehicles.addNew')}
             </SheetTitle>
           </SheetHeader>
-          <div className="flex-1 overflow-y-auto p-4 space-y-4">
-          <FormField
-            control={form.control}
-            name="regNumber"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel required>{t('vehicles.regNumber')}</FormLabel>
-                <FormControl>
-                  <Input placeholder="BG 123-AA" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          <div className="flex-1 space-y-4 overflow-y-auto p-4">
             <FormField
               control={form.control}
-              name="make"
+              name="regNumber"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel required>{t('vehicles.make')}</FormLabel>
+                  <FormLabel required>{t('vehicles.regNumber')}</FormLabel>
                   <FormControl>
-                    <Input placeholder="Scania" {...field} />
+                    <Input placeholder="BG 123-AA" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
-            <FormField
-              control={form.control}
-              name="model"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel required>{t('vehicles.model')}</FormLabel>
-                  <FormControl>
-                    <Input placeholder="R450" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
 
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-            <FormField
-              control={form.control}
-              name="year"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>{t('vehicles.year')}</FormLabel>
-                  <FormControl>
-                    <Input
-                      type="number"
-                      placeholder="2024"
-                      value={field.value ?? ''}
-                      onChange={(e) =>
-                        field.onChange(e.target.value ? Number(e.target.value) : null)
-                      }
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+              <FormField
+                control={form.control}
+                name="make"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel required>{t('vehicles.make')}</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Scania" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="model"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel required>{t('vehicles.model')}</FormLabel>
+                    <FormControl>
+                      <Input placeholder="R450" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+              <FormField
+                control={form.control}
+                name="year"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>{t('vehicles.year')}</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="number"
+                        placeholder="2024"
+                        value={field.value ?? ''}
+                        onChange={(e) =>
+                          field.onChange(
+                            e.target.value ? Number(e.target.value) : null
+                          )
+                        }
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="vin"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>{t('vehicles.vin')}</FormLabel>
+                    <FormControl>
+                      <Input
+                        value={field.value ?? ''}
+                        onChange={field.onChange}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+              <FormField
+                control={form.control}
+                name="vehicleType"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel required>{t('vehicles.type')}</FormLabel>
+                    <Select
+                      options={vehicleTypeOptions}
+                      value={field.value}
+                      onChange={field.onChange}
                     />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="vin"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>{t('vehicles.vin')}</FormLabel>
-                  <FormControl>
-                    <Input value={field.value ?? ''} onChange={field.onChange} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="fuelType"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel required>{t('vehicles.fuelType')}</FormLabel>
+                    <Select
+                      options={fuelTypeOptions}
+                      value={field.value}
+                      onChange={field.onChange}
+                    />
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
 
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <FormField
               control={form.control}
-              name="vehicleType"
+              name="ownership"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel required>{t('vehicles.type')}</FormLabel>
+                  <FormLabel>{t('vehicles.ownership')}</FormLabel>
                   <Select
-                    options={vehicleTypeOptions}
-                    value={field.value}
+                    options={ownershipOptions}
+                    value={field.value ?? undefined}
                     onChange={field.onChange}
                   />
                   <FormMessage />
                 </FormItem>
               )}
             />
-            <FormField
-              control={form.control}
-              name="fuelType"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel required>{t('vehicles.fuelType')}</FormLabel>
-                  <Select
-                    options={fuelTypeOptions}
-                    value={field.value}
-                    onChange={field.onChange}
-                  />
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
 
-          <FormField
-            control={form.control}
-            name="ownership"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>{t('vehicles.ownership')}</FormLabel>
-                <Select
-                  options={ownershipOptions}
-                  value={field.value ?? undefined}
-                  onChange={field.onChange}
-                />
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+              <FormField
+                control={form.control}
+                name="cargoCapacityKg"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>{t('vehicles.capacity')}</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="number"
+                        value={field.value ?? ''}
+                        onChange={(e) =>
+                          field.onChange(
+                            e.target.value ? Number(e.target.value) : null
+                          )
+                        }
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="cargoVolumeM3"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>{t('vehicles.volume')}</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="number"
+                        step="0.1"
+                        value={field.value ?? ''}
+                        onChange={(e) =>
+                          field.onChange(
+                            e.target.value ? Number(e.target.value) : null
+                          )
+                        }
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
 
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-            <FormField
-              control={form.control}
-              name="cargoCapacityKg"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>{t('vehicles.capacity')}</FormLabel>
-                  <FormControl>
-                    <Input
-                      type="number"
-                      value={field.value ?? ''}
-                      onChange={(e) =>
-                        field.onChange(e.target.value ? Number(e.target.value) : null)
-                      }
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="cargoVolumeM3"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>{t('vehicles.volume')}</FormLabel>
-                  <FormControl>
-                    <Input
-                      type="number"
-                      step="0.1"
-                      value={field.value ?? ''}
-                      onChange={(e) =>
-                        field.onChange(e.target.value ? Number(e.target.value) : null)
-                      }
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
-
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-            <FormField
-              control={form.control}
-              name="avgConsumptionL100km"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>{t('vehicles.consumption')}</FormLabel>
-                  <FormControl>
-                    <Input
-                      type="number"
-                      step="0.1"
-                      value={field.value ?? ''}
-                      onChange={(e) =>
-                        field.onChange(e.target.value ? Number(e.target.value) : null)
-                      }
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="odometerKm"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>{t('vehicles.odometer')}</FormLabel>
-                  <FormControl>
-                    <Input
-                      type="number"
-                      value={field.value ?? ''}
-                      onChange={(e) =>
-                        field.onChange(e.target.value ? Number(e.target.value) : null)
-                      }
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
-
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+              <FormField
+                control={form.control}
+                name="avgConsumptionL100km"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>{t('vehicles.consumption')}</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="number"
+                        step="0.1"
+                        value={field.value ?? ''}
+                        onChange={(e) =>
+                          field.onChange(
+                            e.target.value ? Number(e.target.value) : null
+                          )
+                        }
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="odometerKm"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>{t('vehicles.odometer')}</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="number"
+                        value={field.value ?? ''}
+                        onChange={(e) =>
+                          field.onChange(
+                            e.target.value ? Number(e.target.value) : null
+                          )
+                        }
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
           </div>
         </Form>
       </SheetContent>

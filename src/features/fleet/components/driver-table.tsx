@@ -1,5 +1,9 @@
 import { useMemo } from 'react'
-import type { ColumnDef, PaginationState, SortingState } from '@tanstack/react-table'
+import type {
+  ColumnDef,
+  PaginationState,
+  SortingState,
+} from '@tanstack/react-table'
 import { useTranslation } from 'react-i18next'
 import { MoreHorizontal, Pencil, Trash2 } from 'lucide-react'
 import { DataTable } from '@/shared/ui/data-table'
@@ -14,10 +18,10 @@ import {
 } from '@/shared/ui/overlay/dropdown-menu'
 import { BodySmall } from '@/shared/ui/typography'
 import type { ReactNode } from 'react'
-import type { Driver, DriverStatus } from '../types'
+import type { DriverListItem, DriverStatus } from '../types'
 
 type DriverTableProps = {
-  data: Driver[]
+  data: DriverListItem[]
   isLoading: boolean
   pageCount: number
   totalCount: number
@@ -26,16 +30,19 @@ type DriverTableProps = {
   onPaginationChange: (pagination: PaginationState) => void
   sorting?: SortingState
   onSortingChange?: (sorting: SortingState) => void
-  onEdit: (driver: Driver) => void
-  onDelete: (driver: Driver) => void
+  onEdit: (driver: DriverListItem) => void
+  onDelete: (driver: DriverListItem) => void
   emptyAction?: ReactNode
+  isFiltered?: boolean
+  onClearFilters?: () => void
 }
 
-const statusVariant: Record<DriverStatus, 'default' | 'secondary' | 'outline'> = {
-  ACTIVE: 'default',
-  ON_LEAVE: 'secondary',
-  INACTIVE: 'outline',
-}
+const statusVariant: Record<DriverStatus, 'default' | 'secondary' | 'outline'> =
+  {
+    ACTIVE: 'default',
+    ON_LEAVE: 'secondary',
+    INACTIVE: 'outline',
+  }
 
 export function DriverTable({
   data,
@@ -50,14 +57,21 @@ export function DriverTable({
   onEdit,
   onDelete,
   emptyAction,
+  isFiltered,
+  onClearFilters,
 }: DriverTableProps) {
   const { t } = useTranslation('fleet')
 
-  const columns = useMemo<ColumnDef<Driver>[]>(
+  const columns = useMemo<ColumnDef<DriverListItem>[]>(
     () => [
       {
         accessorKey: 'firstName',
-        header: ({ column }) => <DataTableColumnHeader column={column} title={t('drivers.firstName')} />,
+        header: ({ column }) => (
+          <DataTableColumnHeader
+            column={column}
+            title={t('drivers.firstName')}
+          />
+        ),
         cell: ({ row }) => (
           <BodySmall className="font-medium">
             {row.original.firstName} {row.original.lastName}
@@ -66,24 +80,38 @@ export function DriverTable({
       },
       {
         accessorKey: 'jmbg',
-        header: ({ column }) => <DataTableColumnHeader column={column} title={t('drivers.jmbg')} />,
+        header: ({ column }) => (
+          <DataTableColumnHeader column={column} title={t('drivers.jmbg')} />
+        ),
         cell: ({ row }) => row.original.jmbg ?? '—',
       },
       {
         accessorKey: 'phone',
-        header: ({ column }) => <DataTableColumnHeader column={column} title={t('drivers.phone')} />,
+        header: ({ column }) => (
+          <DataTableColumnHeader column={column} title={t('drivers.phone')} />
+        ),
         cell: ({ row }) => row.original.phone ?? '—',
       },
       {
         accessorKey: 'licenseCategories',
-        header: ({ column }) => <DataTableColumnHeader column={column} title={t('drivers.categories')} />,
+        header: ({ column }) => (
+          <DataTableColumnHeader
+            column={column}
+            title={t('drivers.categories')}
+          />
+        ),
         cell: ({ row }) => row.original.licenseCategories ?? '—',
       },
       {
         accessorKey: 'status',
-        header: ({ column }) => <DataTableColumnHeader column={column} title={t('common:status.active')} />,
+        header: ({ column }) => (
+          <DataTableColumnHeader
+            column={column}
+            title={t('common:status.active')}
+          />
+        ),
         cell: ({ row }) => (
-          <Badge variant={statusVariant[row.original.status]}>
+          <Badge variant={statusVariant[row.original.status as DriverStatus]}>
             {t(`drivers.statuses.${row.original.status}`)}
           </Badge>
         ),
@@ -138,6 +166,8 @@ export function DriverTable({
       pageSize={pageSize}
       onPaginationChange={onPaginationChange}
       emptyAction={emptyAction}
+      isFiltered={isFiltered}
+      onClearFilters={onClearFilters}
     />
   )
 }

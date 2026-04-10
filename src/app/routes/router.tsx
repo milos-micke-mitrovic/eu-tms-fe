@@ -68,6 +68,18 @@ const NotificationsPage = lazy(() =>
   }))
 )
 
+const ExchangeRatesPage = lazy(() =>
+  import('@/features/finance/pages/exchange-rates-page').then((m) => ({
+    default: m.ExchangeRatesPage,
+  }))
+)
+
+const InvoicesPage = lazy(() =>
+  import('@/features/finance/pages/invoices-page').then((m) => ({
+    default: m.InvoicesPage,
+  }))
+)
+
 // Redirects to the user's default route based on role
 function DefaultRedirect() {
   const { user } = useAuth()
@@ -92,9 +104,30 @@ function LazyPage({ children }: { children: React.ReactNode }) {
   )
 }
 
+function RouterErrorFallback() {
+  return (
+    <div className="flex min-h-screen flex-col items-center justify-center p-6 text-center">
+      <div className="text-primary mb-6 text-[80px] leading-none font-bold opacity-20">
+        !
+      </div>
+      <p className="mb-2 text-xl font-semibold">Došlo je do greške</p>
+      <p className="text-muted-foreground mb-6 text-sm">
+        Došlo je do neočekivane greške. Pokušajte ponovo.
+      </p>
+      <button
+        onClick={() => (window.location.href = '/')}
+        className="bg-primary text-primary-foreground rounded-md px-4 py-2 text-sm font-medium"
+      >
+        Početna strana
+      </button>
+    </div>
+  )
+}
+
 export const router = createBrowserRouter([
   // Public routes (no auth required)
   {
+    errorElement: <RouterErrorFallback />,
     element: (
       <RouteGuard requireAuth={false}>
         <Outlet />
@@ -113,6 +146,7 @@ export const router = createBrowserRouter([
   },
   // Protected routes (auth required)
   {
+    errorElement: <RouterErrorFallback />,
     element: <DashboardLayout />,
     children: [
       {
@@ -188,6 +222,22 @@ export const router = createBrowserRouter([
         element: (
           <LazyPage>
             <NotificationsPage />
+          </LazyPage>
+        ),
+      },
+      {
+        path: '/exchange-rates',
+        element: (
+          <LazyPage>
+            <ExchangeRatesPage />
+          </LazyPage>
+        ),
+      },
+      {
+        path: '/invoices',
+        element: (
+          <LazyPage>
+            <InvoicesPage />
           </LazyPage>
         ),
       },

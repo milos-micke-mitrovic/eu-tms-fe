@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
+import { useTranslation } from 'react-i18next'
 import { X, Plus, Loader2 } from 'lucide-react'
 import { cn } from '@/shared/utils'
 
@@ -19,6 +20,7 @@ type AutocompleteInputProps = {
   initialLabel?: string
   loading?: boolean
   debounceMs?: number
+  error?: boolean
 }
 
 function useDebounce(callback: (value: string) => void, delay: number) {
@@ -53,13 +55,19 @@ function AutocompleteInput({
   initialLabel,
   loading = false,
   debounceMs = 300,
+  error = false,
 }: AutocompleteInputProps) {
+  const { t } = useTranslation('common')
   const [inputText, setInputText] = useState('')
-  const [selectedLabel, setSelectedLabel] = useState<string | null>(initialLabel ?? null)
+  const [selectedLabel, setSelectedLabel] = useState<string | null>(
+    initialLabel ?? null
+  )
   const [open, setOpen] = useState(false)
   const [highlightedIndex, setHighlightedIndex] = useState(-1)
+  const [isSearchPending, setIsSearchPending] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
   const listRef = useRef<HTMLDivElement>(null)
+  const isFocusedRef = useRef(false)
 
   // Sync selectedLabel when initialLabel changes externally (edit mode / form reset)
   useEffect(() => {
@@ -82,37 +90,56 @@ function AutocompleteInput({
     useCallback(
       (text: string) => {
         onSearchChange?.(text)
+        setIsSearchPending(false)
       },
       [onSearchChange]
     ),
     debounceMs
   )
 
-  // Reset highlighted index when options change or dropdown closes
+  // Reset highlighted index when options change
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect -- syncing keyboard nav state with external changes
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- syncing keyboard nav state
     setHighlightedIndex(-1)
-  }, [options, open])
+  }, [options])
 
   const displayText = selectedLabel !== null ? selectedLabel : inputText
+
+  // Client-side filter to prevent stale cached results from showing
+  const filteredOptions =
+    inputText.length >= 2
+      ? options.filter((o) =>
+          o.label.toLowerCase().includes(inputText.trim().toLowerCase())
+        )
+      : options
 
   const showCreateOption =
     creatable &&
     inputText.trim().length > 0 &&
-    !options.some((o) => o.label.toLowerCase() === inputText.trim().toLowerCase())
+    !filteredOptions.some(
+      (o) => o.label.toLowerCase() === inputText.trim().toLowerCase()
+    )
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const text = e.target.value
     setInputText(text)
     setSelectedLabel(null)
-    // Store typed text as the value (for inline creation path)
-    onChange(text)
-    onLabelChange?.(text)
-    setOpen(text.length >= 2)
+    if (!text) {
+      onChange('')
+      onLabelChange?.('')
+      setOpen(false)
+    } else if (text.length >= 2) {
+      // Open immediately with loading state — stays open until blur or selection
+      setOpen(true)
+    } else {
+      setOpen(false)
+    }
 
     if (text.length >= 2) {
+      setIsSearchPending(true)
       debouncedSearch(text)
     } else {
+      setIsSearchPending(false)
       onSearchChange?.('')
     }
   }
@@ -147,14 +174,20 @@ function AutocompleteInput({
   }
 
   const handleFocus = () => {
-    if (inputText.length >= 2 && (options.length > 0 || showCreateOption)) {
+    isFocusedRef.current = true
+    if (inputText.length >= 2) {
       setOpen(true)
     }
   }
 
   const handleBlur = () => {
-    // Small delay to allow click on suggestion items to register first
-    setTimeout(() => setOpen(false), 150)
+    isFocusedRef.current = false
+    // Delay to allow click on suggestion items to register first
+    setTimeout(() => {
+      if (!isFocusedRef.current) {
+        setOpen(false)
+      }
+    }, 200)
   }
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
@@ -165,7 +198,7 @@ function AutocompleteInput({
       return
     }
 
-    const totalItems = options.length + (showCreateOption ? 1 : 0)
+    const totalItems = filteredOptions.length + (showCreateOption ? 1 : 0)
 
     switch (e.key) {
       case 'ArrowDown':
@@ -178,9 +211,15 @@ function AutocompleteInput({
         break
       case 'Enter':
         e.preventDefault()
-        if (highlightedIndex >= 0 && highlightedIndex < options.length) {
-          handleSelect(options[highlightedIndex])
-        } else if (highlightedIndex === options.length && showCreateOption) {
+        if (
+          highlightedIndex >= 0 &&
+          highlightedIndex < filteredOptions.length
+        ) {
+          handleSelect(filteredOptions[highlightedIndex])
+        } else if (
+          highlightedIndex === filteredOptions.length &&
+          showCreateOption
+        ) {
           handleCreate()
         }
         break
@@ -199,7 +238,8 @@ function AutocompleteInput({
   }, [highlightedIndex])
 
   const hasValue = selectedLabel !== null || value !== ''
-  const showDropdown = open && (options.length > 0 || showCreateOption || loading)
+  // Always show dropdown when open — it will display: loading spinner, results, or "no results"
+  const showDropdown = open && inputText.length >= 2
 
   return (
     <div className="relative">
@@ -214,22 +254,24 @@ function AutocompleteInput({
           onKeyDown={handleKeyDown}
           placeholder={placeholder}
           disabled={disabled}
+          aria-invalid={error || undefined}
           className={cn(
             'border-input flex h-9 w-full rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none',
             'focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px]',
             'placeholder:text-muted-foreground md:text-sm',
+            'aria-invalid:border-destructive aria-invalid:ring-destructive/20',
             disabled && 'cursor-not-allowed opacity-50',
             hasValue && 'pr-8'
           )}
         />
         {loading && !hasValue && (
-          <Loader2 className="text-muted-foreground absolute right-2.5 top-1/2 size-4 -translate-y-1/2 animate-spin" />
+          <Loader2 className="text-muted-foreground absolute top-1/2 right-2.5 size-4 -translate-y-1/2 animate-spin" />
         )}
         {hasValue && !disabled && (
           <button
             type="button"
             onMouseDown={handleClear}
-            className="absolute right-2 top-1/2 -translate-y-1/2 cursor-pointer text-muted-foreground hover:text-foreground"
+            className="text-muted-foreground hover:text-foreground absolute top-1/2 right-2 -translate-y-1/2 cursor-pointer"
             tabIndex={-1}
           >
             <X className="size-3.5" />
@@ -238,30 +280,43 @@ function AutocompleteInput({
       </div>
 
       {showDropdown && (
-        <div ref={listRef} className="absolute top-full left-0 right-0 z-50 mt-1 max-h-48 overflow-y-auto rounded-md border border-border bg-popover p-1 shadow-md">
-          {loading && options.length === 0 && !showCreateOption && (
-            <div className="flex items-center justify-center gap-2 px-2 py-3 text-sm text-muted-foreground">
+        <div
+          ref={listRef}
+          className="border-border bg-popover absolute top-full right-0 left-0 z-50 mt-1 max-h-48 overflow-y-auto rounded-md border p-1 shadow-md"
+        >
+          {(isSearchPending || loading) && (
+            <div className="text-muted-foreground flex items-center justify-center gap-2 px-2 py-3 text-sm">
               <Loader2 className="size-4 animate-spin" />
             </div>
           )}
-          {options.map((option, index) => (
-            <button
-              key={option.value}
-              type="button"
-              data-option
-              onMouseDown={(e) => e.preventDefault()}
-              onClick={() => handleSelect(option)}
-              onMouseEnter={() => setHighlightedIndex(index)}
-              className={cn(
-                'flex w-full items-center rounded-sm px-2 py-1.5 text-sm cursor-pointer text-left truncate',
-                highlightedIndex === index
-                  ? 'bg-accent text-accent-foreground'
-                  : 'hover:bg-accent hover:text-accent-foreground'
-              )}
-            >
-              {option.label}
-            </button>
-          ))}
+          {!isSearchPending &&
+            !loading &&
+            filteredOptions.length === 0 &&
+            !showCreateOption && (
+              <div className="text-muted-foreground px-2 py-3 text-center text-sm">
+                {t('select.noResults')}
+              </div>
+            )}
+          {!isSearchPending &&
+            !loading &&
+            filteredOptions.map((option, index) => (
+              <button
+                key={option.value}
+                type="button"
+                data-option
+                onMouseDown={(e) => e.preventDefault()}
+                onClick={() => handleSelect(option)}
+                onMouseEnter={() => setHighlightedIndex(index)}
+                className={cn(
+                  'flex w-full cursor-pointer items-center truncate rounded-sm px-2 py-1.5 text-left text-sm',
+                  highlightedIndex === index
+                    ? 'bg-accent text-accent-foreground'
+                    : 'hover:bg-accent hover:text-accent-foreground'
+                )}
+              >
+                {option.label}
+              </button>
+            ))}
           {showCreateOption && (
             <button
               type="button"
@@ -270,7 +325,7 @@ function AutocompleteInput({
               onClick={handleCreate}
               onMouseEnter={() => setHighlightedIndex(options.length)}
               className={cn(
-                'flex w-full items-center gap-1.5 rounded-sm px-2 py-1.5 text-sm text-primary cursor-pointer',
+                'text-primary flex w-full cursor-pointer items-center gap-1.5 rounded-sm px-2 py-1.5 text-sm',
                 highlightedIndex === options.length
                   ? 'bg-accent text-accent-foreground'
                   : 'hover:bg-accent hover:text-accent-foreground'
@@ -286,4 +341,8 @@ function AutocompleteInput({
   )
 }
 
-export { AutocompleteInput, type AutocompleteInputProps, type AutocompleteOption }
+export {
+  AutocompleteInput,
+  type AutocompleteInputProps,
+  type AutocompleteOption,
+}
