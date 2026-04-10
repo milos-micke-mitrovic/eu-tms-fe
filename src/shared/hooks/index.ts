@@ -1,4 +1,5 @@
 export { useDebounce } from './use-debounce'
 export { useFilterVisibility } from './use-filter-visibility'
 export { usePageTitle } from './use-page-title'
+export { useTableSort } from './use-table-sort'
 export { useUnsavedChanges } from './use-unsaved-changes'

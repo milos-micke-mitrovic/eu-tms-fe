@@ -128,5 +128,5 @@
   --sidebar-border: hsl(var(--brand-neutral-800));
   --sidebar-ring: hsl(173 80% 45%);
 
-  --overlay: hsl(0 0% 0% / 0.7);
+  --overlay: hsl(0 0% 0% / 0.85);
 }

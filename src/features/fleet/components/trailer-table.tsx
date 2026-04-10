@@ -1,8 +1,9 @@
 import { useMemo } from 'react'
-import type { ColumnDef, PaginationState } from '@tanstack/react-table'
+import type { ColumnDef, PaginationState, SortingState } from '@tanstack/react-table'
 import { useTranslation } from 'react-i18next'
 import { MoreHorizontal, Pencil, Trash2 } from 'lucide-react'
 import { DataTable } from '@/shared/ui/data-table'
+import { DataTableColumnHeader } from '@/shared/ui/data-table/data-table-column-header'
 import { Badge } from '@/shared/ui/badge'
 import { Button } from '@/shared/ui/button'
 import {
@@ -23,6 +24,8 @@ type TrailerTableProps = {
   pageIndex: number
   pageSize: number
   onPaginationChange: (pagination: PaginationState) => void
+  sorting?: SortingState
+  onSortingChange?: (sorting: SortingState) => void
   onEdit: (trailer: Trailer) => void
   onDelete: (trailer: Trailer) => void
   emptyAction?: ReactNode
@@ -42,6 +45,8 @@ export function TrailerTable({
   pageIndex,
   pageSize,
   onPaginationChange,
+  sorting,
+  onSortingChange,
   onEdit,
   onDelete,
   emptyAction,
@@ -52,14 +57,14 @@ export function TrailerTable({
     () => [
       {
         accessorKey: 'regNumber',
-        header: t('trailers.regNumber'),
+        header: ({ column }) => <DataTableColumnHeader column={column} title={t('trailers.regNumber')} />,
         cell: ({ row }) => (
           <BodySmall className="font-medium">{row.original.regNumber}</BodySmall>
         ),
       },
       {
         accessorKey: 'type',
-        header: t('trailers.type'),
+        header: ({ column }) => <DataTableColumnHeader column={column} title={t('trailers.type')} />,
         cell: ({ row }) => t(`trailers.trailerTypes.${row.original.type}`),
       },
       {
@@ -69,12 +74,12 @@ export function TrailerTable({
       },
       {
         accessorKey: 'capacityKg',
-        header: t('trailers.capacity'),
+        header: ({ column }) => <DataTableColumnHeader column={column} title={t('trailers.capacity')} />,
         cell: ({ row }) => row.original.capacityKg ?? '—',
       },
       {
         accessorKey: 'status',
-        header: t('trailers.status'),
+        header: ({ column }) => <DataTableColumnHeader column={column} title={t('trailers.status')} />,
         cell: ({ row }) => (
           <Badge variant={statusVariant[row.original.status]}>
             {t(`trailers.statuses.${row.original.status}`)}
@@ -117,6 +122,9 @@ export function TrailerTable({
       data={data}
       isLoading={isLoading}
       manualPagination
+      manualSorting
+      sorting={sorting}
+      onSortingChange={onSortingChange}
       pageCount={pageCount}
       totalCount={totalCount}
       pageIndex={pageIndex}

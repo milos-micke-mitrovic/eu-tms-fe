@@ -1,6 +1,5 @@
 import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
-import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useTranslation } from 'react-i18next'
 import {
@@ -22,23 +21,7 @@ import {
 } from '@/shared/ui/form'
 import type { Vehicle, VehicleRequest } from '../types'
 import { useCreateVehicle, useUpdateVehicle } from '../api/use-vehicle-mutations'
-
-const vehicleSchema = z.object({
-  regNumber: z.string().min(1),
-  make: z.string().min(1),
-  model: z.string().min(1),
-  year: z.coerce.number().min(1900).max(2100).optional().nullable(),
-  vin: z.string().optional().nullable(),
-  vehicleType: z.enum(['TRUCK', 'TRACTOR', 'TRAILER', 'SEMI_TRAILER']),
-  fuelType: z.enum(['DIESEL', 'PETROL', 'LPG', 'CNG', 'ELECTRIC']),
-  ownership: z.enum(['OWNED', 'LEASED', 'RENTED']).optional().nullable(),
-  cargoCapacityKg: z.coerce.number().positive().optional().nullable(),
-  cargoVolumeM3: z.coerce.number().positive().optional().nullable(),
-  avgConsumptionL100km: z.coerce.number().positive().optional().nullable(),
-  odometerKm: z.coerce.number().min(0).optional().nullable(),
-})
-
-type VehicleFormData = z.infer<typeof vehicleSchema>
+import { vehicleSchema, type VehicleFormData } from '../schemas'
 
 type VehicleFormProps = {
   open: boolean
@@ -134,19 +117,24 @@ export function VehicleForm({ open, onClose, vehicle }: VehicleFormProps) {
 
   return (
     <Sheet open={open} onOpenChange={(isOpen) => !isOpen && onClose()}>
-      <SheetContent className="overflow-y-auto sm:max-w-lg">
-        <SheetHeader>
-          <SheetTitle>
-            {isEditing ? t('common:actions.edit') : t('vehicles.addNew')}
-          </SheetTitle>
-        </SheetHeader>
-        <Form form={form} onSubmit={onSubmit} className="space-y-4 p-4">
+      <SheetContent className="sm:max-w-lg">
+        <Form form={form} onSubmit={onSubmit} className="flex flex-1 flex-col overflow-hidden">
+          <SheetHeader actions={
+            <Button type="submit" size="sm" disabled={isPending}>
+              {isPending ? t('common:app.loading') : t('common:actions.save')}
+            </Button>
+          }>
+            <SheetTitle>
+              {isEditing ? t('common:actions.edit') : t('vehicles.addNew')}
+            </SheetTitle>
+          </SheetHeader>
+          <div className="flex-1 overflow-y-auto p-4 space-y-4">
           <FormField
             control={form.control}
             name="regNumber"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>{t('vehicles.regNumber')}</FormLabel>
+                <FormLabel required>{t('vehicles.regNumber')}</FormLabel>
                 <FormControl>
                   <Input placeholder="BG 123-AA" {...field} />
                 </FormControl>
@@ -161,7 +149,7 @@ export function VehicleForm({ open, onClose, vehicle }: VehicleFormProps) {
               name="make"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>{t('vehicles.make')}</FormLabel>
+                  <FormLabel required>{t('vehicles.make')}</FormLabel>
                   <FormControl>
                     <Input placeholder="Scania" {...field} />
                   </FormControl>
@@ -174,7 +162,7 @@ export function VehicleForm({ open, onClose, vehicle }: VehicleFormProps) {
               name="model"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>{t('vehicles.model')}</FormLabel>
+                  <FormLabel required>{t('vehicles.model')}</FormLabel>
                   <FormControl>
                     <Input placeholder="R450" {...field} />
                   </FormControl>
@@ -226,7 +214,7 @@ export function VehicleForm({ open, onClose, vehicle }: VehicleFormProps) {
               name="vehicleType"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>{t('vehicles.type')}</FormLabel>
+                  <FormLabel required>{t('vehicles.type')}</FormLabel>
                   <Select
                     options={vehicleTypeOptions}
                     value={field.value}
@@ -241,7 +229,7 @@ export function VehicleForm({ open, onClose, vehicle }: VehicleFormProps) {
               name="fuelType"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>{t('vehicles.fuelType')}</FormLabel>
+                  <FormLabel required>{t('vehicles.fuelType')}</FormLabel>
                   <Select
                     options={fuelTypeOptions}
                     value={field.value}
@@ -353,13 +341,6 @@ export function VehicleForm({ open, onClose, vehicle }: VehicleFormProps) {
             />
           </div>
 
-          <div className="flex justify-end gap-2 pt-4">
-            <Button type="button" variant="outline" onClick={onClose}>
-              {t('common:actions.cancel')}
-            </Button>
-            <Button type="submit" disabled={isPending}>
-              {isPending ? t('common:app.loading') : t('common:actions.save')}
-            </Button>
           </div>
         </Form>
       </SheetContent>

@@ -33,10 +33,21 @@ function Form<TFieldValues extends FieldValues = FieldValues>({
   className,
   ...props
 }: FormProps<TFieldValues>) {
+  const formRef = React.useRef<HTMLFormElement>(null)
+
+  const handleSubmit = form.handleSubmit(onSubmit, () => {
+    // Auto-scroll to first error field
+    requestAnimationFrame(() => {
+      const firstError = formRef.current?.querySelector('[aria-invalid="true"]')
+      firstError?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+    })
+  })
+
   return (
     <FormProvider {...form}>
       <form
-        onSubmit={form.handleSubmit(onSubmit)}
+        ref={formRef}
+        onSubmit={handleSubmit}
         className={className}
         {...props}
       >
@@ -131,8 +142,7 @@ function FormLabel({
       htmlFor={formItemId}
       {...props}
     >
-      {children}
-      {required && <span className="text-destructive ml-0.5">*</span>}
+      {children}{required && <span className="text-destructive">*</span>}
     </Label>
   )
 }

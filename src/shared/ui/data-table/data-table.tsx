@@ -37,6 +37,7 @@ type DataTableProps<TData, TValue> = {
   totalCount?: number
   onPaginationChange?: (pagination: PaginationState) => void
   manualSorting?: boolean
+  sorting?: SortingState
   onSortingChange?: (sorting: SortingState) => void
   loading?: boolean
   isLoading?: boolean
@@ -58,6 +59,7 @@ export function DataTable<TData, TValue>({
   totalCount,
   onPaginationChange,
   manualSorting = false,
+  sorting: externalSorting,
   onSortingChange,
   loading = false,
   isLoading = false,
@@ -68,7 +70,8 @@ export function DataTable<TData, TValue>({
 }: DataTableProps<TData, TValue>) {
   const { t } = useTranslation('common')
   const resolvedEmptyText = emptyText ?? t('table.noResults')
-  const [sorting, setSorting] = useState<SortingState>([])
+  const [internalSorting, setInternalSorting] = useState<SortingState>([])
+  const sorting = externalSorting ?? internalSorting
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
   const [paginationState, setPaginationState] = useState<PaginationState>({
     pageIndex: initialPageIndex,
@@ -98,7 +101,7 @@ export function DataTable<TData, TValue>({
     onSortingChange: (updater) => {
       const newSorting =
         typeof updater === 'function' ? updater(sorting) : updater
-      setSorting(newSorting)
+      if (!externalSorting) setInternalSorting(newSorting)
       onSortingChange?.(newSorting)
     },
     onColumnFiltersChange: setColumnFilters,
@@ -121,10 +124,10 @@ export function DataTable<TData, TValue>({
   const showEmptyState = !isTableLoading && !table.getRowModel().rows?.length
 
   return (
-    <div className="flex min-h-0 flex-col gap-4">
-      <div className="relative min-h-0 shrink overflow-auto rounded-md border">
+    <div className="flex min-h-0 max-h-full flex-col gap-4">
+      <div className="relative min-h-0 overflow-auto rounded-md border">
         <Table>
-          <TableHeader>
+          <TableHeader className="bg-background sticky top-0 z-10">
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => (
@@ -170,7 +173,7 @@ export function DataTable<TData, TValue>({
         </Table>
         {/* Loading overlay with backdrop */}
         {isTableLoading && (
-          <div className="absolute inset-0 top-10 flex items-center justify-center bg-background/60 backdrop-blur-[1px]">
+          <div className="absolute inset-0 top-10 flex items-center justify-center bg-background/60">
             <Spinner />
           </div>
         )}

@@ -21,7 +21,14 @@
     "refresh": "Osveži",
     "export": "Izvezi",
     "import": "Uvezi",
-    "add": "Dodaj"
+    "add": "Dodaj",
+    "notes": "Napomena",
+    "location": "Lokacija",
+    "basic": "Osnovno",
+    "transport": "Transport",
+    "trailer": "Prikolica",
+    "inRsd": "U dinarima (RSD)",
+    "addFirst": "Dodajte prvu stavku"
   },
   "selectDate": "Izaberite datum",
   "selectTime": "Izaberite vreme",

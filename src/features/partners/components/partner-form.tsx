@@ -1,6 +1,5 @@
 import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
-import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useTranslation } from 'react-i18next'
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/shared/ui/overlay/sheet'
@@ -9,27 +8,9 @@ import { Input } from '@/shared/ui/input'
 import { Textarea } from '@/shared/ui/textarea'
 import { Select } from '@/shared/ui/select'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/ui/form'
-import { isValidPib } from '@/shared/utils'
 import type { Partner, PartnerRequest } from '../types'
 import { useCreatePartner, useUpdatePartner } from '../api/use-partner-mutations'
-
-const partnerSchema = z.object({
-  name: z.string().min(1),
-  pib: z.string().refine((v) => !v || isValidPib(v), { message: 'Neispravan PIB (mod11)' }).optional().or(z.literal('')).nullable(),
-  maticniBroj: z.string().optional().nullable(),
-  address: z.string().optional().nullable(),
-  city: z.string().optional().nullable(),
-  country: z.string().optional().nullable(),
-  zipCode: z.string().optional().nullable(),
-  bankAccount: z.string().optional().nullable(),
-  phone: z.string().optional().nullable(),
-  email: z.string().email().optional().or(z.literal('')).nullable(),
-  contactPerson: z.string().optional().nullable(),
-  partnerType: z.enum(['CLIENT', 'SUPPLIER', 'BOTH']),
-  notes: z.string().optional().nullable(),
-})
-
-type PartnerFormData = z.infer<typeof partnerSchema>
+import { partnerSchema, type PartnerFormData } from '../schemas'
 
 type PartnerFormProps = {
   open: boolean
@@ -121,17 +102,22 @@ export function PartnerForm({ open, onClose, partner }: PartnerFormProps) {
 
   return (
     <Sheet open={open} onOpenChange={(isOpen) => !isOpen && onClose()}>
-      <SheetContent className="overflow-y-auto sm:max-w-lg">
-        <SheetHeader>
-          <SheetTitle>{isEditing ? t('common:actions.edit') : t('addNew')}</SheetTitle>
-        </SheetHeader>
-        <Form form={form} onSubmit={onSubmit} className="space-y-4 p-4">
+      <SheetContent className="sm:max-w-lg">
+        <Form form={form} onSubmit={onSubmit} className="flex flex-1 flex-col overflow-hidden">
+          <SheetHeader actions={
+            <Button type="submit" size="sm" disabled={isPending}>
+              {isPending ? t('common:app.loading') : t('common:actions.save')}
+            </Button>
+          }>
+            <SheetTitle>{isEditing ? t('common:actions.edit') : t('addNew')}</SheetTitle>
+          </SheetHeader>
+          <div className="flex-1 overflow-y-auto p-4 space-y-4">
           <FormField control={form.control} name="name" render={({ field }) => (
-            <FormItem><FormLabel>{t('name')}</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
+            <FormItem><FormLabel required>{t('name')}</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
           )} />
 
           <FormField control={form.control} name="partnerType" render={({ field }) => (
-            <FormItem><FormLabel>{t('type')}</FormLabel><Select options={partnerTypeOptions} value={field.value} onChange={field.onChange} /><FormMessage /></FormItem>
+            <FormItem><FormLabel required>{t('type')}</FormLabel><Select options={partnerTypeOptions} value={field.value} onChange={field.onChange} /><FormMessage /></FormItem>
           )} />
 
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
@@ -180,9 +166,6 @@ export function PartnerForm({ open, onClose, partner }: PartnerFormProps) {
             <FormItem><FormLabel>{t('notes')}</FormLabel><FormControl><Textarea rows={3} {...field} value={field.value ?? ''} /></FormControl><FormMessage /></FormItem>
           )} />
 
-          <div className="flex justify-end gap-2 pt-4">
-            <Button type="button" variant="outline" onClick={onClose}>{t('common:actions.cancel')}</Button>
-            <Button type="submit" disabled={isPending}>{isPending ? t('common:app.loading') : t('common:actions.save')}</Button>
           </div>
         </Form>
       </SheetContent>

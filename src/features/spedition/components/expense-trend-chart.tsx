@@ -1,6 +1,8 @@
 import { useTranslation } from 'react-i18next'
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts'
-import { BodySmall } from '@/shared/ui/typography'
+import { Inbox } from 'lucide-react'
+import { BodySmall, Caption } from '@/shared/ui/typography'
+import { Skeleton } from '@/shared/ui/skeleton'
 import { formatCurrency } from '@/shared/utils'
 import type { ExpenseSummaryItem } from '../types'
 
@@ -19,11 +21,14 @@ export function ExpenseTrendChart({ data, isLoading }: ExpenseTrendChartProps) {
 
   return (
     <div className="rounded-lg border p-4">
-      <BodySmall className="mb-4 font-medium">{t('common:dashboard.expenseTrend', { defaultValue: 'Trend troškova' })}</BodySmall>
+      <BodySmall className="mb-4 font-medium">{t('expenses.trend')}</BodySmall>
       {isLoading ? (
-        <div className="flex h-64 items-center justify-center text-sm text-muted-foreground">{t('common:app.loading')}</div>
+        <Skeleton className="h-64 w-full" />
       ) : chartData.length === 0 ? (
-        <div className="flex h-64 items-center justify-center text-sm text-muted-foreground">{t('common:table.noData')}</div>
+        <div className="flex h-64 flex-col items-center justify-center gap-2">
+          <Inbox className="text-muted-foreground size-8" />
+          <Caption className="text-muted-foreground">{t('common:table.noData')}</Caption>
+        </div>
       ) : (
         <ResponsiveContainer width="100%" height={280}>
           <BarChart data={chartData}>

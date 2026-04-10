@@ -1,41 +1,45 @@
-// PARTIAL: BE Sprint 3 — types defined per CLAUDE.md, BE not yet implemented
-
 export type FuelTank = {
   id: number
   name: string
-  fuelType: string
   capacityLiters: number
   currentLevelLiters: number
+  fuelType: string
+  percentFull: number | null
+  location: string | null
   createdAt: string
 }
 
 export type FuelTankRequest = {
   name: string
-  fuelType: string
   capacityLiters: number
-  currentLevelLiters: number
+  fuelType: string
+  location?: string | null
 }
 
 export type FuelTransaction = {
   id: number
-  tankId: number
-  tankName: string
-  type: 'REFILL' | 'DISPENSE'
+  fuelTankId: number
+  fuelTankName: string
+  vehicleId: number | null
+  driverId: number | null
+  transactionType: 'REFILL' | 'DISPENSE'
   liters: number
   pricePerLiter: number | null
-  vehicleId: number | null
-  vehicleRegNumber: string | null
+  totalCost: number | null
   odometerKm: number | null
+  transactionDate: string
   notes: string | null
   createdAt: string
 }
 
 export type FuelTransactionRequest = {
   tankId: number
-  type: 'REFILL' | 'DISPENSE'
+  transactionType: 'REFILL' | 'DISPENSE'
   liters: number
   pricePerLiter?: number | null
   vehicleId?: number | null
+  driverId?: number | null
   odometerKm?: number | null
+  transactionDate?: string
   notes?: string | null
 }

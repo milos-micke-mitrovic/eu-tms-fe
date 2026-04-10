@@ -2,7 +2,7 @@ import { useState, useCallback } from 'react'
 import type { PaginationState } from '@tanstack/react-table'
 import { useTranslation } from 'react-i18next'
 import { Plus } from 'lucide-react'
-import { usePageTitle, useDebounce } from '@/shared/hooks'
+import { usePageTitle, useDebounce, useTableSort } from '@/shared/hooks'
 import { PageHeader } from '@/shared/components'
 import { ConfirmDialog } from '@/shared/ui/overlay/confirm-dialog'
 import { Button } from '@/shared/ui/button'
@@ -25,11 +25,9 @@ export function VehiclesPage() {
   const [statusFilter, setStatusFilter] = useState<string>('')
   const [typeFilter, setTypeFilter] = useState<string>('')
 
-  // Pagination state
-  const [pagination, setPagination] = useState<PaginationState>({
-    pageIndex: 0,
-    pageSize: 20,
-  })
+  // Pagination + sorting state
+  const [pagination, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize: 20 })
+  const { sorting, onSortingChange, sortBy, sortDir } = useTableSort()
 
   // Sheet state
   const [formOpen, setFormOpen] = useState(false)
@@ -42,6 +40,8 @@ export function VehiclesPage() {
     search: debouncedSearch || undefined,
     status: statusFilter || undefined,
     vehicleType: typeFilter || undefined,
+    sortBy,
+    sortDir,
     page: pagination.pageIndex,
     size: pagination.pageSize,
   }
@@ -92,7 +92,7 @@ export function VehiclesPage() {
   ]
 
   return (
-    <div className="space-y-6">
+    <div className="flex min-h-0 max-h-full flex-col gap-6">
       <PageHeader
         title={t('vehicles.title')}
         action={
@@ -135,6 +135,8 @@ export function VehiclesPage() {
         pageIndex={pagination.pageIndex}
         pageSize={pagination.pageSize}
         onPaginationChange={setPagination}
+        sorting={sorting}
+        onSortingChange={onSortingChange}
         onEdit={handleEdit}
         onDelete={handleDelete}
         onRowClick={handleRowClick}

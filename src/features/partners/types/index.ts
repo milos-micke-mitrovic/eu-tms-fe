@@ -38,6 +38,8 @@ export type PartnerRequest = {
 export type PartnerFilter = {
   search?: string
   partnerType?: string
+  sortBy?: string
+  sortDir?: string
   page?: number
   size?: number
 }

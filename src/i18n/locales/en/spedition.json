@@ -37,6 +37,10 @@
     "receipt": "Receipt",
     "total": "Total Expenses",
     "profit": "Profit",
+    "avgPerCategory": "Average per Category",
+    "byCategory": "Expenses by Category",
+    "trend": "Expense Trend",
+    "topVehicles": "Top 10 Vehicles by Expense",
     "categories": {
       "FUEL": "Fuel",
       "TOLL_DOMESTIC": "Toll (Domestic)",

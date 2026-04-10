@@ -66,9 +66,9 @@ export function AppSidebar() {
 
   return (
     <Sidebar>
-      <SidebarHeader className="h-14 justify-center border-b px-4">
-        <div className="flex items-center gap-2">
-          <Logo size="sm" className="shrink-0" />
+      <SidebarHeader className={`h-14 justify-center border-b ${isCollapsed ? 'px-1' : 'px-4'}`}>
+        <div className={`flex items-center ${isCollapsed ? 'justify-center' : 'gap-2'}`}>
+          <Logo size={isCollapsed ? 'md' : 'lg'} className="shrink-0" />
           {!isCollapsed && <H4>{t('common:app.name')}</H4>}
         </div>
       </SidebarHeader>
@@ -94,12 +94,12 @@ export function AppSidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
-      <SidebarFooter className="border-t p-2">
+      <SidebarFooter className={`border-t ${isCollapsed ? 'p-1' : 'p-2'}`}>
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton
               tooltip={user ? getUserDisplayName(user) : undefined}
-              className="hover:bg-sidebar-accent"
+              className={`hover:bg-sidebar-accent ${isCollapsed ? 'justify-center' : ''}`}
             >
               <div className="bg-primary text-primary-foreground flex size-6 shrink-0 items-center justify-center rounded-full text-xs font-medium">
                 {user ? getUserInitials(user) : '?'}

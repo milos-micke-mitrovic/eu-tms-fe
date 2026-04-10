@@ -157,3 +157,19 @@
     @apply text-sm font-medium;
   }
 }
+
+/*
+ * Global cursor-pointer for interactive elements
+ * shadcn/Radix doesn't add cursor:pointer by default
+ */
+@layer base {
+  button:not(:disabled),
+  [role="button"]:not(:disabled),
+  [role="tab"],
+  [role="menuitem"],
+  [role="option"],
+  [data-radix-collection-item],
+  summary {
+    cursor: pointer;
+  }
+}

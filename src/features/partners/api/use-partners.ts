@@ -3,8 +3,8 @@ import { useQuery } from '@apollo/client/react'
 import type { PartnerFilter, Partner } from '../types'
 
 export const GET_PARTNERS = gql`
-  query GetPartners($search: String, $partnerType: String, $page: Int, $size: Int) {
-    partners(search: $search, partnerType: $partnerType, page: $page, size: $size) {
+  query GetPartners($search: String, $partnerType: String, $sortBy: String, $sortDir: String, $page: Int, $size: Int) {
+    partners(search: $search, partnerType: $partnerType, sortBy: $sortBy, sortDir: $sortDir, page: $page, size: $size) {
       content {
         id
         name
@@ -14,7 +14,6 @@ export const GET_PARTNERS = gql`
         phone
         email
         contactPerson
-        createdAt
       }
       totalElements
       totalPages

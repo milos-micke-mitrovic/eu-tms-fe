@@ -47,6 +47,8 @@ export type VehicleFilter = {
   status?: string
   vehicleType?: string
   search?: string
+  sortBy?: string
+  sortDir?: string
   page?: number
   size?: number
 }
@@ -99,6 +101,8 @@ export type DriverFilter = {
   status?: string
   companyId?: number
   search?: string
+  sortBy?: string
+  sortDir?: string
   page?: number
   size?: number
 }

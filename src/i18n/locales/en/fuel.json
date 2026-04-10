@@ -6,8 +6,8 @@
   "capacity": "Capacity (l)",
   "currentLevel": "Current Level (l)",
   "fuelType": "Fuel Type",
-  "refill": "Refill Tank",
-  "dispense": "Dispense to Vehicle",
+  "refill": "Refill",
+  "dispense": "Dispense",
   "liters": "Liters",
   "pricePerLiter": "Price per Liter",
   "odometer": "Odometer"

@@ -81,13 +81,25 @@ function DialogContent({
   )
 }
 
-function DialogHeader({ className, ...props }: React.ComponentProps<'div'>) {
+function DialogHeader({
+  className,
+  children,
+  actions,
+  ...props
+}: React.ComponentProps<'div'> & {
+  actions?: React.ReactNode
+}) {
   return (
     <div
       data-slot="dialog-header"
-      className={cn('flex flex-col gap-2 text-center sm:text-left', className)}
+      className={cn('flex items-center justify-between gap-4 text-center sm:text-left', className)}
       {...props}
-    />
+    >
+      <div className="min-w-0 flex-1">{children}</div>
+      {actions && (
+        <div className="flex flex-shrink-0 items-center gap-2">{actions}</div>
+      )}
+    </div>
   )
 }
 

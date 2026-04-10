@@ -1,6 +1,5 @@
 import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
-import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useTranslation } from 'react-i18next'
 import {
@@ -21,26 +20,9 @@ import {
   FormLabel,
   FormMessage,
 } from '@/shared/ui/form'
-import { isValidJmbg } from '@/shared/utils'
 import type { Driver, DriverRequest } from '../types'
 import { useCreateDriver, useUpdateDriver } from '../api/use-driver-mutations'
-
-const driverSchema = z.object({
-  firstName: z.string().min(1),
-  lastName: z.string().min(1),
-  jmbg: z.string().refine((v) => !v || isValidJmbg(v), { message: 'Neispravan JMBG (mod11)' }).optional().or(z.literal('')).nullable(),
-  phone: z.string().optional().nullable(),
-  email: z.string().email().optional().or(z.literal('')).nullable(),
-  birthDate: z.string().optional().nullable(),
-  licenseNumber: z.string().optional().nullable(),
-  licenseCategories: z.string().optional().nullable(),
-  adrCertificate: z.boolean().optional().nullable(),
-  adrExpiry: z.string().optional().nullable(),
-  healthCheckExpiry: z.string().optional().nullable(),
-  employmentDate: z.string().optional().nullable(),
-})
-
-type DriverFormData = z.infer<typeof driverSchema>
+import { driverSchema, type DriverFormData } from '../schemas'
 
 type DriverFormProps = {
   open: boolean
@@ -124,20 +106,25 @@ export function DriverForm({ open, onClose, driver }: DriverFormProps) {
 
   return (
     <Sheet open={open} onOpenChange={(isOpen) => !isOpen && onClose()}>
-      <SheetContent className="overflow-y-auto sm:max-w-lg">
-        <SheetHeader>
-          <SheetTitle>
-            {isEditing ? t('common:actions.edit') : t('drivers.addNew')}
-          </SheetTitle>
-        </SheetHeader>
-        <Form form={form} onSubmit={onSubmit} className="space-y-4 p-4">
+      <SheetContent className="sm:max-w-lg">
+        <Form form={form} onSubmit={onSubmit} className="flex flex-1 flex-col overflow-hidden">
+          <SheetHeader actions={
+            <Button type="submit" size="sm" disabled={isPending}>
+              {isPending ? t('common:app.loading') : t('common:actions.save')}
+            </Button>
+          }>
+            <SheetTitle>
+              {isEditing ? t('common:actions.edit') : t('drivers.addNew')}
+            </SheetTitle>
+          </SheetHeader>
+          <div className="flex-1 overflow-y-auto p-4 space-y-4">
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <FormField
               control={form.control}
               name="firstName"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>{t('drivers.firstName')}</FormLabel>
+                  <FormLabel required>{t('drivers.firstName')}</FormLabel>
                   <FormControl>
                     <Input {...field} />
                   </FormControl>
@@ -150,7 +137,7 @@ export function DriverForm({ open, onClose, driver }: DriverFormProps) {
               name="lastName"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>{t('drivers.lastName')}</FormLabel>
+                  <FormLabel required>{t('drivers.lastName')}</FormLabel>
                   <FormControl>
                     <Input {...field} />
                   </FormControl>
@@ -298,13 +285,6 @@ export function DriverForm({ open, onClose, driver }: DriverFormProps) {
             />
           </div>
 
-          <div className="flex justify-end gap-2 pt-4">
-            <Button type="button" variant="outline" onClick={onClose}>
-              {t('common:actions.cancel')}
-            </Button>
-            <Button type="submit" disabled={isPending}>
-              {isPending ? t('common:app.loading') : t('common:actions.save')}
-            </Button>
           </div>
         </Form>
       </SheetContent>

@@ -1,8 +1,9 @@
 import { useMemo } from 'react'
-import type { ColumnDef, PaginationState } from '@tanstack/react-table'
+import type { ColumnDef, PaginationState, SortingState } from '@tanstack/react-table'
 import { useTranslation } from 'react-i18next'
 import { MoreHorizontal, Pencil, Trash2 } from 'lucide-react'
 import { DataTable } from '@/shared/ui/data-table'
+import { DataTableColumnHeader } from '@/shared/ui/data-table/data-table-column-header'
 import { Badge } from '@/shared/ui/badge'
 import { Button } from '@/shared/ui/button'
 import {
@@ -23,6 +24,8 @@ type DriverTableProps = {
   pageIndex: number
   pageSize: number
   onPaginationChange: (pagination: PaginationState) => void
+  sorting?: SortingState
+  onSortingChange?: (sorting: SortingState) => void
   onEdit: (driver: Driver) => void
   onDelete: (driver: Driver) => void
   emptyAction?: ReactNode
@@ -42,6 +45,8 @@ export function DriverTable({
   pageIndex,
   pageSize,
   onPaginationChange,
+  sorting,
+  onSortingChange,
   onEdit,
   onDelete,
   emptyAction,
@@ -52,7 +57,7 @@ export function DriverTable({
     () => [
       {
         accessorKey: 'firstName',
-        header: t('drivers.firstName'),
+        header: ({ column }) => <DataTableColumnHeader column={column} title={t('drivers.firstName')} />,
         cell: ({ row }) => (
           <BodySmall className="font-medium">
             {row.original.firstName} {row.original.lastName}
@@ -61,22 +66,22 @@ export function DriverTable({
       },
       {
         accessorKey: 'jmbg',
-        header: t('drivers.jmbg'),
+        header: ({ column }) => <DataTableColumnHeader column={column} title={t('drivers.jmbg')} />,
         cell: ({ row }) => row.original.jmbg ?? '—',
       },
       {
         accessorKey: 'phone',
-        header: t('drivers.phone'),
+        header: ({ column }) => <DataTableColumnHeader column={column} title={t('drivers.phone')} />,
         cell: ({ row }) => row.original.phone ?? '—',
       },
       {
         accessorKey: 'licenseCategories',
-        header: t('drivers.categories'),
+        header: ({ column }) => <DataTableColumnHeader column={column} title={t('drivers.categories')} />,
         cell: ({ row }) => row.original.licenseCategories ?? '—',
       },
       {
         accessorKey: 'status',
-        header: t('common:status.active'),
+        header: ({ column }) => <DataTableColumnHeader column={column} title={t('common:status.active')} />,
         cell: ({ row }) => (
           <Badge variant={statusVariant[row.original.status]}>
             {t(`drivers.statuses.${row.original.status}`)}
@@ -124,6 +129,9 @@ export function DriverTable({
       data={data}
       isLoading={isLoading}
       manualPagination
+      manualSorting
+      sorting={sorting}
+      onSortingChange={onSortingChange}
       pageCount={pageCount}
       totalCount={totalCount}
       pageIndex={pageIndex}

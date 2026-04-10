@@ -2,7 +2,7 @@ import { useState, useCallback } from 'react'
 import type { PaginationState } from '@tanstack/react-table'
 import { useTranslation } from 'react-i18next'
 import { Plus } from 'lucide-react'
-import { usePageTitle, useDebounce } from '@/shared/hooks'
+import { usePageTitle, useDebounce, useTableSort } from '@/shared/hooks'
 import { PageHeader } from '@/shared/components'
 import { ConfirmDialog } from '@/shared/ui/overlay/confirm-dialog'
 import { Button } from '@/shared/ui/button'
@@ -22,6 +22,7 @@ export function PartnersPage() {
   const debouncedSearch = useDebounce(search, 300)
   const [typeFilter, setTypeFilter] = useState<string>('')
   const [pagination, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize: 20 })
+  const { sorting, onSortingChange, sortBy, sortDir } = useTableSort()
   const [formOpen, setFormOpen] = useState(false)
   const [editingPartner, setEditingPartner] = useState<Partner | null>(null)
   const [deleteTarget, setDeleteTarget] = useState<Partner | null>(null)
@@ -29,6 +30,8 @@ export function PartnersPage() {
   const filter: PartnerFilter = {
     search: debouncedSearch || undefined,
     partnerType: typeFilter || undefined,
+    sortBy,
+    sortDir,
     page: pagination.pageIndex,
     size: pagination.pageSize,
   }
@@ -51,7 +54,7 @@ export function PartnersPage() {
   ]
 
   return (
-    <div className="space-y-6">
+    <div className="flex min-h-0 max-h-full flex-col gap-6">
       <PageHeader
         title={t('title')}
         action={<Button onClick={handleCreate}><Plus className="mr-2 size-4" />{t('addNew')}</Button>}
@@ -60,7 +63,7 @@ export function PartnersPage() {
         <Input placeholder={t('common:actions.search')} value={search} onChange={(e) => setSearch(e.target.value)} className="w-full sm:w-64" />
         <Select options={typeOptions} value={typeFilter} onChange={setTypeFilter} className="w-full sm:w-44" placeholder={t('type')} />
       </div>
-      <PartnerTable data={partners?.content ?? []} isLoading={loading} pageCount={partners?.totalPages ?? 0} totalCount={partners?.totalElements ?? 0} pageIndex={pagination.pageIndex} pageSize={pagination.pageSize} onPaginationChange={setPagination} onEdit={handleEdit} onDelete={handleDelete}
+      <PartnerTable data={partners?.content ?? []} isLoading={loading} pageCount={partners?.totalPages ?? 0} totalCount={partners?.totalElements ?? 0} pageIndex={pagination.pageIndex} pageSize={pagination.pageSize} onPaginationChange={setPagination} sorting={sorting} onSortingChange={onSortingChange} onEdit={handleEdit} onDelete={handleDelete}
         emptyAction={<Button size="sm" onClick={handleCreate}><Plus className="mr-2 size-4" />{t('addNew')}</Button>}
       />
       <PartnerForm open={formOpen} onClose={() => { setFormOpen(false); setEditingPartner(null) }} partner={editingPartner} />

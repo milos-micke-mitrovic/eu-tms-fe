@@ -2,7 +2,7 @@ import { useState, useCallback } from 'react'
 import type { PaginationState } from '@tanstack/react-table'
 import { useTranslation } from 'react-i18next'
 import { Plus } from 'lucide-react'
-import { usePageTitle } from '@/shared/hooks'
+import { usePageTitle, useTableSort } from '@/shared/hooks'
 import { PageHeader } from '@/shared/components'
 import { ConfirmDialog } from '@/shared/ui/overlay/confirm-dialog'
 import { Button } from '@/shared/ui/button'
@@ -17,11 +17,12 @@ export function TrailersPage() {
   usePageTitle(t('trailers.title'))
 
   const [pagination, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize: 20 })
+  const { sorting, onSortingChange, sortBy, sortDir } = useTableSort()
   const [formOpen, setFormOpen] = useState(false)
   const [editingTrailer, setEditingTrailer] = useState<Trailer | null>(null)
   const [deleteTarget, setDeleteTarget] = useState<Trailer | null>(null)
 
-  const { data, loading } = useTrailers(pagination.pageIndex, pagination.pageSize)
+  const { data, loading } = useTrailers({ sortBy, sortDir, page: pagination.pageIndex, size: pagination.pageSize })
   const deleteMutation = useDeleteTrailer()
   const trailers = data?.trailers
 
@@ -33,12 +34,12 @@ export function TrailersPage() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="flex min-h-0 max-h-full flex-col gap-6">
       <PageHeader
         title={t('trailers.title')}
         action={<Button onClick={handleCreate}><Plus className="mr-2 size-4" />{t('trailers.addNew')}</Button>}
       />
-      <TrailerTable data={trailers?.content ?? []} isLoading={loading} pageCount={trailers?.totalPages ?? 0} totalCount={trailers?.totalElements ?? 0} pageIndex={pagination.pageIndex} pageSize={pagination.pageSize} onPaginationChange={setPagination} onEdit={handleEdit} onDelete={handleDelete}
+      <TrailerTable data={trailers?.content ?? []} isLoading={loading} pageCount={trailers?.totalPages ?? 0} totalCount={trailers?.totalElements ?? 0} pageIndex={pagination.pageIndex} pageSize={pagination.pageSize} onPaginationChange={setPagination} sorting={sorting} onSortingChange={onSortingChange} onEdit={handleEdit} onDelete={handleDelete}
         emptyAction={<Button size="sm" onClick={handleCreate}><Plus className="mr-2 size-4" />{t('trailers.addNew')}</Button>}
       />
       <TrailerForm open={formOpen} onClose={() => { setFormOpen(false); setEditingTrailer(null) }} trailer={editingTrailer} />

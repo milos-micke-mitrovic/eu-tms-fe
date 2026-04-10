@@ -6,8 +6,8 @@
   "capacity": "Kapacitet (l)",
   "currentLevel": "Trenutni nivo (l)",
   "fuelType": "Tip goriva",
-  "refill": "Dopuna cisterne",
-  "dispense": "Točenje u vozilo",
+  "refill": "Dopuni",
+  "dispense": "Toči",
   "liters": "Litara",
   "pricePerLiter": "Cena po litru",
   "odometer": "Kilometraža"

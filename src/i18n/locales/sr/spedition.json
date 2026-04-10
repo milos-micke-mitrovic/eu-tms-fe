@@ -37,6 +37,10 @@
     "receipt": "Račun",
     "total": "Ukupno troškovi",
     "profit": "Zarada",
+    "avgPerCategory": "Prosek po kategoriji",
+    "byCategory": "Troškovi po kategorijama",
+    "trend": "Trend troškova",
+    "topVehicles": "Top 10 vozila po trošku",
     "categories": {
       "FUEL": "Gorivo",
       "TOLL_DOMESTIC": "Putarina (domaća)",

@@ -1,6 +1,5 @@
 import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
-import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useTranslation } from 'react-i18next'
 import {
@@ -22,17 +21,7 @@ import {
 } from '@/shared/ui/form'
 import type { Trailer, TrailerRequest } from '../types'
 import { useCreateTrailer, useUpdateTrailer } from '../api/use-trailer-mutations'
-
-const trailerSchema = z.object({
-  regNumber: z.string().min(1),
-  type: z.enum(['CURTAIN', 'BOX', 'REFRIGERATED', 'FLATBED', 'TANK', 'CONTAINER']),
-  lengthM: z.coerce.number().positive().optional().nullable(),
-  capacityKg: z.coerce.number().positive().optional().nullable(),
-  year: z.coerce.number().min(1900).max(2100).optional().nullable(),
-  ownership: z.enum(['OWNED', 'LEASED', 'RENTED']).optional().nullable(),
-})
-
-type TrailerFormData = z.infer<typeof trailerSchema>
+import { trailerSchema, type TrailerFormData } from '../schemas'
 
 type TrailerFormProps = {
   open: boolean
@@ -106,19 +95,24 @@ export function TrailerForm({ open, onClose, trailer }: TrailerFormProps) {
 
   return (
     <Sheet open={open} onOpenChange={(isOpen) => !isOpen && onClose()}>
-      <SheetContent className="overflow-y-auto sm:max-w-lg">
-        <SheetHeader>
-          <SheetTitle>
-            {isEditing ? t('common:actions.edit') : t('trailers.addNew')}
-          </SheetTitle>
-        </SheetHeader>
-        <Form form={form} onSubmit={onSubmit} className="space-y-4 p-4">
+      <SheetContent className="sm:max-w-lg">
+        <Form form={form} onSubmit={onSubmit} className="flex flex-1 flex-col overflow-hidden">
+          <SheetHeader actions={
+            <Button type="submit" size="sm" disabled={isPending}>
+              {isPending ? t('common:app.loading') : t('common:actions.save')}
+            </Button>
+          }>
+            <SheetTitle>
+              {isEditing ? t('common:actions.edit') : t('trailers.addNew')}
+            </SheetTitle>
+          </SheetHeader>
+          <div className="flex-1 overflow-y-auto p-4 space-y-4">
           <FormField
             control={form.control}
             name="regNumber"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>{t('trailers.regNumber')}</FormLabel>
+                <FormLabel required>{t('trailers.regNumber')}</FormLabel>
                 <FormControl>
                   <Input {...field} />
                 </FormControl>
@@ -133,7 +127,7 @@ export function TrailerForm({ open, onClose, trailer }: TrailerFormProps) {
               name="type"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>{t('trailers.type')}</FormLabel>
+                  <FormLabel required>{t('trailers.type')}</FormLabel>
                   <Select
                     options={trailerTypeOptions}
                     value={field.value}
@@ -221,13 +215,6 @@ export function TrailerForm({ open, onClose, trailer }: TrailerFormProps) {
             />
           </div>
 
-          <div className="flex justify-end gap-2 pt-4">
-            <Button type="button" variant="outline" onClick={onClose}>
-              {t('common:actions.cancel')}
-            </Button>
-            <Button type="submit" disabled={isPending}>
-              {isPending ? t('common:app.loading') : t('common:actions.save')}
-            </Button>
           </div>
         </Form>
       </SheetContent>

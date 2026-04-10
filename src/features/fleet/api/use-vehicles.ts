@@ -3,8 +3,8 @@ import { useQuery } from '@apollo/client/react'
 import type { VehicleFilter, Vehicle } from '../types'
 
 export const GET_VEHICLES = gql`
-  query GetVehicles($status: String, $vehicleType: String, $search: String, $page: Int, $size: Int) {
-    vehicles(status: $status, vehicleType: $vehicleType, search: $search, page: $page, size: $size) {
+  query GetVehicles($status: String, $vehicleType: String, $search: String, $sortBy: String, $sortDir: String, $page: Int, $size: Int) {
+    vehicles(status: $status, vehicleType: $vehicleType, search: $search, sortBy: $sortBy, sortDir: $sortDir, page: $page, size: $size) {
       content {
         id
         regNumber
@@ -18,7 +18,6 @@ export const GET_VEHICLES = gql`
         currentDriverId
         currentDriverName
         odometerKm
-        createdAt
       }
       totalElements
       totalPages
@@ -53,10 +52,7 @@ export const GET_VEHICLE = gql`
         originalFilename
         expirationDate
         notes
-        createdAt
       }
-      createdAt
-      updatedAt
     }
   }
 `

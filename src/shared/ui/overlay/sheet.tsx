@@ -2,6 +2,8 @@
 
 import * as React from 'react'
 import * as SheetPrimitive from '@radix-ui/react-dialog'
+import { VisuallyHidden } from '@radix-ui/react-visually-hidden'
+import { X } from 'lucide-react'
 
 import { cn } from '@/shared/utils'
 
@@ -69,8 +71,9 @@ function SheetContent({
       <SheetPrimitive.Content
         data-slot="sheet-content"
         aria-describedby={undefined}
+        aria-label="Panel"
         className={cn(
-          'bg-background data-[state=open]:animate-in data-[state=closed]:animate-out z-modal fixed flex flex-col shadow-lg transition ease-in-out data-[state=closed]:duration-300 data-[state=open]:duration-500',
+          'bg-background data-[state=open]:animate-in data-[state=closed]:animate-out z-modal fixed flex flex-col shadow-lg transition ease-out data-[state=closed]:duration-150 data-[state=open]:duration-200',
           side === 'right' &&
             `data-[state=closed]:slide-out-to-right data-[state=open]:slide-in-from-right inset-y-0 right-0 h-full w-full rounded-l-xl border-l ${sizeClasses[size]}`,
           side === 'left' &&
@@ -83,6 +86,9 @@ function SheetContent({
         )}
         {...props}
       >
+        <VisuallyHidden asChild>
+          <SheetPrimitive.Title>Panel</SheetPrimitive.Title>
+        </VisuallyHidden>
         {children}
       </SheetPrimitive.Content>
     </SheetPortal>
@@ -100,13 +106,16 @@ function SheetHeader({
   return (
     <div
       data-slot="sheet-header"
-      className={cn('flex items-center justify-between gap-4 p-4', className)}
+      className={cn('flex items-center gap-4 border-b p-4', className)}
       {...props}
     >
       <div className="min-w-0 flex-1">{children}</div>
-      {actions && (
-        <div className="flex flex-shrink-0 items-center gap-2">{actions}</div>
-      )}
+      <div className="flex flex-shrink-0 items-center gap-2">
+        {actions}
+        <SheetPrimitive.Close className="text-muted-foreground hover:text-foreground rounded-sm p-1 transition-colors focus:outline-none">
+          <X className="size-4" />
+        </SheetPrimitive.Close>
+      </div>
     </div>
   )
 }

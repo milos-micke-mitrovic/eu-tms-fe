@@ -3,8 +3,8 @@ import { useQuery } from '@apollo/client/react'
 import type { DriverFilter, Driver } from '../types'
 
 export const GET_DRIVERS = gql`
-  query GetDrivers($status: String, $companyId: ID, $search: String, $page: Int, $size: Int) {
-    drivers(status: $status, companyId: $companyId, search: $search, page: $page, size: $size) {
+  query GetDrivers($status: String, $companyId: ID, $search: String, $sortBy: String, $sortDir: String, $page: Int, $size: Int) {
+    drivers(status: $status, companyId: $companyId, search: $search, sortBy: $sortBy, sortDir: $sortDir, page: $page, size: $size) {
       content {
         id
         firstName
@@ -15,7 +15,6 @@ export const GET_DRIVERS = gql`
         status
         vehicleId
         vehicleRegNumber
-        createdAt
       }
       totalElements
       totalPages
@@ -51,10 +50,7 @@ export const GET_DRIVER = gql`
         originalFilename
         expirationDate
         notes
-        createdAt
       }
-      createdAt
-      updatedAt
     }
   }
 `

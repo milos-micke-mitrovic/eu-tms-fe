@@ -20,7 +20,15 @@
     "clear": "Clear",
     "refresh": "Refresh",
     "export": "Export",
-    "import": "Import"
+    "import": "Import",
+    "add": "Add",
+    "notes": "Notes",
+    "location": "Location",
+    "basic": "Basic",
+    "transport": "Transport",
+    "trailer": "Trailer",
+    "inRsd": "In RSD",
+    "addFirst": "Add the first item"
   },
   "selectDate": "Select date",
   "selectTime": "Select time",
@@ -156,6 +164,10 @@
     "title": "Sidebar",
     "description": "Displays the mobile sidebar.",
     "toggle": "Toggle Sidebar"
+  },
+  "deleteConfirm": {
+    "title": "Confirm Deletion",
+    "description": "Are you sure you want to delete? This action cannot be undone."
   },
   "unsavedChanges": {
     "title": "Unsaved Changes",

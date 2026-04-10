@@ -4,8 +4,8 @@ import type { RouteStatus } from '../types'
 
 const statusVariant: Record<RouteStatus, 'default' | 'secondary' | 'outline' | 'destructive'> = {
   CREATED: 'outline',
-  DISPATCHED: 'secondary',
-  IN_TRANSIT: 'default',
+  DISPATCHED: 'default',
+  IN_TRANSIT: 'secondary',
   COMPLETED: 'default',
   INVOICED: 'secondary',
   PAID: 'default',
@@ -14,9 +14,14 @@ const statusVariant: Record<RouteStatus, 'default' | 'secondary' | 'outline' | '
 
 export function RouteStatusBadge({ status }: { status: RouteStatus }) {
   const { t } = useTranslation('spedition')
+  return <Badge variant={statusVariant[status]}>{t(`routes.status.${status}`)}</Badge>
+}
+
+export function RouteTypeBadge({ routeType }: { routeType: string }) {
+  const { t } = useTranslation('spedition')
   return (
-    <Badge variant={statusVariant[status]}>
-      {t(`routes.status.${status}`)}
+    <Badge variant={routeType === 'INTERNATIONAL' ? 'default' : 'outline'}>
+      {routeType === 'INTERNATIONAL' ? t('routes.international') : t('routes.domestic')}
     </Badge>
   )
 }
