@@ -7,7 +7,7 @@ export default defineConfig({
     environment: 'jsdom',
     setupFiles: ['./src/test/setup.ts'],
     include: ['src/**/*.test.{ts,tsx}'],
-    // API integration tests need special handling
+    testTimeout: 15000, // allow time for rate-limited API retries
     fileParallelism: false, // run test files sequentially to avoid rate limiting
   },
   resolve: {
