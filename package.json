@@ -11,7 +11,7 @@
     "format:check": "prettier --check .",
     "preview": "vite preview",
     "test": "vitest",
-    "test:run": "vitest run --exclude 'src/test/api/**'",
+    "test:unit": "vitest run --exclude 'src/test/api/**'",
     "test:api": "vitest run src/test/api/",
     "test:all": "vitest run"
   },
