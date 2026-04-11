@@ -60,10 +60,10 @@ export function TravelOrderSection({
       driverId: Number(route.driverId),
       vehicleId: Number(route.vehicleId),
       departureDateTime: route.departureDate
-        ? `${route.departureDate}T08:00:00`
+        ? `${route.departureDate}T08:00:00Z`
         : undefined,
       returnDateTime: route.returnDate
-        ? `${route.returnDate}T18:00:00`
+        ? `${route.returnDate}T18:00:00Z`
         : undefined,
       purpose: 'Transport robe',
       notes: route.notes ?? undefined,

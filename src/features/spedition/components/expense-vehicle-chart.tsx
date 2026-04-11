@@ -25,7 +25,7 @@ export function ExpenseVehicleChart({
 }: ExpenseVehicleChartProps) {
   const { t } = useTranslation('spedition')
 
-  const chartData = data
+  const chartData = [...data]
     .sort((a, b) => b.totalAmountRsd - a.totalAmountRsd)
     .slice(0, 10)
     .map((item) => ({ name: item.key, total: item.totalAmountRsd }))

@@ -1,5 +1,5 @@
 import { useEffect, useState, useCallback } from 'react'
-import { useForm } from 'react-hook-form'
+import { useForm, useFieldArray } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useTranslation } from 'react-i18next'
 import {
@@ -14,6 +14,7 @@ import { Textarea } from '@/shared/ui/textarea'
 import { Select } from '@/shared/ui/select'
 import { AutocompleteInput } from '@/shared/ui/select/autocomplete-input'
 import { DatePicker } from '@/shared/ui/date-time/date-picker'
+import { Plus, Trash2 } from 'lucide-react'
 import { SectionDivider } from '@/shared/components'
 import {
   Form,
@@ -28,7 +29,7 @@ import { usePartners } from '@/features/partners/api/use-partners'
 import { useVehicles } from '@/features/fleet/api/use-vehicles'
 import { useDrivers } from '@/features/fleet/api/use-drivers'
 import { useTrailers } from '@/features/fleet/api/use-trailers'
-import { CURRENCIES } from '../constants'
+import { CURRENCIES, COUNTRY_CODES } from '../constants'
 import type { RouteListItem, RouteRequest } from '../types'
 import { useRouteDetail } from '../api/use-route-detail'
 import { useCreateRoute, useUpdateRoute } from '../api/use-route-mutations'
@@ -55,6 +56,7 @@ const defaultValues: RouteFormData = {
   currency: 'EUR',
   distanceKm: null,
   notes: '',
+  stops: [],
 }
 
 export function RouteForm({ open, onClose, route }: RouteFormProps) {
@@ -102,6 +104,15 @@ export function RouteForm({ open, onClose, route }: RouteFormProps) {
     defaultValues,
   })
 
+  const {
+    fields: stopFields,
+    append: appendStop,
+    remove: removeStop,
+  } = useFieldArray({
+    control: form.control,
+    name: 'stops',
+  })
+
   const [partnerLabel, setPartnerLabel] = useState('')
 
   // Use full route detail when available, fall back to list item
@@ -134,6 +145,29 @@ export function RouteForm({ open, onClose, route }: RouteFormProps) {
         currency: src.currency ?? 'EUR',
         distanceKm: src.distanceKm ?? null,
         notes: src.notes ?? '',
+        stops: (src.stops ?? []).map(
+          (s: {
+            stopOrder: number
+            stopType: string
+            address?: string
+            city?: string
+            countryCode: string
+            zipCode?: string
+            plannedArrival?: string
+            plannedDeparture?: string
+            notes?: string
+          }) => ({
+            stopOrder: s.stopOrder,
+            stopType: s.stopType,
+            address: s.address ?? '',
+            city: s.city ?? '',
+            countryCode: s.countryCode,
+            zipCode: s.zipCode ?? '',
+            plannedArrival: s.plannedArrival ?? '',
+            plannedDeparture: s.plannedDeparture ?? '',
+            notes: s.notes ?? '',
+          })
+        ),
       })
       // eslint-disable-next-line react-hooks/set-state-in-effect -- syncing label with route prop
       setPartnerLabel(src.partner?.name ?? '')
@@ -159,6 +193,21 @@ export function RouteForm({ open, onClose, route }: RouteFormProps) {
       currency: data.currency,
       distanceKm: data.distanceKm ?? undefined,
       notes: data.notes || undefined,
+      stops: (data.stops ?? []).map((s) => ({
+        stopOrder: s.stopOrder,
+        stopType: s.stopType,
+        address: s.address || undefined,
+        city: s.city || undefined,
+        countryCode: s.countryCode,
+        zipCode: s.zipCode || undefined,
+        plannedArrival: s.plannedArrival
+          ? `${s.plannedArrival}T00:00:00Z`
+          : undefined,
+        plannedDeparture: s.plannedDeparture
+          ? `${s.plannedDeparture}T00:00:00Z`
+          : undefined,
+        notes: s.notes || undefined,
+      })),
     }
     if (isEditing)
       await updateMutation.mutateAsync({ id: route.id, data: request })
@@ -480,6 +529,124 @@ export function RouteForm({ open, onClose, route }: RouteFormProps) {
                     </FormItem>
                   )}
                 />
+              </div>
+            </div>
+
+            {/* Section: Stopovi */}
+            <div>
+              <SectionDivider title={t('stops.title')} />
+              <div className="space-y-3">
+                {stopFields.map((field, index) => (
+                  <div
+                    key={field.id}
+                    className="relative space-y-3 rounded-lg border p-3"
+                  >
+                    <button
+                      type="button"
+                      className="text-destructive hover:bg-destructive/10 absolute top-2 right-2 rounded-sm p-1"
+                      onClick={() => removeStop(index)}
+                    >
+                      <Trash2 className="size-3.5" />
+                    </button>
+                    <div className="grid grid-cols-2 gap-3">
+                      <FormField
+                        control={form.control}
+                        name={`stops.${index}.stopType`}
+                        render={({ field: f }) => (
+                          <FormItem>
+                            <FormLabel required>
+                              {t('stops.stopType')}
+                            </FormLabel>
+                            <Select
+                              options={[
+                                'LOADING',
+                                'UNLOADING',
+                                'BORDER',
+                                'CUSTOMS',
+                                'REST',
+                                'FUEL',
+                                'OTHER',
+                              ].map((v) => ({
+                                value: v,
+                                label: t(`stops.types.${v}`),
+                              }))}
+                              value={f.value}
+                              onChange={f.onChange}
+                            />
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={form.control}
+                        name={`stops.${index}.countryCode`}
+                        render={({ field: f }) => (
+                          <FormItem>
+                            <FormLabel required>{t('stops.country')}</FormLabel>
+                            <Select
+                              options={COUNTRY_CODES.map((c) => ({
+                                value: c.code,
+                                label: c.name,
+                              }))}
+                              value={f.value}
+                              onChange={f.onChange}
+                              searchable
+                            />
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+                    <div className="grid grid-cols-2 gap-3">
+                      <FormField
+                        control={form.control}
+                        name={`stops.${index}.city`}
+                        render={({ field: f }) => (
+                          <FormItem>
+                            <FormLabel>{t('stops.city')}</FormLabel>
+                            <FormControl>
+                              <Input {...f} value={f.value ?? ''} />
+                            </FormControl>
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={form.control}
+                        name={`stops.${index}.address`}
+                        render={({ field: f }) => (
+                          <FormItem>
+                            <FormLabel>{t('stops.address')}</FormLabel>
+                            <FormControl>
+                              <Input {...f} value={f.value ?? ''} />
+                            </FormControl>
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+                  </div>
+                ))}
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  className="w-full"
+                  onClick={() =>
+                    appendStop({
+                      stopOrder: stopFields.length + 1,
+                      stopType: 'LOADING',
+                      address: '',
+                      city: '',
+                      countryCode: 'RS',
+                      zipCode: '',
+                      plannedArrival: '',
+                      plannedDeparture: '',
+                      notes: '',
+                    })
+                  }
+                >
+                  <Plus className="mr-2 size-4" />
+                  {t('stops.addNew')}
+                </Button>
               </div>
             </div>
           </div>

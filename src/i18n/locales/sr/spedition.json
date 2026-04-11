@@ -26,6 +26,26 @@
       "CANCELLED": "Otkazan"
     }
   },
+  "stops": {
+    "title": "Stopovi",
+    "addNew": "Dodaj stop",
+    "stopType": "Tip stopa",
+    "address": "Adresa",
+    "city": "Grad",
+    "country": "Država",
+    "zipCode": "Poštanski broj",
+    "plannedArrival": "Planirani dolazak",
+    "plannedDeparture": "Planirani odlazak",
+    "types": {
+      "LOADING": "Utovar",
+      "UNLOADING": "Istovar",
+      "BORDER": "Granica",
+      "CUSTOMS": "Carina",
+      "REST": "Odmor",
+      "FUEL": "Gorivo",
+      "OTHER": "Ostalo"
+    }
+  },
   "expenses": {
     "title": "Troškovi",
     "addNew": "Novi trošak",

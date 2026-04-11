@@ -79,14 +79,14 @@ export function FuelTransactionForm({
 
   const onSubmit = async (data: TransactionFormData) => {
     const request: FuelTransactionRequest = {
-      tankId: Number(tankId),
+      fuelTankId: Number(tankId),
       transactionType,
       liters: data.liters,
       pricePerLiter: data.pricePerLiter ?? undefined,
       vehicleId: data.vehicleId ?? undefined,
       driverId: data.driverId ?? undefined,
       odometerKm: data.odometerKm ?? undefined,
-      transactionDate: data.transactionDate,
+      transactionDate: `${data.transactionDate}T00:00:00Z`,
       notes: data.notes || undefined,
     }
     await createMutation.mutateAsync(request)

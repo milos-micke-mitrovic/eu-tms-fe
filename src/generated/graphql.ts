@@ -30,6 +30,13 @@ export type Scalars = {
   DateTime: { input: string; output: string }
 }
 
+export type AgingBucket = {
+  bucket: Scalars['String']['output']
+  currency: Scalars['String']['output']
+  invoiceCount: Scalars['Int']['output']
+  totalAmount: Scalars['BigDecimal']['output']
+}
+
 export type CategoryAmount = {
   category: Scalars['String']['output']
   totalAmountRsd: Scalars['BigDecimal']['output']
@@ -42,6 +49,14 @@ export type CollectionStats = {
   totalCollected: Scalars['BigDecimal']['output']
   totalInvoiced: Scalars['BigDecimal']['output']
   totalOverdue: Scalars['BigDecimal']['output']
+}
+
+export type CostPerKm = {
+  costPerKmRsd: Scalars['BigDecimal']['output']
+  regNumber: Scalars['String']['output']
+  totalDistanceKm: Scalars['Int']['output']
+  totalExpenseRsd: Scalars['BigDecimal']['output']
+  vehicleId: Scalars['ID']['output']
 }
 
 export type Dashboard = {
@@ -93,12 +108,29 @@ export type DriverDocument = {
   originalFilename?: Maybe<Scalars['String']['output']>
 }
 
+export type DriverFuelComparison = {
+  avgLitersPer100km: Scalars['BigDecimal']['output']
+  driverId: Scalars['ID']['output']
+  driverName: Scalars['String']['output']
+  totalKm: Scalars['Int']['output']
+  totalLiters: Scalars['BigDecimal']['output']
+}
+
 export type DriverPage = {
   content: Array<Driver>
   number: Scalars['Int']['output']
   size: Scalars['Int']['output']
   totalElements: Scalars['Int']['output']
   totalPages: Scalars['Int']['output']
+}
+
+export type DriverProductivity = {
+  daysOnRoad: Scalars['Int']['output']
+  driverId: Scalars['ID']['output']
+  driverName: Scalars['String']['output']
+  routeCount: Scalars['Int']['output']
+  totalProfit: Scalars['BigDecimal']['output']
+  totalRevenue: Scalars['BigDecimal']['output']
 }
 
 export type ExchangeRate = {
@@ -135,6 +167,13 @@ export type FleetSummary = {
   activeVehicles: Scalars['Int']['output']
   totalDrivers: Scalars['Int']['output']
   totalVehicles: Scalars['Int']['output']
+}
+
+export type FuelConsumptionTrend = {
+  avgLitersPer100km: Scalars['BigDecimal']['output']
+  month: Scalars['String']['output']
+  regNumber: Scalars['String']['output']
+  vehicleId: Scalars['ID']['output']
 }
 
 export type FuelTank = {
@@ -187,6 +226,13 @@ export type InvoicePage = {
 export type MonthlyAmount = {
   month: Scalars['String']['output']
   totalAmountRsd: Scalars['BigDecimal']['output']
+}
+
+export type MonthlyPnl = {
+  expenses: Scalars['BigDecimal']['output']
+  month: Scalars['String']['output']
+  profit: Scalars['BigDecimal']['output']
+  revenue: Scalars['BigDecimal']['output']
 }
 
 export type NotificationSummary = {
@@ -267,16 +313,23 @@ export type ProfitabilityPage = {
 }
 
 export type Query = {
+  agingAnalysis: Array<AgingBucket>
+  costPerKm: Array<CostPerKm>
   dashboard: Dashboard
   driver?: Maybe<Driver>
+  driverFuelComparison: Array<DriverFuelComparison>
+  driverProductivity: Array<DriverProductivity>
   drivers: DriverPage
   exchangeRates: Array<ExchangeRate>
   expenseSummary: Array<ExpenseSummaryItem>
   expiringDocuments: Array<ExpiringDocument>
+  fuelConsumptionAllVehicles: Array<FuelConsumptionTrend>
+  fuelConsumptionTrend: Array<FuelConsumptionTrend>
   fuelTanks: Array<FuelTank>
   invoice?: Maybe<Invoice>
   invoiceCollectionStats: CollectionStats
   invoices: InvoicePage
+  monthlyPnl: Array<MonthlyPnl>
   partners: PartnerPage
   perDiemRates: Array<PerDiemRate>
   /** Liveness probe — returns 'pong'. */
@@ -285,14 +338,33 @@ export type Query = {
   profitabilityByRoute: ProfitabilityPage
   profitabilityByVehicle: Array<VehicleProfitability>
   route?: Maybe<Route>
+  routeCountByPartner: Array<RouteCountByPartner>
   routes: RoutePage
+  topDebtors: Array<TopDebtor>
+  topProfitableRoutes: Array<TopRoute>
   trailers: TrailerPage
   vehicle?: Maybe<Vehicle>
+  vehicleUtilization: Array<VehicleUtilization>
   vehicles: VehiclePage
+}
+
+export type QueryCostPerKmArgs = {
+  from: Scalars['Date']['input']
+  to: Scalars['Date']['input']
 }
 
 export type QueryDriverArgs = {
   id: Scalars['ID']['input']
+}
+
+export type QueryDriverFuelComparisonArgs = {
+  from: Scalars['Date']['input']
+  to: Scalars['Date']['input']
+}
+
+export type QueryDriverProductivityArgs = {
+  from: Scalars['Date']['input']
+  to: Scalars['Date']['input']
 }
 
 export type QueryDriversArgs = {
@@ -319,6 +391,17 @@ export type QueryExpiringDocumentsArgs = {
   days: Scalars['Int']['input']
 }
 
+export type QueryFuelConsumptionAllVehiclesArgs = {
+  from: Scalars['Date']['input']
+  to: Scalars['Date']['input']
+}
+
+export type QueryFuelConsumptionTrendArgs = {
+  from: Scalars['Date']['input']
+  to: Scalars['Date']['input']
+  vehicleId: Scalars['ID']['input']
+}
+
 export type QueryInvoiceArgs = {
   id: Scalars['ID']['input']
 }
@@ -338,6 +421,11 @@ export type QueryInvoicesArgs = {
   sortBy?: InputMaybe<Scalars['String']['input']>
   sortDir?: InputMaybe<Scalars['String']['input']>
   status?: InputMaybe<Scalars['String']['input']>
+}
+
+export type QueryMonthlyPnlArgs = {
+  from: Scalars['Date']['input']
+  to: Scalars['Date']['input']
 }
 
 export type QueryPartnersArgs = {
@@ -370,6 +458,11 @@ export type QueryRouteArgs = {
   id: Scalars['ID']['input']
 }
 
+export type QueryRouteCountByPartnerArgs = {
+  from: Scalars['Date']['input']
+  to: Scalars['Date']['input']
+}
+
 export type QueryRoutesArgs = {
   dateFrom?: InputMaybe<Scalars['Date']['input']>
   dateTo?: InputMaybe<Scalars['Date']['input']>
@@ -385,6 +478,16 @@ export type QueryRoutesArgs = {
   vehicleId?: InputMaybe<Scalars['ID']['input']>
 }
 
+export type QueryTopDebtorsArgs = {
+  limit?: InputMaybe<Scalars['Int']['input']>
+}
+
+export type QueryTopProfitableRoutesArgs = {
+  from: Scalars['Date']['input']
+  limit?: InputMaybe<Scalars['Int']['input']>
+  to: Scalars['Date']['input']
+}
+
 export type QueryTrailersArgs = {
   page?: InputMaybe<Scalars['Int']['input']>
   size?: InputMaybe<Scalars['Int']['input']>
@@ -394,6 +497,11 @@ export type QueryTrailersArgs = {
 
 export type QueryVehicleArgs = {
   id: Scalars['ID']['input']
+}
+
+export type QueryVehicleUtilizationArgs = {
+  from: Scalars['Date']['input']
+  to: Scalars['Date']['input']
 }
 
 export type QueryVehiclesArgs = {
@@ -433,6 +541,13 @@ export type Route = {
   updatedAt?: Maybe<Scalars['DateTime']['output']>
   vehicle?: Maybe<Vehicle>
   vehicleId?: Maybe<Scalars['ID']['output']>
+}
+
+export type RouteCountByPartner = {
+  partnerId: Scalars['ID']['output']
+  partnerName: Scalars['String']['output']
+  routeCount: Scalars['Int']['output']
+  totalRevenue: Scalars['BigDecimal']['output']
 }
 
 export type RouteExpense = {
@@ -490,6 +605,26 @@ export type RouteSummary = {
   partnerName?: Maybe<Scalars['String']['output']>
   price?: Maybe<Scalars['BigDecimal']['output']>
   status: Scalars['String']['output']
+}
+
+export type TopDebtor = {
+  avgDaysOverdue: Scalars['Int']['output']
+  invoiceCount: Scalars['Int']['output']
+  oldestDueDate: Scalars['Date']['output']
+  partnerId: Scalars['ID']['output']
+  partnerName: Scalars['String']['output']
+  totalDebt: Scalars['BigDecimal']['output']
+}
+
+export type TopRoute = {
+  expenses: Scalars['BigDecimal']['output']
+  internalNumber: Scalars['String']['output']
+  marginPercent: Scalars['BigDecimal']['output']
+  partnerName?: Maybe<Scalars['String']['output']>
+  profit: Scalars['BigDecimal']['output']
+  revenue: Scalars['BigDecimal']['output']
+  routeId: Scalars['ID']['output']
+  vehicleRegNumber?: Maybe<Scalars['String']['output']>
 }
 
 export type Trailer = {
@@ -565,6 +700,14 @@ export type VehicleProfitability = {
   routeCount: Scalars['Int']['output']
   totalExpenses: Scalars['BigDecimal']['output']
   totalRevenue: Scalars['BigDecimal']['output']
+  vehicleId: Scalars['ID']['output']
+}
+
+export type VehicleUtilization = {
+  daysInPeriod: Scalars['Int']['output']
+  daysOnRoad: Scalars['Int']['output']
+  regNumber: Scalars['String']['output']
+  utilizationPercent: Scalars['BigDecimal']['output']
   vehicleId: Scalars['ID']['output']
 }
 
@@ -925,6 +1068,169 @@ export type GetPartnersQuery = {
       notes?: string | null
     }>
   }
+}
+
+export type FuelConsumptionTrendQueryVariables = Exact<{
+  vehicleId: Scalars['ID']['input']
+  from: Scalars['Date']['input']
+  to: Scalars['Date']['input']
+}>
+
+export type FuelConsumptionTrendQuery = {
+  fuelConsumptionTrend: Array<{
+    vehicleId: string
+    regNumber: string
+    month: string
+    avgLitersPer100km: number
+  }>
+}
+
+export type FuelConsumptionAllVehiclesQueryVariables = Exact<{
+  from: Scalars['Date']['input']
+  to: Scalars['Date']['input']
+}>
+
+export type FuelConsumptionAllVehiclesQuery = {
+  fuelConsumptionAllVehicles: Array<{
+    vehicleId: string
+    regNumber: string
+    month: string
+    avgLitersPer100km: number
+  }>
+}
+
+export type DriverFuelComparisonQueryVariables = Exact<{
+  from: Scalars['Date']['input']
+  to: Scalars['Date']['input']
+}>
+
+export type DriverFuelComparisonQuery = {
+  driverFuelComparison: Array<{
+    driverId: string
+    driverName: string
+    avgLitersPer100km: number
+    totalKm: number
+    totalLiters: number
+  }>
+}
+
+export type CostPerKmQueryVariables = Exact<{
+  from: Scalars['Date']['input']
+  to: Scalars['Date']['input']
+}>
+
+export type CostPerKmQuery = {
+  costPerKm: Array<{
+    vehicleId: string
+    regNumber: string
+    totalExpenseRsd: number
+    totalDistanceKm: number
+    costPerKmRsd: number
+  }>
+}
+
+export type VehicleUtilizationQueryVariables = Exact<{
+  from: Scalars['Date']['input']
+  to: Scalars['Date']['input']
+}>
+
+export type VehicleUtilizationQuery = {
+  vehicleUtilization: Array<{
+    vehicleId: string
+    regNumber: string
+    daysInPeriod: number
+    daysOnRoad: number
+    utilizationPercent: number
+  }>
+}
+
+export type TopProfitableRoutesQueryVariables = Exact<{
+  from: Scalars['Date']['input']
+  to: Scalars['Date']['input']
+  limit?: InputMaybe<Scalars['Int']['input']>
+}>
+
+export type TopProfitableRoutesQuery = {
+  topProfitableRoutes: Array<{
+    routeId: string
+    internalNumber: string
+    partnerName?: string | null
+    vehicleRegNumber?: string | null
+    revenue: number
+    expenses: number
+    profit: number
+    marginPercent: number
+  }>
+}
+
+export type MonthlyPnlQueryVariables = Exact<{
+  from: Scalars['Date']['input']
+  to: Scalars['Date']['input']
+}>
+
+export type MonthlyPnlQuery = {
+  monthlyPnl: Array<{
+    month: string
+    revenue: number
+    expenses: number
+    profit: number
+  }>
+}
+
+export type AgingAnalysisQueryVariables = Exact<{ [key: string]: never }>
+
+export type AgingAnalysisQuery = {
+  agingAnalysis: Array<{
+    bucket: string
+    invoiceCount: number
+    totalAmount: number
+    currency: string
+  }>
+}
+
+export type TopDebtorsQueryVariables = Exact<{
+  limit?: InputMaybe<Scalars['Int']['input']>
+}>
+
+export type TopDebtorsQuery = {
+  topDebtors: Array<{
+    partnerId: string
+    partnerName: string
+    totalDebt: number
+    invoiceCount: number
+    oldestDueDate: string
+    avgDaysOverdue: number
+  }>
+}
+
+export type RouteCountByPartnerQueryVariables = Exact<{
+  from: Scalars['Date']['input']
+  to: Scalars['Date']['input']
+}>
+
+export type RouteCountByPartnerQuery = {
+  routeCountByPartner: Array<{
+    partnerId: string
+    partnerName: string
+    routeCount: number
+    totalRevenue: number
+  }>
+}
+
+export type DriverProductivityQueryVariables = Exact<{
+  from: Scalars['Date']['input']
+  to: Scalars['Date']['input']
+}>
+
+export type DriverProductivityQuery = {
+  driverProductivity: Array<{
+    driverId: string
+    driverName: string
+    routeCount: number
+    totalRevenue: number
+    totalProfit: number
+    daysOnRoad: number
+  }>
 }
 
 export type ProfitabilityByRouteQueryVariables = Exact<{

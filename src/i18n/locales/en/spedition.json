@@ -26,6 +26,26 @@
       "CANCELLED": "Cancelled"
     }
   },
+  "stops": {
+    "title": "Stops",
+    "addNew": "Add stop",
+    "stopType": "Stop type",
+    "address": "Address",
+    "city": "City",
+    "country": "Country",
+    "zipCode": "Zip code",
+    "plannedArrival": "Planned arrival",
+    "plannedDeparture": "Planned departure",
+    "types": {
+      "LOADING": "Loading",
+      "UNLOADING": "Unloading",
+      "BORDER": "Border",
+      "CUSTOMS": "Customs",
+      "REST": "Rest",
+      "FUEL": "Fuel",
+      "OTHER": "Other"
+    }
+  },
   "expenses": {
     "title": "Expenses",
     "addNew": "New Expense",

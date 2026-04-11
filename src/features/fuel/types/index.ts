@@ -26,7 +26,7 @@ export type FuelTransaction = {
 }
 
 export type FuelTransactionRequest = {
-  tankId: number
+  fuelTankId: number
   transactionType: 'REFILL' | 'DISPENSE'
   liters: number
   pricePerLiter?: number | null

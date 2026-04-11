@@ -4,10 +4,21 @@ import { PageHeader } from '@/shared/components'
 import { usePageTitle } from '@/shared/hooks'
 import { DatePicker } from '@/shared/ui/date-time/date-picker'
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/shared/ui/tabs'
+// Existing components
 import { ProfitabilityTable } from '../components/profitability-table'
-import { VehicleProfitabilityChart } from '../components/vehicle-profitability-chart'
 import { PartnerProfitabilityChart } from '../components/partner-profitability-chart'
 import { CollectionStatsCards } from '../components/collection-stats-cards'
+// New advanced stats components
+import { MonthlyPnlChart } from '../components/monthly-pnl-chart'
+import { TopRoutesTable } from '../components/top-routes-table'
+import { FuelConsumptionTrendChart } from '../components/fuel-consumption-trend-chart'
+import { DriverFuelComparisonChart } from '../components/driver-fuel-comparison-chart'
+import { VehicleUtilizationChart } from '../components/vehicle-utilization-chart'
+import { CostPerKmChart } from '../components/cost-per-km-chart'
+import { DriverProductivityTable } from '../components/driver-productivity-table'
+import { AgingAnalysisChart } from '../components/aging-analysis-chart'
+import { TopDebtorsTable } from '../components/top-debtors-table'
+import { RouteCountByPartnerChart } from '../components/route-count-by-partner-chart'
 
 export function StatisticsPage() {
   const { t } = useTranslation('reports')
@@ -45,29 +56,62 @@ export function StatisticsPage() {
         />
       </div>
 
-      <Tabs defaultValue="profitability">
+      <Tabs defaultValue="overview">
         <TabsList>
-          <TabsTrigger value="profitability">
-            {t('statistics.profitability')}
-          </TabsTrigger>
-          <TabsTrigger value="collection">
-            {t('statistics.collection')}
-          </TabsTrigger>
+          <TabsTrigger value="overview">{t('stats.overview')}</TabsTrigger>
+          <TabsTrigger value="fuel">{t('stats.fuel')}</TabsTrigger>
+          <TabsTrigger value="fleet">{t('stats.fleet')}</TabsTrigger>
+          <TabsTrigger value="finances">{t('stats.finances')}</TabsTrigger>
+          <TabsTrigger value="clients">{t('stats.clients')}</TabsTrigger>
         </TabsList>
 
-        <TabsContent value="profitability">
+        {/* PREGLED */}
+        <TabsContent value="overview">
           <div className="flex flex-col gap-6">
-            <ProfitabilityTable from={from} to={to} />
-
-            <div className="grid gap-6 lg:grid-cols-2">
-              <VehicleProfitabilityChart from={from} to={to} />
-              <PartnerProfitabilityChart from={from} to={to} />
-            </div>
+            <MonthlyPnlChart from={from} to={to} />
+            <TopRoutesTable from={from} to={to} />
           </div>
         </TabsContent>
 
-        <TabsContent value="collection">
-          <CollectionStatsCards from={from} to={to} />
+        {/* GORIVO */}
+        <TabsContent value="fuel">
+          <div className="flex flex-col gap-6">
+            <FuelConsumptionTrendChart from={from} to={to} />
+            <DriverFuelComparisonChart from={from} to={to} />
+          </div>
+        </TabsContent>
+
+        {/* VOZNI PARK */}
+        <TabsContent value="fleet">
+          <div className="flex flex-col gap-6">
+            <div className="grid gap-6 lg:grid-cols-2">
+              <VehicleUtilizationChart from={from} to={to} />
+              <CostPerKmChart from={from} to={to} />
+            </div>
+            <DriverProductivityTable from={from} to={to} />
+          </div>
+        </TabsContent>
+
+        {/* FINANSIJE */}
+        <TabsContent value="finances">
+          <div className="flex flex-col gap-6">
+            <div className="grid gap-6 lg:grid-cols-2">
+              <AgingAnalysisChart />
+              <TopDebtorsTable />
+            </div>
+            <CollectionStatsCards from={from} to={to} />
+          </div>
+        </TabsContent>
+
+        {/* KLIJENTI */}
+        <TabsContent value="clients">
+          <div className="flex flex-col gap-6">
+            <RouteCountByPartnerChart from={from} to={to} />
+            <div className="grid gap-6 lg:grid-cols-2">
+              <ProfitabilityTable from={from} to={to} />
+              <PartnerProfitabilityChart from={from} to={to} />
+            </div>
+          </div>
         </TabsContent>
       </Tabs>
     </div>
