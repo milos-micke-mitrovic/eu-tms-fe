@@ -56,6 +56,10 @@ type InvoiceTableProps = {
   emptyAction?: ReactNode
   isFiltered?: boolean
   onClearFilters?: () => void
+  highlightId?: string | number | null
+  highlightName?: string | null
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  getRowName?: (row: any) => string
 }
 
 export function InvoiceTable({
@@ -74,6 +78,9 @@ export function InvoiceTable({
   emptyAction,
   isFiltered,
   onClearFilters,
+  highlightId,
+  highlightName,
+  getRowName,
 }: InvoiceTableProps) {
   const { t } = useTranslation('finance')
 
@@ -223,6 +230,9 @@ export function InvoiceTable({
       emptyAction={emptyAction}
       isFiltered={isFiltered}
       onClearFilters={onClearFilters}
+      highlightId={highlightId}
+      highlightName={highlightName}
+      getRowName={getRowName}
     />
   )
 }

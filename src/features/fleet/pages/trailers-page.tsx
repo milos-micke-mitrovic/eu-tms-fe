@@ -2,7 +2,7 @@ import { useState, useCallback } from 'react'
 import type { PaginationState } from '@tanstack/react-table'
 import { useTranslation } from 'react-i18next'
 import { Plus } from 'lucide-react'
-import { usePageTitle, useTableSort } from '@/shared/hooks'
+import { usePageTitle, useTableSort, useHighlightRow } from '@/shared/hooks'
 import { PageHeader } from '@/shared/components'
 import { ConfirmDialog } from '@/shared/ui/overlay/confirm-dialog'
 import { Button } from '@/shared/ui/button'
@@ -16,6 +16,7 @@ import type { TrailerListItem } from '../types'
 export function TrailersPage() {
   const { t } = useTranslation('fleet')
   usePageTitle(t('trailers.title'))
+  const [highlight, onDrawerClose] = useHighlightRow()
 
   const [pagination, setPagination] = useState<PaginationState>({
     pageIndex: 0,
@@ -76,6 +77,8 @@ export function TrailersPage() {
       <TrailerTable
         data={trailers?.content ?? []}
         isLoading={loading}
+        highlightId={highlight.id}
+        highlightName={highlight.name}
         pageCount={trailers?.totalPages ?? 0}
         totalCount={trailers?.totalElements ?? 0}
         pageIndex={pagination.pageIndex}
@@ -104,7 +107,10 @@ export function TrailersPage() {
       <TrailerDetailSheet
         trailer={detailTrailer}
         open={!!detailTrailer}
-        onClose={() => setDetailTrailer(null)}
+        onClose={() => {
+          onDrawerClose(detailTrailer?.id ?? null)
+          setDetailTrailer(null)
+        }}
         onEdit={() => {
           if (detailTrailer) {
             setEditingTrailer(detailTrailer)

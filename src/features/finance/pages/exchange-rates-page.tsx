@@ -127,19 +127,21 @@ export function ExchangeRatesPage() {
           </Button>
         </div>
 
-        {convertMutation.data && (
+        {convertMutation.data?.convertedAmount != null && (
           <div className="mt-4 flex gap-6">
             <div>
               <Caption className="text-muted-foreground">
                 {t('exchangeRates.converter.result')}
               </Caption>
-              <H4>{convertMutation.data.result.toFixed(2)} RSD</H4>
+              <H4>
+                {Number(convertMutation.data.convertedAmount).toFixed(2)} RSD
+              </H4>
             </div>
             <div>
               <Caption className="text-muted-foreground">
                 {t('exchangeRates.converter.rate')}
               </Caption>
-              <H4>{convertMutation.data.rate.toFixed(4)}</H4>
+              <H4>{Number(convertMutation.data.exchangeRate).toFixed(4)}</H4>
             </div>
           </div>
         )}

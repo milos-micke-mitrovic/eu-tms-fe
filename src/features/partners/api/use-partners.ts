@@ -24,11 +24,17 @@ export const GET_PARTNERS = gql`
         id
         name
         pib
+        maticniBroj
+        address
         city
+        country
+        zipCode
+        bankAccount
         partnerType
         phone
         email
         contactPerson
+        notes
       }
       totalElements
       totalPages

@@ -28,11 +28,12 @@ type ConvertCurrencyRequest = {
 }
 
 type ConvertCurrencyResponse = {
-  amount: number
+  originalAmount: number
   fromCurrency: string
   toCurrency: string
-  result: number
-  rate: number
+  convertedAmount: number | null
+  exchangeRate: number | null
+  rateDate: string
 }
 
 export function useConvertCurrency() {

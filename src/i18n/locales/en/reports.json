@@ -1,0 +1,47 @@
+{
+  "title": "Reports",
+  "expenseReport": {
+    "title": "Expense Report",
+    "description": "Overview of all expenses for the period, grouped by category"
+  },
+  "profitabilityReport": {
+    "title": "Profitability Report",
+    "description": "Revenue vs expenses by route, vehicle, or partner",
+    "groupBy": "Group by",
+    "byRoute": "By route",
+    "byVehicle": "By vehicle",
+    "byPartner": "By partner"
+  },
+  "fleetCostReport": {
+    "title": "Fleet Cost Report",
+    "description": "Costs per vehicle with average per kilometer"
+  },
+  "downloadPdf": "Download PDF",
+  "downloadExcel": "Download Excel",
+  "dateFrom": "From",
+  "dateTo": "To",
+  "generating": "Generating...",
+  "downloaded": "Report downloaded",
+  "statistics": {
+    "title": "Statistics",
+    "profitability": "Profitability",
+    "collection": "Collection",
+    "dateFrom": "From",
+    "dateTo": "To",
+    "routeNumber": "Route",
+    "client": "Client",
+    "vehicle": "Vehicle",
+    "revenue": "Revenue",
+    "expenses": "Expenses",
+    "profit": "Profit",
+    "margin": "Margin",
+    "totalInvoiced": "Invoiced",
+    "totalCollected": "Collected",
+    "overdue": "Overdue",
+    "collectionRate": "Collection Rate",
+    "avgCollectionDays": "Average collection time: {{days}} days",
+    "vehicleProfitability": "Profitability by Vehicle",
+    "partnerProfitability": "Profitability by Partner",
+    "routeProfitability": "Profitability by Route"
+  }
+}

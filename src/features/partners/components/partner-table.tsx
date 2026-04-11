@@ -33,6 +33,10 @@ type PartnerTableProps = {
   onEdit: (partner: PartnerListItem) => void
   onDelete: (partner: PartnerListItem) => void
   onRowClick?: (partner: PartnerListItem) => void
+  highlightId?: string | number | null
+  highlightName?: string | null
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  getRowName?: (row: any) => string
   emptyAction?: ReactNode
   isFiltered?: boolean
   onClearFilters?: () => void
@@ -57,6 +61,9 @@ export function PartnerTable({
   onEdit,
   onDelete,
   onRowClick,
+  highlightId,
+  highlightName,
+  getRowName,
   emptyAction,
   isFiltered,
   onClearFilters,
@@ -156,6 +163,9 @@ export function PartnerTable({
       pageSize={pageSize}
       onPaginationChange={onPaginationChange}
       onRowClick={onRowClick}
+      highlightId={highlightId}
+      highlightName={highlightName}
+      getRowName={getRowName}
       emptyAction={emptyAction}
       isFiltered={isFiltered}
       onClearFilters={onClearFilters}

@@ -2,7 +2,12 @@ import { useState, useCallback } from 'react'
 import type { PaginationState } from '@tanstack/react-table'
 import { useTranslation } from 'react-i18next'
 import { Plus } from 'lucide-react'
-import { usePageTitle, useDebounce, useTableSort } from '@/shared/hooks'
+import {
+  usePageTitle,
+  useDebounce,
+  useTableSort,
+  useHighlightRow,
+} from '@/shared/hooks'
 import { PageHeader, SearchInput } from '@/shared/components'
 import { ConfirmDialog } from '@/shared/ui/overlay/confirm-dialog'
 import { Button } from '@/shared/ui/button'
@@ -17,6 +22,7 @@ import type { PartnerListItem, PartnerFilter } from '../types'
 export function PartnersPage() {
   const { t } = useTranslation('partners')
   usePageTitle(t('title'))
+  const [highlight, onDrawerClose] = useHighlightRow()
 
   const [search, setSearch] = useState('')
   const debouncedSearch = useDebounce(search, 300)
@@ -111,6 +117,8 @@ export function PartnersPage() {
       <PartnerTable
         data={partners?.content ?? []}
         isLoading={loading}
+        highlightId={highlight.id}
+        highlightName={highlight.name}
         pageCount={partners?.totalPages ?? 0}
         totalCount={partners?.totalElements ?? 0}
         pageIndex={pagination.pageIndex}
@@ -141,7 +149,10 @@ export function PartnersPage() {
       <PartnerDetailSheet
         partner={detailPartner}
         open={!!detailPartner}
-        onClose={() => setDetailPartner(null)}
+        onClose={() => {
+          onDrawerClose(detailPartner?.id ?? null)
+          setDetailPartner(null)
+        }}
         onEdit={() => {
           if (detailPartner) {
             setEditingPartner(detailPartner)

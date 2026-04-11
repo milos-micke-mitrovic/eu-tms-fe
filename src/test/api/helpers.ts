@@ -3,6 +3,10 @@ const GRAPHQL = 'http://localhost:8080/graphql'
 
 let token: string | null = null
 
+async function wait(ms: number) {
+  return new Promise((r) => setTimeout(r, ms))
+}
+
 export async function ensureToken(): Promise<void> {
   if (token) return
 
@@ -20,8 +24,8 @@ export async function ensureToken(): Promise<void> {
     }
 
     if (res.status === 429) {
-      const wait = Number(res.headers.get('Retry-After') || 6)
-      await new Promise((r) => setTimeout(r, wait * 1000))
+      const retryAfter = Number(res.headers.get('Retry-After') || 6)
+      await wait(retryAfter * 1000)
       continue
     }
 
@@ -32,27 +36,54 @@ export async function ensureToken(): Promise<void> {
 
 export async function rest(method: string, path: string, body?: unknown) {
   await ensureToken()
-  const res = await fetch(`${API}${path}`, {
-    method,
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`,
-    },
-    body: body ? JSON.stringify(body) : undefined,
-  })
-  const data = res.status === 204 ? null : await res.json().catch(() => null)
-  return { status: res.status, data }
+
+  for (let attempt = 0; attempt < 3; attempt++) {
+    const res = await fetch(`${API}${path}`, {
+      method,
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      body: body ? JSON.stringify(body) : undefined,
+    })
+
+    if (res.status === 429) {
+      const retryAfter = Number(res.headers.get('Retry-After') || 3)
+      await wait(retryAfter * 1000)
+      continue
+    }
+
+    const data = res.status === 204 ? null : await res.json().catch(() => null)
+    return { status: res.status, data }
+  }
+
+  return { status: 429, data: null }
 }
 
-export async function graphql(query: string, variables?: Record<string, unknown>) {
+export async function graphql(
+  query: string,
+  variables?: Record<string, unknown>
+) {
   await ensureToken()
-  const res = await fetch(GRAPHQL, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`,
-    },
-    body: JSON.stringify({ query, variables }),
-  })
-  return res.json()
+
+  for (let attempt = 0; attempt < 3; attempt++) {
+    const res = await fetch(GRAPHQL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ query, variables }),
+    })
+
+    if (res.status === 429) {
+      const retryAfter = Number(res.headers.get('Retry-After') || 3)
+      await wait(retryAfter * 1000)
+      continue
+    }
+
+    return res.json()
+  }
+
+  return { data: null, errors: [{ message: 'Rate limited after 3 retries' }] }
 }

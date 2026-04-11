@@ -1,0 +1,34 @@
+{
+  "title": "Dozvole",
+  "addNew": "Nova dozvola",
+  "permitType": "Tip dozvole",
+  "country": "Zemlja",
+  "number": "Broj dozvole",
+  "validFrom": "Važi od",
+  "validTo": "Važi do",
+  "vehicle": "Vozilo",
+  "route": "Nalog",
+  "notes": "Napomena",
+  "assign": "Dodeli vozilu",
+  "release": "Oslobodi",
+  "markUsed": "Označi kao iskorišćenu",
+  "allCountries": "Sve zemlje",
+  "types": {
+    "CEMT": "CEMT",
+    "BILATERAL": "Bilateralna",
+    "ECMT": "ECMT"
+  },
+  "status": {
+    "AVAILABLE": "Dostupna",
+    "ASSIGNED": "Dodeljena",
+    "IN_USE": "U upotrebi",
+    "EXPIRED": "Istekla",
+    "USED": "Iskorišćena"
+  },
+  "summary": {
+    "available": "Dostupne",
+    "assigned": "Dodeljene",
+    "expiringSoon": "Ističu uskoro",
+    "expired": "Istekle"
+  }
+}

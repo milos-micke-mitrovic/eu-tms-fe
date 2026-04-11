@@ -37,6 +37,10 @@ type RouteTableProps = {
   emptyAction?: ReactNode
   isFiltered?: boolean
   onClearFilters?: () => void
+  highlightId?: string | number | null
+  highlightName?: string | null
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  getRowName?: (row: any) => string
 }
 
 export function RouteTable({
@@ -55,6 +59,9 @@ export function RouteTable({
   emptyAction,
   isFiltered,
   onClearFilters,
+  highlightId,
+  highlightName,
+  getRowName,
 }: RouteTableProps) {
   const { t } = useTranslation('spedition')
 
@@ -221,6 +228,9 @@ export function RouteTable({
       emptyAction={emptyAction}
       isFiltered={isFiltered}
       onClearFilters={onClearFilters}
+      highlightId={highlightId}
+      highlightName={highlightName}
+      getRowName={getRowName}
     />
   )
 }

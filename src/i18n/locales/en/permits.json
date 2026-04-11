@@ -1,0 +1,34 @@
+{
+  "title": "Permits",
+  "addNew": "New Permit",
+  "permitType": "Permit Type",
+  "country": "Country",
+  "number": "Permit Number",
+  "validFrom": "Valid From",
+  "validTo": "Valid To",
+  "vehicle": "Vehicle",
+  "route": "Route",
+  "notes": "Notes",
+  "assign": "Assign to Vehicle",
+  "release": "Release",
+  "markUsed": "Mark as Used",
+  "allCountries": "All Countries",
+  "types": {
+    "CEMT": "CEMT",
+    "BILATERAL": "Bilateral",
+    "ECMT": "ECMT"
+  },
+  "status": {
+    "AVAILABLE": "Available",
+    "ASSIGNED": "Assigned",
+    "IN_USE": "In Use",
+    "EXPIRED": "Expired",
+    "USED": "Used"
+  },
+  "summary": {
+    "available": "Available",
+    "assigned": "Assigned",
+    "expiringSoon": "Expiring Soon",
+    "expired": "Expired"
+  }
+}

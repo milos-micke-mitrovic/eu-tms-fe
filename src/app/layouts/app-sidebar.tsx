@@ -12,6 +12,9 @@ import {
   Fuel,
   FileText,
   Coins,
+  BarChart3,
+  PieChart,
+  ShieldCheck,
 } from 'lucide-react'
 import { Logo } from '@/shared/components'
 import {
@@ -45,6 +48,9 @@ const navItems = [
   { key: 'fuel', path: '/fuel', icon: Fuel },
   { key: 'invoices', path: '/invoices', icon: FileText },
   { key: 'exchangeRates', path: '/exchange-rates', icon: Coins },
+  { key: 'permits', path: '/permits', icon: ShieldCheck },
+  { key: 'reports', path: '/reports', icon: BarChart3 },
+  { key: 'statistics', path: '/statistics', icon: PieChart },
 ] as const
 
 export function AppSidebar() {

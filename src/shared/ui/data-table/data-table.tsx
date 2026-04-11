@@ -49,6 +49,10 @@ type DataTableProps<TData, TValue> = {
   isFiltered?: boolean
   onClearFilters?: () => void
   onRowClick?: (row: TData) => void
+  highlightId?: string | number | null
+  highlightName?: string | null
+  getRowId?: (row: TData) => string | number
+  getRowName?: (row: TData) => string
 }
 
 export function DataTable<TData, TValue>({
@@ -73,6 +77,10 @@ export function DataTable<TData, TValue>({
   isFiltered = false,
   onClearFilters,
   onRowClick,
+  highlightId,
+  highlightName,
+  getRowId,
+  getRowName,
 }: DataTableProps<TData, TValue>) {
   const { t } = useTranslation('common')
   const resolvedEmptyText = emptyText ?? t('table.noResults')
@@ -128,6 +136,33 @@ export function DataTable<TData, TValue>({
     },
   })
 
+  // Highlight row — from navigation or drawer close. Fades after 2s.
+  const [activeHighlightId, setActiveHighlightId] = useState(highlightId)
+  const [activeHighlightName, setActiveHighlightName] = useState(highlightName)
+  const [fading, setFading] = useState(false)
+  useEffect(() => {
+    setActiveHighlightId(highlightId)
+    setActiveHighlightName(highlightName)
+    setFading(false)
+  }, [highlightId, highlightName])
+  useEffect(() => {
+    if (
+      (activeHighlightId != null || activeHighlightName != null) &&
+      displayData.length > 0
+    ) {
+      const fadeTimer = setTimeout(() => setFading(true), 1500)
+      const clearTimer = setTimeout(() => {
+        setActiveHighlightId(null)
+        setActiveHighlightName(null)
+        setFading(false)
+      }, 2500)
+      return () => {
+        clearTimeout(fadeTimer)
+        clearTimeout(clearTimer)
+      }
+    }
+  }, [activeHighlightId, activeHighlightName, displayData.length])
+
   const showEmptyState = !isTableLoading && !table.getRowModel().rows?.length
   const isInitialLoad = isTableLoading && displayData.length === 0
   const isRefetching = isTableLoading && displayData.length > 0
@@ -166,25 +201,48 @@ export function DataTable<TData, TValue>({
                 </TableRow>
               ))
             ) : table.getRowModel().rows?.length ? (
-              table.getRowModel().rows.map((row) => (
-                <TableRow
-                  key={row.id}
-                  data-state={row.getIsSelected() && 'selected'}
-                  className={cn(
-                    onRowClick && 'hover:bg-muted/50 cursor-pointer'
-                  )}
-                  onClick={() => onRowClick?.(row.original)}
-                >
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
-                      )}
-                    </TableCell>
-                  ))}
-                </TableRow>
-              ))
+              table.getRowModel().rows.map((row) => {
+                const rowId = getRowId
+                  ? getRowId(row.original)
+                  : // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    (row.original as any)?.id
+                const matchById =
+                  activeHighlightId != null &&
+                  rowId != null &&
+                  String(rowId) === String(activeHighlightId)
+                const matchByName =
+                  activeHighlightName != null &&
+                  getRowName != null &&
+                  getRowName(row.original)
+                    .toLowerCase()
+                    .includes(activeHighlightName.toLowerCase())
+                const isHighlighted = matchById || matchByName
+                return (
+                  <TableRow
+                    key={row.id}
+                    data-state={row.getIsSelected() && 'selected'}
+                    className={cn(
+                      onRowClick && 'hover:bg-muted/50 cursor-pointer',
+                      isHighlighted &&
+                        !fading &&
+                        'bg-primary/15 ring-primary/30 ring-1 ring-inset',
+                      isHighlighted &&
+                        fading &&
+                        'bg-primary/5 ring-primary/10 ring-1 transition-all duration-1000 ring-inset'
+                    )}
+                    onClick={() => onRowClick?.(row.original)}
+                  >
+                    {row.getVisibleCells().map((cell) => (
+                      <TableCell key={cell.id}>
+                        {flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext()
+                        )}
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                )
+              })
             ) : (
               <TableRow>
                 <TableCell colSpan={columns.length} className="h-48" />

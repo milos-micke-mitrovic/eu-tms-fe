@@ -76,6 +76,24 @@ const InvoicesPage = lazy(() =>
   }))
 )
 
+const PermitsPage = lazy(() =>
+  import('@/features/permits/pages/permits-page').then((m) => ({
+    default: m.PermitsPage,
+  }))
+)
+
+const ReportsPage = lazy(() =>
+  import('@/features/reports/pages/reports-page').then((m) => ({
+    default: m.ReportsPage,
+  }))
+)
+
+const StatisticsPage = lazy(() =>
+  import('@/features/reports/pages/statistics-page').then((m) => ({
+    default: m.StatisticsPage,
+  }))
+)
+
 // Redirects to the user's default route based on role
 function DefaultRedirect() {
   const { user } = useAuth()
@@ -226,6 +244,30 @@ export const router = createBrowserRouter([
         element: (
           <LazyPage>
             <InvoicesPage />
+          </LazyPage>
+        ),
+      },
+      {
+        path: '/permits',
+        element: (
+          <LazyPage>
+            <PermitsPage />
+          </LazyPage>
+        ),
+      },
+      {
+        path: '/reports',
+        element: (
+          <LazyPage>
+            <ReportsPage />
+          </LazyPage>
+        ),
+      },
+      {
+        path: '/statistics',
+        element: (
+          <LazyPage>
+            <StatisticsPage />
           </LazyPage>
         ),
       },

@@ -2,7 +2,12 @@ import { useState, useCallback } from 'react'
 import type { PaginationState } from '@tanstack/react-table'
 import { useTranslation } from 'react-i18next'
 import { Plus } from 'lucide-react'
-import { usePageTitle, useDebounce, useTableSort } from '@/shared/hooks'
+import {
+  usePageTitle,
+  useDebounce,
+  useTableSort,
+  useHighlightRow,
+} from '@/shared/hooks'
 import { PageHeader, SearchInput } from '@/shared/components'
 import { ConfirmDialog } from '@/shared/ui/overlay/confirm-dialog'
 import { Button } from '@/shared/ui/button'
@@ -17,6 +22,7 @@ import type { DriverListItem, DriverFilter } from '../types'
 export function DriversPage() {
   const { t } = useTranslation('fleet')
   usePageTitle(t('drivers.title'))
+  const [highlight, onDrawerClose] = useHighlightRow()
 
   const [search, setSearch] = useState('')
   const debouncedSearch = useDebounce(search, 300)
@@ -109,6 +115,9 @@ export function DriversPage() {
       <DriverTable
         data={drivers?.content ?? []}
         isLoading={loading}
+        highlightId={highlight.id}
+        highlightName={highlight.name}
+        getRowName={(d) => `${d.firstName} ${d.lastName}`}
         pageCount={drivers?.totalPages ?? 0}
         totalCount={drivers?.totalElements ?? 0}
         pageIndex={pagination.pageIndex}
@@ -139,7 +148,10 @@ export function DriversPage() {
       <DriverDetailSheet
         driverId={detailDriverId}
         open={!!detailDriverId}
-        onClose={() => setDetailDriverId(null)}
+        onClose={() => {
+          onDrawerClose(detailDriverId)
+          setDetailDriverId(null)
+        }}
         onEdit={() => {
           if (detailDriverId) {
             const d = drivers?.content.find((d) => d.id === detailDriverId)

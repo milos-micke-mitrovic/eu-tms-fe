@@ -36,6 +36,10 @@ type VehicleTableProps = {
   emptyAction?: ReactNode
   isFiltered?: boolean
   onClearFilters?: () => void
+  highlightId?: string | number | null
+  highlightName?: string | null
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  getRowName?: (row: any) => string
 }
 
 const statusVariant: Record<
@@ -63,6 +67,9 @@ export function VehicleTable({
   emptyAction,
   isFiltered,
   onClearFilters,
+  highlightId,
+  highlightName,
+  getRowName,
 }: VehicleTableProps) {
   const { t } = useTranslation('fleet')
 
@@ -177,6 +184,9 @@ export function VehicleTable({
       emptyAction={emptyAction}
       isFiltered={isFiltered}
       onClearFilters={onClearFilters}
+      highlightId={highlightId}
+      highlightName={highlightName}
+      getRowName={getRowName}
     />
   )
 }

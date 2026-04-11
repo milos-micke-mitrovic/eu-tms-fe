@@ -65,20 +65,22 @@ export function PartnerForm({ open, onClose, partner }: PartnerFormProps) {
 
   useEffect(() => {
     if (partner) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const p = partner as any
       form.reset({
-        name: partner.name,
-        pib: partner.pib ?? '',
-        maticniBroj: '',
-        address: '',
-        city: partner.city ?? '',
-        country: 'RS',
-        zipCode: '',
-        bankAccount: '',
-        phone: partner.phone ?? '',
-        email: partner.email ?? '',
-        contactPerson: partner.contactPerson ?? '',
-        partnerType: partner.partnerType as PartnerRequest['partnerType'],
-        notes: '',
+        name: p.name,
+        pib: p.pib ?? '',
+        maticniBroj: p.maticniBroj ?? '',
+        address: p.address ?? '',
+        city: p.city ?? '',
+        country: p.country ?? 'RS',
+        zipCode: p.zipCode ?? '',
+        bankAccount: p.bankAccount ?? '',
+        phone: p.phone ?? '',
+        email: p.email ?? '',
+        contactPerson: p.contactPerson ?? '',
+        partnerType: p.partnerType as PartnerRequest['partnerType'],
+        notes: p.notes ?? '',
       })
     } else {
       form.reset(defaultValues)

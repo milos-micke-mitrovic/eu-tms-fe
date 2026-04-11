@@ -1,0 +1,47 @@
+{
+  "title": "Izveštaji",
+  "expenseReport": {
+    "title": "Izveštaj troškova",
+    "description": "Pregled svih troškova za period, grupisano po kategorijama"
+  },
+  "profitabilityReport": {
+    "title": "Izveštaj profitabilnosti",
+    "description": "Prihod vs rashod po turi, vozilu ili klijentu",
+    "groupBy": "Grupiši po",
+    "byRoute": "Po turi",
+    "byVehicle": "Po vozilu",
+    "byPartner": "Po klijentu"
+  },
+  "fleetCostReport": {
+    "title": "Troškovi voznog parka",
+    "description": "Troškovi po vozilu sa prosekom po kilometru"
+  },
+  "downloadPdf": "Preuzmi PDF",
+  "downloadExcel": "Preuzmi Excel",
+  "dateFrom": "Od",
+  "dateTo": "Do",
+  "generating": "Generisanje...",
+  "downloaded": "Izveštaj preuzet",
+  "statistics": {
+    "title": "Statistika",
+    "profitability": "Profitabilnost",
+    "collection": "Naplata",
+    "dateFrom": "Od",
+    "dateTo": "Do",
+    "routeNumber": "Nalog",
+    "client": "Klijent",
+    "vehicle": "Vozilo",
+    "revenue": "Prihod",
+    "expenses": "Troškovi",
+    "profit": "Zarada",
+    "margin": "Marža",
+    "totalInvoiced": "Fakturisano",
+    "totalCollected": "Naplaćeno",
+    "overdue": "Kasni",
+    "collectionRate": "Stopa naplate",
+    "avgCollectionDays": "Prosečno vreme naplate: {{days}} dana",
+    "vehicleProfitability": "Profitabilnost po vozilu",
+    "partnerProfitability": "Profitabilnost po klijentu",
+    "routeProfitability": "Profitabilnost po turi"
+  }
+}

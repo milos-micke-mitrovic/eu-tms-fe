@@ -2,7 +2,12 @@ import { useState, useCallback } from 'react'
 import type { PaginationState } from '@tanstack/react-table'
 import { useTranslation } from 'react-i18next'
 import { Plus } from 'lucide-react'
-import { usePageTitle, useDebounce, useTableSort } from '@/shared/hooks'
+import {
+  usePageTitle,
+  useDebounce,
+  useTableSort,
+  useHighlightRow,
+} from '@/shared/hooks'
 import { PageHeader, SearchInput } from '@/shared/components'
 import { ConfirmDialog } from '@/shared/ui/overlay/confirm-dialog'
 import { Button } from '@/shared/ui/button'
@@ -17,6 +22,7 @@ import type { VehicleListItem, VehicleFilter } from '../types'
 export function VehiclesPage() {
   const { t } = useTranslation('fleet')
   usePageTitle(t('vehicles.title'))
+  const [highlight, onDrawerClose] = useHighlightRow()
 
   // Filter state
   const [search, setSearch] = useState('')
@@ -139,6 +145,9 @@ export function VehiclesPage() {
       <VehicleTable
         data={vehicles?.content ?? []}
         isLoading={loading}
+        highlightId={highlight.id}
+        highlightName={highlight.name}
+        getRowName={(v) => v.regNumber}
         pageCount={vehicles?.totalPages ?? 0}
         totalCount={vehicles?.totalElements ?? 0}
         pageIndex={pagination.pageIndex}
@@ -173,7 +182,10 @@ export function VehiclesPage() {
       <VehicleDetailSheet
         vehicleId={detailVehicleId}
         open={!!detailVehicleId}
-        onClose={() => setDetailVehicleId(null)}
+        onClose={() => {
+          onDrawerClose(detailVehicleId)
+          setDetailVehicleId(null)
+        }}
         onEdit={() => {
           if (detailVehicleId) {
             const v = vehicles?.content.find((v) => v.id === detailVehicleId)

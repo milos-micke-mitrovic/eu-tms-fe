@@ -30,6 +30,37 @@ export type Scalars = {
   DateTime: { input: string; output: string }
 }
 
+export type CategoryAmount = {
+  category: Scalars['String']['output']
+  totalAmountRsd: Scalars['BigDecimal']['output']
+}
+
+export type CollectionStats = {
+  avgCollectionDays: Scalars['Int']['output']
+  collectionRate: Scalars['BigDecimal']['output']
+  overdueCount: Scalars['Int']['output']
+  totalCollected: Scalars['BigDecimal']['output']
+  totalInvoiced: Scalars['BigDecimal']['output']
+  totalOverdue: Scalars['BigDecimal']['output']
+}
+
+export type Dashboard = {
+  activeRoutesCount: Scalars['Int']['output']
+  completedRoutesThisMonth: Scalars['Int']['output']
+  expenseTrendMonthly: Array<MonthlyAmount>
+  expensesByCategory: Array<CategoryAmount>
+  expiringDocuments: Array<ExpiringDocumentSummary>
+  expiringPermits: Array<PermitSummary>
+  fleetSummary: FleetSummary
+  monthlyExpenseTotal: Scalars['BigDecimal']['output']
+  monthlyRevenueTotal: Scalars['BigDecimal']['output']
+  overdueInvoices: Array<OverdueInvoiceSummary>
+  profitThisMonth: Scalars['BigDecimal']['output']
+  recentNotifications: Array<NotificationSummary>
+  recentRoutes: Array<RouteSummary>
+  topVehiclesByExpense: Array<VehicleExpense>
+}
+
 export type Driver = {
   adrCertificate?: Maybe<Scalars['Boolean']['output']>
   adrExpiry?: Maybe<Scalars['Date']['output']>
@@ -90,6 +121,22 @@ export type ExpiringDocument = {
   id: Scalars['ID']['output']
 }
 
+export type ExpiringDocumentSummary = {
+  daysUntilExpiry: Scalars['Int']['output']
+  documentType: Scalars['String']['output']
+  entityId: Scalars['ID']['output']
+  entityName: Scalars['String']['output']
+  entityType: Scalars['String']['output']
+  expirationDate: Scalars['Date']['output']
+}
+
+export type FleetSummary = {
+  activeDrivers: Scalars['Int']['output']
+  activeVehicles: Scalars['Int']['output']
+  totalDrivers: Scalars['Int']['output']
+  totalVehicles: Scalars['Int']['output']
+}
+
 export type FuelTank = {
   capacityLiters: Scalars['BigDecimal']['output']
   createdAt?: Maybe<Scalars['DateTime']['output']>
@@ -137,6 +184,28 @@ export type InvoicePage = {
   totalPages: Scalars['Int']['output']
 }
 
+export type MonthlyAmount = {
+  month: Scalars['String']['output']
+  totalAmountRsd: Scalars['BigDecimal']['output']
+}
+
+export type NotificationSummary = {
+  createdAt: Scalars['DateTime']['output']
+  id: Scalars['ID']['output']
+  message: Scalars['String']['output']
+  read: Scalars['Boolean']['output']
+  title: Scalars['String']['output']
+}
+
+export type OverdueInvoiceSummary = {
+  currency: Scalars['String']['output']
+  daysOverdue: Scalars['Int']['output']
+  id: Scalars['ID']['output']
+  invoiceNumber: Scalars['String']['output']
+  partnerName: Scalars['String']['output']
+  total: Scalars['BigDecimal']['output']
+}
+
 export type Partner = {
   address?: Maybe<Scalars['String']['output']>
   bankAccount?: Maybe<Scalars['String']['output']>
@@ -164,6 +233,15 @@ export type PartnerPage = {
   totalPages: Scalars['Int']['output']
 }
 
+export type PartnerProfitability = {
+  partnerId: Scalars['ID']['output']
+  partnerName: Scalars['String']['output']
+  profit: Scalars['BigDecimal']['output']
+  routeCount: Scalars['Int']['output']
+  totalExpenses: Scalars['BigDecimal']['output']
+  totalRevenue: Scalars['BigDecimal']['output']
+}
+
 export type PerDiemRate = {
   countryCode: Scalars['String']['output']
   countryNameSr: Scalars['String']['output']
@@ -171,7 +249,25 @@ export type PerDiemRate = {
   dailyAmount: Scalars['BigDecimal']['output']
 }
 
+export type PermitSummary = {
+  countryName?: Maybe<Scalars['String']['output']>
+  daysUntilExpiry: Scalars['Int']['output']
+  id: Scalars['ID']['output']
+  permitNumber: Scalars['String']['output']
+  permitType: Scalars['String']['output']
+  validTo: Scalars['Date']['output']
+}
+
+export type ProfitabilityPage = {
+  content: Array<RouteProfitability>
+  number: Scalars['Int']['output']
+  size: Scalars['Int']['output']
+  totalElements: Scalars['Int']['output']
+  totalPages: Scalars['Int']['output']
+}
+
 export type Query = {
+  dashboard: Dashboard
   driver?: Maybe<Driver>
   drivers: DriverPage
   exchangeRates: Array<ExchangeRate>
@@ -179,11 +275,15 @@ export type Query = {
   expiringDocuments: Array<ExpiringDocument>
   fuelTanks: Array<FuelTank>
   invoice?: Maybe<Invoice>
+  invoiceCollectionStats: CollectionStats
   invoices: InvoicePage
   partners: PartnerPage
   perDiemRates: Array<PerDiemRate>
   /** Liveness probe — returns 'pong'. */
   ping: Scalars['String']['output']
+  profitabilityByPartner: Array<PartnerProfitability>
+  profitabilityByRoute: ProfitabilityPage
+  profitabilityByVehicle: Array<VehicleProfitability>
   route?: Maybe<Route>
   routes: RoutePage
   trailers: TrailerPage
@@ -223,6 +323,11 @@ export type QueryInvoiceArgs = {
   id: Scalars['ID']['input']
 }
 
+export type QueryInvoiceCollectionStatsArgs = {
+  from: Scalars['Date']['input']
+  to: Scalars['Date']['input']
+}
+
 export type QueryInvoicesArgs = {
   dateFrom?: InputMaybe<Scalars['Date']['input']>
   dateTo?: InputMaybe<Scalars['Date']['input']>
@@ -242,6 +347,23 @@ export type QueryPartnersArgs = {
   size?: InputMaybe<Scalars['Int']['input']>
   sortBy?: InputMaybe<Scalars['String']['input']>
   sortDir?: InputMaybe<Scalars['String']['input']>
+}
+
+export type QueryProfitabilityByPartnerArgs = {
+  from: Scalars['Date']['input']
+  to: Scalars['Date']['input']
+}
+
+export type QueryProfitabilityByRouteArgs = {
+  from: Scalars['Date']['input']
+  page?: InputMaybe<Scalars['Int']['input']>
+  size?: InputMaybe<Scalars['Int']['input']>
+  to: Scalars['Date']['input']
+}
+
+export type QueryProfitabilityByVehicleArgs = {
+  from: Scalars['Date']['input']
+  to: Scalars['Date']['input']
 }
 
 export type QueryRouteArgs = {
@@ -334,6 +456,17 @@ export type RoutePage = {
   totalPages: Scalars['Int']['output']
 }
 
+export type RouteProfitability = {
+  expenses: Scalars['BigDecimal']['output']
+  internalNumber: Scalars['String']['output']
+  marginPercent: Scalars['BigDecimal']['output']
+  partnerName?: Maybe<Scalars['String']['output']>
+  profit: Scalars['BigDecimal']['output']
+  revenue: Scalars['BigDecimal']['output']
+  routeId: Scalars['ID']['output']
+  vehicleRegNumber?: Maybe<Scalars['String']['output']>
+}
+
 export type RouteStop = {
   actualArrival?: Maybe<Scalars['DateTime']['output']>
   actualDeparture?: Maybe<Scalars['DateTime']['output']>
@@ -347,6 +480,16 @@ export type RouteStop = {
   stopOrder: Scalars['Int']['output']
   stopType: Scalars['String']['output']
   zipCode?: Maybe<Scalars['String']['output']>
+}
+
+export type RouteSummary = {
+  currency?: Maybe<Scalars['String']['output']>
+  departureDate?: Maybe<Scalars['Date']['output']>
+  id: Scalars['ID']['output']
+  internalNumber: Scalars['String']['output']
+  partnerName?: Maybe<Scalars['String']['output']>
+  price?: Maybe<Scalars['BigDecimal']['output']>
+  status: Scalars['String']['output']
 }
 
 export type Trailer = {
@@ -401,12 +544,93 @@ export type VehicleDocument = {
   originalFilename?: Maybe<Scalars['String']['output']>
 }
 
+export type VehicleExpense = {
+  regNumber: Scalars['String']['output']
+  totalAmountRsd: Scalars['BigDecimal']['output']
+  vehicleId: Scalars['ID']['output']
+}
+
 export type VehiclePage = {
   content: Array<Vehicle>
   number: Scalars['Int']['output']
   size: Scalars['Int']['output']
   totalElements: Scalars['Int']['output']
   totalPages: Scalars['Int']['output']
+}
+
+export type VehicleProfitability = {
+  avgProfitPerRoute: Scalars['BigDecimal']['output']
+  profit: Scalars['BigDecimal']['output']
+  regNumber: Scalars['String']['output']
+  routeCount: Scalars['Int']['output']
+  totalExpenses: Scalars['BigDecimal']['output']
+  totalRevenue: Scalars['BigDecimal']['output']
+  vehicleId: Scalars['ID']['output']
+}
+
+export type DashboardQueryVariables = Exact<{ [key: string]: never }>
+
+export type DashboardQuery = {
+  dashboard: {
+    activeRoutesCount: number
+    completedRoutesThisMonth: number
+    monthlyExpenseTotal: number
+    monthlyRevenueTotal: number
+    profitThisMonth: number
+    expensesByCategory: Array<{ category: string; totalAmountRsd: number }>
+    expenseTrendMonthly: Array<{ month: string; totalAmountRsd: number }>
+    topVehiclesByExpense: Array<{
+      vehicleId: string
+      regNumber: string
+      totalAmountRsd: number
+    }>
+    expiringPermits: Array<{
+      id: string
+      permitType: string
+      permitNumber: string
+      countryName?: string | null
+      validTo: string
+      daysUntilExpiry: number
+    }>
+    expiringDocuments: Array<{
+      entityType: string
+      entityId: string
+      entityName: string
+      documentType: string
+      expirationDate: string
+      daysUntilExpiry: number
+    }>
+    overdueInvoices: Array<{
+      id: string
+      invoiceNumber: string
+      partnerName: string
+      total: number
+      currency: string
+      daysOverdue: number
+    }>
+    recentRoutes: Array<{
+      id: string
+      internalNumber: string
+      status: string
+      partnerName?: string | null
+      departureDate?: string | null
+      price?: number | null
+      currency?: string | null
+    }>
+    recentNotifications: Array<{
+      id: string
+      title: string
+      message: string
+      read: boolean
+      createdAt: string
+    }>
+    fleetSummary: {
+      totalVehicles: number
+      activeVehicles: number
+      totalDrivers: number
+      activeDrivers: number
+    }
+  }
 }
 
 export type GetExchangeRatesQueryVariables = Exact<{
@@ -688,12 +912,91 @@ export type GetPartnersQuery = {
       id: string
       name: string
       pib?: string | null
+      maticniBroj?: string | null
+      address?: string | null
       city?: string | null
+      country?: string | null
+      zipCode?: string | null
+      bankAccount?: string | null
       partnerType: string
       phone?: string | null
       email?: string | null
       contactPerson?: string | null
+      notes?: string | null
     }>
+  }
+}
+
+export type ProfitabilityByRouteQueryVariables = Exact<{
+  from: Scalars['Date']['input']
+  to: Scalars['Date']['input']
+  page?: InputMaybe<Scalars['Int']['input']>
+  size?: InputMaybe<Scalars['Int']['input']>
+}>
+
+export type ProfitabilityByRouteQuery = {
+  profitabilityByRoute: {
+    totalPages: number
+    totalElements: number
+    content: Array<{
+      routeId: string
+      internalNumber: string
+      partnerName?: string | null
+      vehicleRegNumber?: string | null
+      revenue: number
+      expenses: number
+      profit: number
+      marginPercent: number
+    }>
+  }
+}
+
+export type ProfitabilityByVehicleQueryVariables = Exact<{
+  from: Scalars['Date']['input']
+  to: Scalars['Date']['input']
+}>
+
+export type ProfitabilityByVehicleQuery = {
+  profitabilityByVehicle: Array<{
+    vehicleId: string
+    regNumber: string
+    routeCount: number
+    totalRevenue: number
+    totalExpenses: number
+    profit: number
+    avgProfitPerRoute: number
+  }>
+}
+
+export type ProfitabilityByPartnerQueryVariables = Exact<{
+  from: Scalars['Date']['input']
+  to: Scalars['Date']['input']
+}>
+
+export type ProfitabilityByPartnerQuery = {
+  profitabilityByPartner: Array<{
+    partnerId: string
+    partnerName: string
+    routeCount: number
+    totalRevenue: number
+    totalExpenses: number
+    profit: number
+  }>
+}
+
+export type InvoiceCollectionStatsQueryVariables = Exact<{
+  from: Scalars['Date']['input']
+  to: Scalars['Date']['input']
+}>
+
+export type InvoiceCollectionStatsQuery = {
+  invoiceCollectionStats: {
+    totalInvoiced: number
+    totalCollected: number
+    totalOverdue: number
+    collectionRate: number
+    avgCollectionDays: number
+    overdueCount: number
   }
 }
 
