@@ -12,7 +12,6 @@ import {
   Fuel,
   FileText,
   Coins,
-  Bell,
 } from 'lucide-react'
 import { Logo } from '@/shared/components'
 import {
@@ -46,7 +45,6 @@ const navItems = [
   { key: 'fuel', path: '/fuel', icon: Fuel },
   { key: 'invoices', path: '/invoices', icon: FileText },
   { key: 'exchangeRates', path: '/exchange-rates', icon: Coins },
-  { key: 'notifications', path: '/notifications', icon: Bell },
 ] as const
 
 export function AppSidebar() {
@@ -105,20 +103,24 @@ export function AppSidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
-      <SidebarFooter className={`border-t ${isCollapsed ? 'p-1' : 'p-2'}`}>
+      <SidebarFooter className="border-primary/20 border-t p-2">
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton
               tooltip={user ? getUserDisplayName(user) : undefined}
               className={`hover:bg-sidebar-accent ${isCollapsed ? 'justify-center' : ''}`}
             >
-              <div className="bg-primary text-primary-foreground flex size-6 shrink-0 items-center justify-center rounded-full text-xs font-medium">
+              <div className="bg-primary text-primary-foreground flex size-8 shrink-0 items-center justify-center rounded-full text-xs font-semibold">
                 {user ? getUserInitials(user) : '?'}
               </div>
-              <div className="flex flex-1 flex-col overflow-hidden group-data-[collapsible=icon]:hidden">
-                <Label truncate>{user ? getUserDisplayName(user) : ''}</Label>
-                <Caption truncate>{user?.email}</Caption>
-              </div>
+              {!isCollapsed && (
+                <div className="flex flex-1 flex-col overflow-hidden">
+                  <Label truncate>{user ? getUserDisplayName(user) : ''}</Label>
+                  <Caption truncate className="text-muted-foreground">
+                    {user?.email}
+                  </Caption>
+                </div>
+              )}
             </SidebarMenuButton>
           </SidebarMenuItem>
           <SidebarMenuItem>

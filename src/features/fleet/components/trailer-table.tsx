@@ -32,6 +32,7 @@ type TrailerTableProps = {
   onSortingChange?: (sorting: SortingState) => void
   onEdit: (trailer: TrailerListItem) => void
   onDelete: (trailer: TrailerListItem) => void
+  onRowClick?: (trailer: TrailerListItem) => void
   emptyAction?: ReactNode
   isFiltered?: boolean
   onClearFilters?: () => void
@@ -58,6 +59,7 @@ export function TrailerTable({
   onSortingChange,
   onEdit,
   onDelete,
+  onRowClick,
   emptyAction,
   isFiltered,
   onClearFilters,
@@ -116,26 +118,28 @@ export function TrailerTable({
       {
         id: 'actions',
         cell: ({ row }) => (
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="icon" className="size-8">
-                <MoreHorizontal className="size-4" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuItem onClick={() => onEdit(row.original)}>
-                <Pencil className="mr-2 size-4" />
-                {t('common:actions.edit')}
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                className="text-destructive"
-                onClick={() => onDelete(row.original)}
-              >
-                <Trash2 className="mr-2 size-4" />
-                {t('common:actions.delete')}
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          <div onClick={(e) => e.stopPropagation()}>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="icon" className="size-8">
+                  <MoreHorizontal className="size-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem onClick={() => onEdit(row.original)}>
+                  <Pencil className="mr-2 size-4" />
+                  {t('common:actions.edit')}
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  className="text-destructive"
+                  onClick={() => onDelete(row.original)}
+                >
+                  <Trash2 className="mr-2 size-4" />
+                  {t('common:actions.delete')}
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
         ),
         size: 50,
       },
@@ -157,6 +161,7 @@ export function TrailerTable({
       pageIndex={pageIndex}
       pageSize={pageSize}
       onPaginationChange={onPaginationChange}
+      onRowClick={onRowClick}
       emptyAction={emptyAction}
       isFiltered={isFiltered}
       onClearFilters={onClearFilters}

@@ -14,7 +14,7 @@ import { Button } from '@/shared/ui/button'
 import { Separator } from '@/shared/ui/separator'
 import { BodySmall, Caption } from '@/shared/ui/typography'
 import { formatDate } from '@/shared/utils'
-import { useVehicle } from '../api/use-vehicles'
+import { useDriver } from '../api/use-drivers'
 import { DocumentUploadDialog } from './document-upload-dialog'
 
 type DocItem = {
@@ -23,8 +23,8 @@ type DocItem = {
   expirationDate?: string | null
 }
 
-type VehicleDetailSheetProps = {
-  vehicleId: string | null
+type DriverDetailSheetProps = {
+  driverId: string | null
   open: boolean
   onClose: () => void
   onEdit?: () => void
@@ -80,7 +80,7 @@ function DocumentList({
         >
           <div>
             <BodySmall className="font-medium">
-              {t(`documents.vehicleTypes.${doc.documentType}`)}
+              {t(`documents.driverTypes.${doc.documentType}`)}
             </BodySmall>
             {doc.expirationDate && (
               <Caption className="text-muted-foreground">
@@ -95,15 +95,15 @@ function DocumentList({
   )
 }
 
-export function VehicleDetailSheet({
-  vehicleId,
+export function DriverDetailSheet({
+  driverId,
   open,
   onClose,
   onEdit,
-}: VehicleDetailSheetProps) {
+}: DriverDetailSheetProps) {
   const { t } = useTranslation('fleet')
-  const { data } = useVehicle(vehicleId)
-  const vehicle = data?.vehicle
+  const { data } = useDriver(driverId)
+  const driver = data?.driver
   const [uploadOpen, setUploadOpen] = useState(false)
 
   return (
@@ -127,62 +127,77 @@ export function VehicleDetailSheet({
               )
             }
           >
-            <SheetTitle>{vehicle?.regNumber ?? '...'}</SheetTitle>
+            <SheetTitle>
+              {driver ? `${driver.firstName} ${driver.lastName}` : '...'}
+            </SheetTitle>
           </SheetHeader>
-          {vehicle && (
+          {driver && (
             <Tabs defaultValue="info" className="p-4">
               <TabsList>
                 <TabsTrigger value="info">Info</TabsTrigger>
                 <TabsTrigger value="documents">
-                  {t('documents.title')} ({vehicle.documents?.length ?? 0})
+                  {t('documents.title')} ({driver.documents?.length ?? 0})
                 </TabsTrigger>
               </TabsList>
               <TabsContent value="info" className="mt-4 space-y-1">
                 <InfoRow
-                  label={t('vehicles.regNumber')}
-                  value={vehicle.regNumber}
+                  label={t('drivers.firstName')}
+                  value={`${driver.firstName} ${driver.lastName}`}
                 />
-                <InfoRow label={t('vehicles.make')} value={vehicle.make} />
-                <InfoRow label={t('vehicles.model')} value={vehicle.model} />
-                <InfoRow label={t('vehicles.year')} value={vehicle.year} />
-                <InfoRow label={t('vehicles.vin')} value={vehicle.vin} />
-                <Separator className="my-2" />
+                <InfoRow label={t('drivers.jmbg')} value={driver.jmbg} />
+                <InfoRow label={t('drivers.phone')} value={driver.phone} />
+                <InfoRow label={t('drivers.email')} value={driver.email} />
                 <InfoRow
-                  label={t('vehicles.type')}
-                  value={t(`vehicles.vehicleTypes.${vehicle.vehicleType}`)}
-                />
-                <InfoRow
-                  label={t('vehicles.fuelType')}
-                  value={t(`vehicles.fuelTypes.${vehicle.fuelType}`)}
-                />
-                <InfoRow
-                  label={t('vehicles.ownership')}
-                  value={t(`vehicles.ownershipTypes.${vehicle.ownership}`)}
-                />
-                <InfoRow
-                  label={t('vehicles.status')}
-                  value={t(`vehicles.statuses.${vehicle.status}`)}
+                  label={t('drivers.birthDate')}
+                  value={driver.birthDate ? formatDate(driver.birthDate) : null}
                 />
                 <Separator className="my-2" />
                 <InfoRow
-                  label={t('vehicles.capacity')}
-                  value={vehicle.cargoCapacityKg}
+                  label={t('drivers.licenseNumber')}
+                  value={driver.licenseNumber}
                 />
                 <InfoRow
-                  label={t('vehicles.volume')}
-                  value={vehicle.cargoVolumeM3}
+                  label={t('drivers.categories')}
+                  value={driver.licenseCategories}
                 />
                 <InfoRow
-                  label={t('vehicles.consumption')}
-                  value={vehicle.avgConsumptionL100km}
+                  label={t('drivers.adr')}
+                  value={
+                    driver.adrCertificate ? t('common:yes') : t('common:no')
+                  }
                 />
                 <InfoRow
-                  label={t('vehicles.odometer')}
-                  value={vehicle.odometerKm}
+                  label={t('drivers.adrExpiry')}
+                  value={driver.adrExpiry ? formatDate(driver.adrExpiry) : null}
                 />
                 <InfoRow
-                  label={t('vehicles.driver')}
-                  value={vehicle.currentDriverName}
+                  label={t('drivers.healthCheckExpiry')}
+                  value={
+                    driver.healthCheckExpiry
+                      ? formatDate(driver.healthCheckExpiry)
+                      : null
+                  }
+                />
+                <InfoRow
+                  label={t('drivers.employment')}
+                  value={
+                    driver.employmentDate
+                      ? formatDate(driver.employmentDate)
+                      : null
+                  }
+                />
+                <Separator className="my-2" />
+                <InfoRow
+                  label={t('common:status.active')}
+                  value={
+                    <Badge variant="outline">
+                      {t(`drivers.statuses.${driver.status}`)}
+                    </Badge>
+                  }
+                />
+                <InfoRow
+                  label={t('drivers.vehicle')}
+                  value={driver.vehicleRegNumber}
                 />
               </TabsContent>
               <TabsContent value="documents" className="mt-4 space-y-4">
@@ -192,19 +207,19 @@ export function VehicleDetailSheet({
                     {t('documents.upload')}
                   </Button>
                 </div>
-                <DocumentList documents={vehicle.documents ?? []} t={t} />
+                <DocumentList documents={driver.documents ?? []} t={t} />
               </TabsContent>
             </Tabs>
           )}
         </SheetContent>
       </Sheet>
 
-      {vehicleId && (
+      {driverId && (
         <DocumentUploadDialog
           open={uploadOpen}
           onClose={() => setUploadOpen(false)}
-          entityType="vehicles"
-          entityId={vehicleId}
+          entityType="drivers"
+          entityId={driverId}
         />
       )}
     </>

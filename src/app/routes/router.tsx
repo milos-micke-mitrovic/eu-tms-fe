@@ -62,11 +62,7 @@ const FuelPage = lazy(() =>
   }))
 )
 
-const NotificationsPage = lazy(() =>
-  import('@/features/notifications/pages/notifications-page').then((m) => ({
-    default: m.NotificationsPage,
-  }))
-)
+// Notifications page removed — bell popover in header is sufficient
 
 const ExchangeRatesPage = lazy(() =>
   import('@/features/finance/pages/exchange-rates-page').then((m) => ({
@@ -214,14 +210,6 @@ export const router = createBrowserRouter([
         element: (
           <LazyPage>
             <FuelPage />
-          </LazyPage>
-        ),
-      },
-      {
-        path: '/notifications',
-        element: (
-          <LazyPage>
-            <NotificationsPage />
           </LazyPage>
         ),
       },

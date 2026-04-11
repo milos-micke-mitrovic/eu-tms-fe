@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useCallback } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useTranslation } from 'react-i18next'
@@ -20,7 +20,10 @@ import {
   FormLabel,
   FormMessage,
 } from '@/shared/ui/form'
+import { Select } from '@/shared/ui/select'
 import type { DriverListItem, DriverRequest } from '../types'
+import { useDriver } from '../api/use-drivers'
+import { useVehicles } from '../api/use-vehicles'
 import { useCreateDriver, useUpdateDriver } from '../api/use-driver-mutations'
 import { driverSchema, type DriverFormData } from '../schemas'
 
@@ -43,11 +46,20 @@ const defaultValues: DriverFormData = {
   adrExpiry: '',
   healthCheckExpiry: '',
   employmentDate: '',
+  vehicleId: null,
 }
 
 export function DriverForm({ open, onClose, driver }: DriverFormProps) {
   const { t } = useTranslation('fleet')
   const isEditing = !!driver
+
+  const { data: detailData } = useDriver(isEditing ? String(driver.id) : null)
+  const fullDriver = detailData?.driver
+  const { data: vehiclesData } = useVehicles({ status: 'ACTIVE', size: 100 })
+  const vehicleOptions = (vehiclesData?.vehicles?.content ?? []).map((v) => ({
+    value: String(v.id),
+    label: `${v.regNumber} — ${v.make} ${v.model}`,
+  }))
 
   const createMutation = useCreateDriver()
   const updateMutation = useUpdateDriver()
@@ -59,26 +71,65 @@ export function DriverForm({ open, onClose, driver }: DriverFormProps) {
     defaultValues,
   })
 
+  const editSource = fullDriver ?? driver
+
   useEffect(() => {
-    if (driver) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const src = editSource as any
+    if (src && isEditing) {
       form.reset({
-        firstName: driver.firstName,
-        lastName: driver.lastName,
-        jmbg: driver.jmbg ?? '',
-        phone: driver.phone ?? '',
-        email: '',
-        birthDate: '',
-        licenseNumber: '',
-        licenseCategories: driver.licenseCategories ?? '',
-        adrCertificate: false,
-        adrExpiry: '',
-        healthCheckExpiry: '',
-        employmentDate: '',
+        firstName: src.firstName ?? '',
+        lastName: src.lastName ?? '',
+        jmbg: src.jmbg ?? '',
+        phone: src.phone ?? '',
+        email: src.email ?? '',
+        birthDate: src.birthDate ?? '',
+        licenseNumber: src.licenseNumber ?? '',
+        licenseCategories: src.licenseCategories ?? '',
+        adrCertificate: src.adrCertificate ?? false,
+        adrExpiry: src.adrExpiry ?? '',
+        healthCheckExpiry: src.healthCheckExpiry ?? '',
+        employmentDate: src.employmentDate ?? '',
+        vehicleId: src.vehicleId ? Number(src.vehicleId) : null,
       })
-    } else {
+    } else if (!isEditing) {
       form.reset(defaultValues)
     }
-  }, [driver, form])
+  }, [editSource, isEditing, form])
+
+  // JMBG ↔ birthDate autofill
+  const handleJmbgChange = useCallback(
+    (value: string) => {
+      form.setValue('jmbg', value)
+      if (value.length === 13 && !form.getValues('birthDate')) {
+        const dd = value.slice(0, 2)
+        const mm = value.slice(2, 4)
+        const yyy = value.slice(4, 7)
+        const year = Number(yyy) > 900 ? `1${yyy}` : `2${yyy}`
+        const date = `${year}-${mm}-${dd}`
+        if (!isNaN(new Date(date).getTime())) {
+          form.setValue('birthDate', date)
+        }
+      }
+    },
+    [form]
+  )
+
+  const handleBirthDateChange = useCallback(
+    (value: string | Date | undefined) => {
+      const dateStr =
+        typeof value === 'string'
+          ? value
+          : (value?.toISOString().slice(0, 10) ?? '')
+      form.setValue('birthDate', dateStr)
+      if (dateStr && !form.getValues('jmbg')) {
+        const [year, mm, dd] = dateStr.split('-')
+        const yyy = year.slice(-3)
+        form.setValue('jmbg', `${dd}${mm}${yyy}`)
+      }
+    },
+    [form]
+  )
 
   const onSubmit = async (data: DriverFormData) => {
     const request: DriverRequest = {
@@ -94,6 +145,7 @@ export function DriverForm({ open, onClose, driver }: DriverFormProps) {
       adrExpiry: data.adrExpiry || undefined,
       healthCheckExpiry: data.healthCheckExpiry || undefined,
       employmentDate: data.employmentDate || undefined,
+      vehicleId: data.vehicleId ?? undefined,
     }
 
     if (isEditing) {
@@ -163,8 +215,8 @@ export function DriverForm({ open, onClose, driver }: DriverFormProps) {
                     <Input
                       placeholder="1234567890123"
                       maxLength={13}
-                      {...field}
                       value={field.value ?? ''}
+                      onChange={(e) => handleJmbgChange(e.target.value)}
                     />
                   </FormControl>
                   <FormMessage />
@@ -247,7 +299,7 @@ export function DriverForm({ open, onClose, driver }: DriverFormProps) {
                     <FormLabel>{t('drivers.birthDate')}</FormLabel>
                     <DatePicker
                       value={field.value ?? undefined}
-                      onChange={(d) => field.onChange(d ?? '')}
+                      onChange={(d) => handleBirthDateChange(d)}
                       returnFormat="iso"
                       clearable
                     />
@@ -272,6 +324,25 @@ export function DriverForm({ open, onClose, driver }: DriverFormProps) {
                 )}
               />
             </div>
+
+            <FormField
+              control={form.control}
+              name="vehicleId"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>{t('drivers.vehicle')}</FormLabel>
+                  <Select
+                    options={vehicleOptions}
+                    value={field.value ? String(field.value) : undefined}
+                    onChange={(v) => field.onChange(v ? Number(v) : null)}
+                    clearable
+                    searchable
+                    placeholder={t('common:select.placeholder')}
+                  />
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
             <FormField
               control={form.control}

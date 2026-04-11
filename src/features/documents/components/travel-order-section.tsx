@@ -1,13 +1,17 @@
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useQueryClient } from '@tanstack/react-query'
-import { FileText, Plus } from 'lucide-react'
+import { FileText, Plus, Trash2 } from 'lucide-react'
 import { Button } from '@/shared/ui/button'
 import { Badge } from '@/shared/ui/badge'
+import { Spinner } from '@/shared/ui/spinner'
+import { ConfirmDialog } from '@/shared/ui/overlay/confirm-dialog'
 import { BodySmall, Caption } from '@/shared/ui/typography'
 import { formatDate, formatCurrency } from '@/shared/utils'
 import {
   useTravelOrdersByRoute,
   useCreateTravelOrder,
+  useDeleteTravelOrder,
   downloadTravelOrderPdf,
 } from '../api/use-travel-orders'
 type RouteInfo = {
@@ -43,6 +47,8 @@ export function TravelOrderSection({
   const queryClient = useQueryClient()
   const { data: orders, isLoading } = useTravelOrdersByRoute(routeId)
   const createMutation = useCreateTravelOrder()
+  const deleteMutation = useDeleteTravelOrder()
+  const [deleteTarget, setDeleteTarget] = useState<number | null>(null)
 
   const canCreate = !!route.driverId && !!route.vehicleId
 
@@ -53,9 +59,12 @@ export function TravelOrderSection({
       routeId: Number(routeId),
       driverId: Number(route.driverId),
       vehicleId: Number(route.vehicleId),
-      departureDate:
-        route.departureDate ?? new Date().toISOString().slice(0, 10),
-      returnDate: route.returnDate,
+      departureDateTime: route.departureDate
+        ? `${route.departureDate}T08:00:00`
+        : undefined,
+      returnDateTime: route.returnDate
+        ? `${route.returnDate}T18:00:00`
+        : undefined,
       purpose: 'Transport robe',
       notes: route.notes ?? undefined,
     })
@@ -66,9 +75,9 @@ export function TravelOrderSection({
 
   if (isLoading) {
     return (
-      <Caption className="text-muted-foreground py-8 text-center">
-        {t('common:app.loading')}
-      </Caption>
+      <div className="flex items-center justify-center py-12">
+        <Spinner />
+      </div>
     )
   }
 
@@ -76,10 +85,13 @@ export function TravelOrderSection({
 
   if (orderList.length === 0) {
     return (
-      <div className="flex flex-col items-center gap-4 py-8">
-        <Caption className="text-muted-foreground">
+      <div className="flex flex-col items-center gap-4 py-12">
+        <div className="bg-muted rounded-full p-3">
+          <FileText className="text-muted-foreground size-6" />
+        </div>
+        <BodySmall className="font-medium">
           {t('travelOrder.noOrder')}
-        </Caption>
+        </BodySmall>
         <Button
           size="sm"
           onClick={handleCreate}
@@ -112,16 +124,26 @@ export function TravelOrderSection({
                 {order.status}
               </Badge>
             </div>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() =>
-                downloadTravelOrderPdf(order.id, order.orderNumber)
-              }
-            >
-              <FileText className="mr-1 size-4" />
-              {t('travelOrder.download')}
-            </Button>
+            <div className="flex items-center gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() =>
+                  downloadTravelOrderPdf(order.id, order.orderNumber)
+                }
+              >
+                <FileText className="mr-1 size-4" />
+                {t('travelOrder.download')}
+              </Button>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="text-destructive size-8"
+                onClick={() => setDeleteTarget(order.id)}
+              >
+                <Trash2 className="size-4" />
+              </Button>
+            </div>
           </div>
           <div className="grid grid-cols-2 gap-2 text-sm">
             <div>
@@ -140,24 +162,28 @@ export function TravelOrderSection({
               <Caption className="text-muted-foreground">
                 {t('routes.departure')}
               </Caption>
-              <BodySmall>{formatDate(order.departureDate)}</BodySmall>
+              <BodySmall>
+                {order.departureDatetime
+                  ? formatDate(order.departureDatetime)
+                  : '—'}
+              </BodySmall>
             </div>
             <div>
               <Caption className="text-muted-foreground">
                 {t('routes.return')}
               </Caption>
               <BodySmall>
-                {order.returnDate ? formatDate(order.returnDate) : '—'}
+                {order.returnDatetime ? formatDate(order.returnDatetime) : '—'}
               </BodySmall>
             </div>
           </div>
-          {order.perDiemTotalRsd != null && (
+          {order.perDiemAdvance != null && (
             <div>
               <Caption className="text-muted-foreground">
                 {t('travelOrder.advances')}
               </Caption>
               <BodySmall className="font-medium">
-                {formatCurrency(order.perDiemTotalRsd, 'RSD')}
+                {formatCurrency(order.perDiemAdvance, 'RSD')}
               </BodySmall>
             </div>
           )}
@@ -171,6 +197,23 @@ export function TravelOrderSection({
           )}
         </div>
       ))}
+
+      <ConfirmDialog
+        open={!!deleteTarget}
+        onOpenChange={(open) => !open && setDeleteTarget(null)}
+        onConfirm={async () => {
+          if (deleteTarget) {
+            await deleteMutation.mutateAsync(deleteTarget)
+            queryClient.invalidateQueries({
+              queryKey: ['travelOrders', 'byRoute', routeId],
+            })
+            setDeleteTarget(null)
+          }
+        }}
+        title={t('common:deleteConfirm.title')}
+        description={t('common:deleteConfirm.description')}
+        loading={deleteMutation.isPending}
+      />
     </div>
   )
 }

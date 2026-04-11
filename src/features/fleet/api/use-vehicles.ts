@@ -82,7 +82,7 @@ export function useVehicles(filter: VehicleFilter) {
 
 export function useVehicle(id: string | null) {
   return useQuery<GetVehicleQuery>(GET_VEHICLE, {
-    variables: { id },
+    variables: { id: id ?? '' },
     skip: !id,
   })
 }

@@ -174,6 +174,16 @@ export function VehiclesPage() {
         vehicleId={detailVehicleId}
         open={!!detailVehicleId}
         onClose={() => setDetailVehicleId(null)}
+        onEdit={() => {
+          if (detailVehicleId) {
+            const v = vehicles?.content.find((v) => v.id === detailVehicleId)
+            if (v) {
+              setEditingVehicle(v)
+              setFormOpen(true)
+            }
+            setDetailVehicleId(null)
+          }
+        }}
       />
 
       {/* Delete Confirmation */}

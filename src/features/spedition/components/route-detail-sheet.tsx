@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Pencil, Plus, Trash2, Calculator } from 'lucide-react'
+import { Pencil, Plus, Trash2, Calculator, MapPin, Inbox } from 'lucide-react'
 import {
   Sheet,
   SheetContent,
@@ -49,6 +49,7 @@ export function RouteDetailSheet({
   onEdit,
 }: RouteDetailSheetProps) {
   const { t } = useTranslation('spedition')
+  const [activeTab, setActiveTab] = useState('info')
   const { data, loading } = useRouteDetail(routeId)
   const route = data?.route
   const statusMutation = useUpdateRouteStatus()
@@ -80,14 +81,9 @@ export function RouteDetailSheet({
   }
 
   const confirmPerDiem = async () => {
-    if (route && route.stops?.length) {
+    if (route) {
       await perDiemMutation.mutateAsync({
         routeId: Number(route.id),
-        stops: route.stops.map((s) => ({
-          countryCode: s.countryCode,
-          entryTime: s.actualArrival ?? s.plannedArrival ?? '',
-          exitTime: s.actualDeparture ?? s.plannedDeparture ?? '',
-        })),
       })
       setPerDiemConfirmOpen(false)
     }
@@ -139,11 +135,15 @@ export function RouteDetailSheet({
                 </div>
               </SheetHeader>
 
-              <Tabs defaultValue="info" className="mt-4 px-4">
+              <Tabs
+                value={activeTab}
+                onValueChange={setActiveTab}
+                className="mt-4 px-4"
+              >
                 <TabsList>
                   <TabsTrigger value="info">Info</TabsTrigger>
                   <TabsTrigger value="stops">
-                    {t('common:actions.filter')} ({route.stops?.length ?? 0})
+                    Stopovi ({route.stops?.length ?? 0})
                   </TabsTrigger>
                   <TabsTrigger value="expenses">
                     {t('expenses.title')} ({route.expenses?.length ?? 0})
@@ -314,9 +314,14 @@ export function RouteDetailSheet({
                 {/* STOPS TAB */}
                 <TabsContent value="stops" className="mt-4 space-y-3">
                   {route.stops?.length === 0 ? (
-                    <Caption className="text-muted-foreground py-8 text-center">
-                      {t('common:table.noData')}
-                    </Caption>
+                    <div className="flex flex-col items-center gap-2 py-12">
+                      <div className="bg-muted rounded-full p-3">
+                        <MapPin className="text-muted-foreground size-6" />
+                      </div>
+                      <BodySmall className="font-medium">
+                        {t('common:table.noData')}
+                      </BodySmall>
+                    </div>
                   ) : (
                     [...(route.stops ?? [])]
                       .sort((a, b) => a.stopOrder - b.stopOrder)
@@ -473,9 +478,14 @@ export function RouteDetailSheet({
 
                   {/* Expense list */}
                   {route.expenses?.length === 0 ? (
-                    <Caption className="text-muted-foreground py-8 text-center">
-                      {t('common:table.noData')}
-                    </Caption>
+                    <div className="flex flex-col items-center gap-2 py-12">
+                      <div className="bg-muted rounded-full p-3">
+                        <Inbox className="text-muted-foreground size-6" />
+                      </div>
+                      <BodySmall className="font-medium">
+                        {t('common:table.noData')}
+                      </BodySmall>
+                    </div>
                   ) : (
                     <div className="space-y-2">
                       {route.expenses?.map((exp) => (
@@ -484,14 +494,9 @@ export function RouteDetailSheet({
                           className="flex items-center justify-between rounded-lg border p-3"
                         >
                           <div className="flex-1">
-                            <div className="flex items-center gap-2">
-                              <BodySmall className="font-medium">
-                                {t(`expenses.categories.${exp.category}`)}
-                              </BodySmall>
-                              <Badge variant="outline" className="text-xs">
-                                {exp.status}
-                              </Badge>
-                            </div>
+                            <BodySmall className="font-medium">
+                              {t(`expenses.categories.${exp.category}`)}
+                            </BodySmall>
                             <Caption className="text-muted-foreground">
                               {formatCurrency(exp.amount, exp.currency)}
                               {exp.amountRsd != null &&

@@ -177,7 +177,6 @@ export function InvoiceForm({ open, onClose, invoice }: InvoiceFormProps) {
           <div className="flex-1 space-y-6 overflow-y-auto p-4">
             {/* Partner & dates */}
             <div>
-              <SectionDivider title={t('common:actions.basic')} />
               <div className="space-y-4">
                 <FormField
                   control={form.control}

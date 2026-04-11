@@ -32,6 +32,7 @@ type PartnerTableProps = {
   onSortingChange?: (sorting: SortingState) => void
   onEdit: (partner: PartnerListItem) => void
   onDelete: (partner: PartnerListItem) => void
+  onRowClick?: (partner: PartnerListItem) => void
   emptyAction?: ReactNode
   isFiltered?: boolean
   onClearFilters?: () => void
@@ -55,6 +56,7 @@ export function PartnerTable({
   onSortingChange,
   onEdit,
   onDelete,
+  onRowClick,
   emptyAction,
   isFiltered,
   onClearFilters,
@@ -110,26 +112,28 @@ export function PartnerTable({
       {
         id: 'actions',
         cell: ({ row }) => (
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="icon" className="size-8">
-                <MoreHorizontal className="size-4" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuItem onClick={() => onEdit(row.original)}>
-                <Pencil className="mr-2 size-4" />
-                {t('common:actions.edit')}
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                className="text-destructive"
-                onClick={() => onDelete(row.original)}
-              >
-                <Trash2 className="mr-2 size-4" />
-                {t('common:actions.delete')}
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          <div onClick={(e) => e.stopPropagation()}>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="icon" className="size-8">
+                  <MoreHorizontal className="size-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem onClick={() => onEdit(row.original)}>
+                  <Pencil className="mr-2 size-4" />
+                  {t('common:actions.edit')}
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  className="text-destructive"
+                  onClick={() => onDelete(row.original)}
+                >
+                  <Trash2 className="mr-2 size-4" />
+                  {t('common:actions.delete')}
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
         ),
         size: 50,
       },
@@ -151,6 +155,7 @@ export function PartnerTable({
       pageIndex={pageIndex}
       pageSize={pageSize}
       onPaginationChange={onPaginationChange}
+      onRowClick={onRowClick}
       emptyAction={emptyAction}
       isFiltered={isFiltered}
       onClearFilters={onClearFilters}

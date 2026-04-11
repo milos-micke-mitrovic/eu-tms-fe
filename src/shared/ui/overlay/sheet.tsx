@@ -106,7 +106,10 @@ function SheetHeader({
   return (
     <div
       data-slot="sheet-header"
-      className={cn('flex items-center gap-3 border-b p-4', className)}
+      className={cn(
+        'border-primary/30 flex items-center gap-3 border-b p-4',
+        className
+      )}
       {...props}
     >
       <SheetPrimitive.Close className="text-muted-foreground hover:text-foreground shrink-0 rounded-sm p-1 transition-colors focus:outline-none">

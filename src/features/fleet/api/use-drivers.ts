@@ -80,7 +80,7 @@ export function useDrivers(filter: DriverFilter) {
 
 export function useDriver(id: string | null) {
   return useQuery<GetDriverQuery>(GET_DRIVER, {
-    variables: { id },
+    variables: { id: id ?? '' },
     skip: !id,
   })
 }

@@ -17,23 +17,34 @@ export type TravelOrder = {
   id: number
   routeId: number
   orderNumber: string
+  driverId: number
   driverName: string
+  vehicleId: number
   vehicleRegNumber: string
-  departureDate: string
-  returnDate: string | null
+  departureDatetime: string | null
+  returnDatetime: string | null
+  destination: string | null
+  purpose: string
   status: TravelOrderStatus
-  perDiemTotalRsd: number | null
+  fuelAdvance: number
+  perDiemAdvance: number
+  tollAdvance: number
+  otherAdvance: number
+  actualFuelCost: number | null
+  actualPerDiem: number | null
+  actualTollCost: number | null
+  actualOtherCost: number | null
   notes: string | null
   createdAt: string
-  updatedAt: string
 }
 
 export type TravelOrderRequest = {
   routeId: number
   driverId: number
   vehicleId: number
-  departureDate: string
-  returnDate?: string | null
+  departureDateTime?: string | null
+  returnDateTime?: string | null
+  destination?: string
   purpose?: string
   notes?: string
 }

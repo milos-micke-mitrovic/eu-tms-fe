@@ -30,6 +30,7 @@ import { useDrivers } from '@/features/fleet/api/use-drivers'
 import { useTrailers } from '@/features/fleet/api/use-trailers'
 import { CURRENCIES } from '../constants'
 import type { RouteListItem, RouteRequest } from '../types'
+import { useRouteDetail } from '../api/use-route-detail'
 import { useCreateRoute, useUpdateRoute } from '../api/use-route-mutations'
 import { routeSchema, type RouteFormData } from '../schemas'
 
@@ -59,6 +60,11 @@ const defaultValues: RouteFormData = {
 export function RouteForm({ open, onClose, route }: RouteFormProps) {
   const { t } = useTranslation('spedition')
   const isEditing = !!route
+  // Fetch full route detail for edit mode (list item only has subset of fields)
+  const { data: detailData } = useRouteDetail(
+    isEditing ? String(route.id) : null
+  )
+  const fullRoute = detailData?.route
   const createMutation = useCreateRoute()
   const updateMutation = useUpdateRoute()
   const isPending = createMutation.isPending || updateMutation.isPending
@@ -98,31 +104,44 @@ export function RouteForm({ open, onClose, route }: RouteFormProps) {
 
   const [partnerLabel, setPartnerLabel] = useState('')
 
+  // Use full route detail when available, fall back to list item
+  const editSource = fullRoute ?? route
+
   useEffect(() => {
-    if (route) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any -- editSource may be list item or detail, different shapes
+    const src = editSource as any
+    if (src && isEditing) {
       form.reset({
-        routeType: route.routeType as 'DOMESTIC' | 'INTERNATIONAL',
-        partnerId: Number(route.partner?.id) || 0,
-        vehicleId: route.vehicle ? Number(route.vehicle.id) : null,
-        driverId: route.driver ? Number(route.driver.id) : null,
-        trailerId: null,
-        departureDate: route.departureDate ?? '',
-        returnDate: route.returnDate ?? '',
-        cargoDescription: '',
-        cargoWeightKg: null,
-        cargoVolumeM3: null,
-        price: route.price ?? null,
-        currency: route.currency ?? 'EUR',
-        distanceKm: null,
-        notes: '',
+        routeType: src.routeType as 'DOMESTIC' | 'INTERNATIONAL',
+        partnerId: Number(src.partnerId ?? src.partner?.id ?? 0),
+        vehicleId: src.vehicleId
+          ? Number(src.vehicleId)
+          : src.vehicle
+            ? Number(src.vehicle.id)
+            : null,
+        driverId: src.driverId
+          ? Number(src.driverId)
+          : src.driver
+            ? Number(src.driver.id)
+            : null,
+        trailerId: src.trailerId ? Number(src.trailerId) : null,
+        departureDate: src.departureDate ?? '',
+        returnDate: src.returnDate ?? '',
+        cargoDescription: src.cargoDescription ?? '',
+        cargoWeightKg: src.cargoWeightKg ?? null,
+        cargoVolumeM3: src.cargoVolumeM3 ?? null,
+        price: src.price ?? null,
+        currency: src.currency ?? 'EUR',
+        distanceKm: src.distanceKm ?? null,
+        notes: src.notes ?? '',
       })
       // eslint-disable-next-line react-hooks/set-state-in-effect -- syncing label with route prop
-      setPartnerLabel(route.partner?.name ?? '')
-    } else {
+      setPartnerLabel(src.partner?.name ?? '')
+    } else if (!isEditing) {
       form.reset(defaultValues)
       setPartnerLabel('')
     }
-  }, [route, form])
+  }, [editSource, isEditing, form])
 
   const onSubmit = async (data: RouteFormData) => {
     const request: RouteRequest = {
@@ -176,7 +195,6 @@ export function RouteForm({ open, onClose, route }: RouteFormProps) {
           <div className="flex-1 space-y-6 overflow-y-auto p-4">
             {/* Section: Osnovno */}
             <div>
-              <SectionDivider title={t('common:actions.basic')} />
               <div className="space-y-4">
                 <FormField
                   control={form.control}

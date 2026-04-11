@@ -11,6 +11,7 @@ import { usePartners } from '../api/use-partners'
 import { useDeletePartner } from '../api/use-partner-mutations'
 import { PartnerTable } from '../components/partner-table'
 import { PartnerForm } from '../components/partner-form'
+import { PartnerDetailSheet } from '../components/partner-detail-sheet'
 import type { PartnerListItem, PartnerFilter } from '../types'
 
 export function PartnersPage() {
@@ -27,6 +28,9 @@ export function PartnersPage() {
   const { sorting, onSortingChange, sortBy, sortDir } = useTableSort()
   const [formOpen, setFormOpen] = useState(false)
   const [editingPartner, setEditingPartner] = useState<PartnerListItem | null>(
+    null
+  )
+  const [detailPartner, setDetailPartner] = useState<PartnerListItem | null>(
     null
   )
   const [deleteTarget, setDeleteTarget] = useState<PartnerListItem | null>(null)
@@ -56,6 +60,9 @@ export function PartnersPage() {
   const handleEdit = useCallback((p: PartnerListItem) => {
     setEditingPartner(p)
     setFormOpen(true)
+  }, [])
+  const handleRowClick = useCallback((p: PartnerListItem) => {
+    setDetailPartner(p)
   }, [])
   const handleDelete = useCallback(
     (p: PartnerListItem) => setDeleteTarget(p),
@@ -113,6 +120,7 @@ export function PartnersPage() {
         onSortingChange={onSortingChange}
         onEdit={handleEdit}
         onDelete={handleDelete}
+        onRowClick={handleRowClick}
         isFiltered={isFiltered}
         onClearFilters={clearFilters}
         emptyAction={
@@ -129,6 +137,18 @@ export function PartnersPage() {
           setEditingPartner(null)
         }}
         partner={editingPartner}
+      />
+      <PartnerDetailSheet
+        partner={detailPartner}
+        open={!!detailPartner}
+        onClose={() => setDetailPartner(null)}
+        onEdit={() => {
+          if (detailPartner) {
+            setEditingPartner(detailPartner)
+            setFormOpen(true)
+            setDetailPartner(null)
+          }
+        }}
       />
       <ConfirmDialog
         open={!!deleteTarget}

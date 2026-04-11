@@ -10,6 +10,7 @@ import { useTrailers } from '../api/use-trailers'
 import { useDeleteTrailer } from '../api/use-trailer-mutations'
 import { TrailerTable } from '../components/trailer-table'
 import { TrailerForm } from '../components/trailer-form'
+import { TrailerDetailSheet } from '../components/trailer-detail-sheet'
 import type { TrailerListItem } from '../types'
 
 export function TrailersPage() {
@@ -23,6 +24,9 @@ export function TrailersPage() {
   const { sorting, onSortingChange, sortBy, sortDir } = useTableSort()
   const [formOpen, setFormOpen] = useState(false)
   const [editingTrailer, setEditingTrailer] = useState<TrailerListItem | null>(
+    null
+  )
+  const [detailTrailer, setDetailTrailer] = useState<TrailerListItem | null>(
     null
   )
   const [deleteTarget, setDeleteTarget] = useState<TrailerListItem | null>(null)
@@ -43,6 +47,9 @@ export function TrailersPage() {
   const handleEdit = useCallback((t: TrailerListItem) => {
     setEditingTrailer(t)
     setFormOpen(true)
+  }, [])
+  const handleRowClick = useCallback((t: TrailerListItem) => {
+    setDetailTrailer(t)
   }, [])
   const handleDelete = useCallback(
     (t: TrailerListItem) => setDeleteTarget(t),
@@ -78,6 +85,7 @@ export function TrailersPage() {
         onSortingChange={onSortingChange}
         onEdit={handleEdit}
         onDelete={handleDelete}
+        onRowClick={handleRowClick}
         emptyAction={
           <Button size="sm" onClick={handleCreate}>
             <Plus className="mr-2 size-4" />
@@ -92,6 +100,18 @@ export function TrailersPage() {
           setEditingTrailer(null)
         }}
         trailer={editingTrailer}
+      />
+      <TrailerDetailSheet
+        trailer={detailTrailer}
+        open={!!detailTrailer}
+        onClose={() => setDetailTrailer(null)}
+        onEdit={() => {
+          if (detailTrailer) {
+            setEditingTrailer(detailTrailer)
+            setFormOpen(true)
+            setDetailTrailer(null)
+          }
+        }}
       />
       <ConfirmDialog
         open={!!deleteTarget}

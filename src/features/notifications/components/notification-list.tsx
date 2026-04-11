@@ -1,4 +1,4 @@
-import { AlertTriangle, FileWarning, Clock } from 'lucide-react'
+import { AlertTriangle, Bell, FileWarning, Clock } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { Badge } from '@/shared/ui/badge'
 import { BodySmall, Caption } from '@/shared/ui/typography'
@@ -22,8 +22,13 @@ export function NotificationList({ notifications }: NotificationListProps) {
 
   if (notifications.length === 0) {
     return (
-      <div className="py-12 text-center">
-        <Caption className="text-muted-foreground">{t('common:table.noData')}</Caption>
+      <div className="flex flex-col items-center gap-2 py-12">
+        <div className="bg-muted rounded-full p-3">
+          <Bell className="text-muted-foreground size-6" />
+        </div>
+        <BodySmall className="font-medium">
+          {t('common:table.noData')}
+        </BodySmall>
       </div>
     )
   }
@@ -48,10 +53,18 @@ export function NotificationList({ notifications }: NotificationListProps) {
             <div className="min-w-0 flex-1">
               <div className="flex items-center gap-2">
                 <BodySmall className="font-medium">{n.title}</BodySmall>
-                {!n.read && <Badge variant="default" className="h-5 text-[10px]">Novo</Badge>}
+                {!n.read && (
+                  <Badge variant="default" className="h-5 text-[10px]">
+                    Novo
+                  </Badge>
+                )}
               </div>
-              <Caption className="text-muted-foreground mt-0.5">{n.message}</Caption>
-              <Caption className="text-muted-foreground mt-1">{formatRelative(n.createdAt)}</Caption>
+              <Caption className="text-muted-foreground mt-0.5">
+                {n.message}
+              </Caption>
+              <Caption className="text-muted-foreground mt-1">
+                {formatRelative(n.createdAt)}
+              </Caption>
             </div>
           </div>
         )

@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { isValidJmbg } from '@/shared/utils'
+// isValidJmbg removed — autofill between JMBG and birthDate replaces validation
 
 export const vehicleSchema = z.object({
   regNumber: z.string().min(1),
@@ -14,12 +14,18 @@ export const vehicleSchema = z.object({
   cargoVolumeM3: z.coerce.number().positive().optional().nullable(),
   avgConsumptionL100km: z.coerce.number().positive().optional().nullable(),
   odometerKm: z.coerce.number().min(0).optional().nullable(),
+  currentDriverId: z.coerce.number().positive().optional().nullable(),
 })
 
 export const driverSchema = z.object({
   firstName: z.string().min(1),
   lastName: z.string().min(1),
-  jmbg: z.string().refine((v) => !v || isValidJmbg(v), { message: 'Neispravan JMBG (mod11)' }).optional().or(z.literal('')).nullable(),
+  jmbg: z
+    .string()
+    .regex(/^(\d{13})?$/, { message: 'JMBG mora imati 13 cifara' })
+    .optional()
+    .or(z.literal(''))
+    .nullable(),
   phone: z.string().optional().nullable(),
   email: z.string().email().optional().or(z.literal('')).nullable(),
   birthDate: z.string().optional().nullable(),
@@ -29,11 +35,19 @@ export const driverSchema = z.object({
   adrExpiry: z.string().optional().nullable(),
   healthCheckExpiry: z.string().optional().nullable(),
   employmentDate: z.string().optional().nullable(),
+  vehicleId: z.coerce.number().positive().optional().nullable(),
 })
 
 export const trailerSchema = z.object({
   regNumber: z.string().min(1),
-  type: z.enum(['CURTAIN', 'BOX', 'REFRIGERATED', 'FLATBED', 'TANK', 'CONTAINER']),
+  type: z.enum([
+    'CURTAIN',
+    'BOX',
+    'REFRIGERATED',
+    'FLATBED',
+    'TANK',
+    'CONTAINER',
+  ]),
   lengthM: z.coerce.number().positive().optional().nullable(),
   capacityKg: z.coerce.number().positive().optional().nullable(),
   year: z.coerce.number().min(1900).max(2100).optional().nullable(),

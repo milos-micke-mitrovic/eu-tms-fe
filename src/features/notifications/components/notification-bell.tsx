@@ -1,5 +1,4 @@
-import { Bell, Inbox } from 'lucide-react'
-import { useNavigate } from 'react-router-dom'
+import { Bell } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { Button } from '@/shared/ui/button'
 import { Badge } from '@/shared/ui/badge'
@@ -30,18 +29,21 @@ function NotificationItem({ notification }: { notification: Notification }) {
       }`}
     >
       <BodySmall className="font-medium">{notification.title}</BodySmall>
-      <Caption className="text-muted-foreground line-clamp-2">{notification.message}</Caption>
-      <Caption className="text-muted-foreground mt-1">{formatRelative(notification.createdAt)}</Caption>
+      <Caption className="text-muted-foreground line-clamp-2">
+        {notification.message}
+      </Caption>
+      <Caption className="text-muted-foreground mt-1">
+        {formatRelative(notification.createdAt)}
+      </Caption>
     </button>
   )
 }
 
 export function NotificationBell() {
   const { t } = useTranslation('navigation')
-  const navigate = useNavigate()
   const { data, isError } = useNotifications(0, 5)
 
-  const notifications = (!isError && data?.content) ? data.content : []
+  const notifications = !isError && data?.content ? data.content : []
   const unreadCount = notifications.filter((n) => !n.read).length
 
   return (
@@ -52,7 +54,7 @@ export function NotificationBell() {
           {unreadCount > 0 && (
             <Badge
               variant="destructive"
-              className="absolute -right-1 -top-1 flex size-5 items-center justify-center p-0 text-[10px]"
+              className="absolute -top-1 -right-1 flex size-5 items-center justify-center p-0 text-[10px]"
             >
               {unreadCount}
             </Badge>
@@ -61,27 +63,25 @@ export function NotificationBell() {
       </PopoverTrigger>
       <PopoverContent align="end" className="w-80 p-0">
         <div className="border-b p-3">
-          <BodySmall className="font-medium">{t('sidebar.notifications')}</BodySmall>
+          <BodySmall className="font-medium">
+            {t('sidebar.notifications')}
+          </BodySmall>
         </div>
         <div className="max-h-64 overflow-y-auto">
           {notifications.length === 0 ? (
-            <div className="flex flex-col items-center gap-2 py-8">
-              <Inbox className="text-muted-foreground size-8" />
-              <Caption className="text-muted-foreground">{t('common:table.noData')}</Caption>
+            <div className="flex flex-col items-center gap-2 py-6">
+              <div className="bg-muted rounded-full p-3">
+                <Bell className="text-muted-foreground size-6" />
+              </div>
+              <BodySmall className="font-medium">
+                {t('common:table.noData')}
+              </BodySmall>
             </div>
           ) : (
-            notifications.map((n) => <NotificationItem key={n.id} notification={n} />)
+            notifications.map((n) => (
+              <NotificationItem key={n.id} notification={n} />
+            ))
           )}
-        </div>
-        <div className="border-t p-2">
-          <Button
-            variant="ghost"
-            size="sm"
-            className="w-full"
-            onClick={() => navigate('/notifications')}
-          >
-            {t('sidebar.notifications')}
-          </Button>
         </div>
       </PopoverContent>
     </Popover>

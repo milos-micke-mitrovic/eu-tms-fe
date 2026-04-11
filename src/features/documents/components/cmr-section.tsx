@@ -5,6 +5,7 @@ import { FileText, Plus } from 'lucide-react'
 import { Button } from '@/shared/ui/button'
 import { Select } from '@/shared/ui/select'
 import { Badge } from '@/shared/ui/badge'
+import { Spinner } from '@/shared/ui/spinner'
 import { BodySmall, Caption } from '@/shared/ui/typography'
 import { formatDate } from '@/shared/utils'
 import {
@@ -44,9 +45,9 @@ export function CmrSection({ routeId }: CmrSectionProps) {
 
   if (isLoading) {
     return (
-      <Caption className="text-muted-foreground py-8 text-center">
-        {t('common:app.loading')}
-      </Caption>
+      <div className="flex items-center justify-center py-12">
+        <Spinner />
+      </div>
     )
   }
 
@@ -54,19 +55,25 @@ export function CmrSection({ routeId }: CmrSectionProps) {
 
   return (
     <div className="space-y-4">
-      <div className="flex justify-end">
-        <Button size="sm" onClick={() => setDialogOpen(true)}>
-          <Plus className="mr-2 size-4" />
-          {t('cmr.generate')}
-        </Button>
-      </div>
-
       {documents.length === 0 ? (
-        <Caption className="text-muted-foreground py-8 text-center">
-          {t('cmr.noDocuments')}
-        </Caption>
+        <div className="flex flex-col items-center gap-4 py-12">
+          <div className="bg-muted rounded-full p-3">
+            <FileText className="text-muted-foreground size-6" />
+          </div>
+          <BodySmall className="font-medium">{t('cmr.noDocuments')}</BodySmall>
+          <Button size="sm" onClick={() => setDialogOpen(true)}>
+            <Plus className="mr-2 size-4" />
+            {t('cmr.generate')}
+          </Button>
+        </div>
       ) : (
-        <div className="space-y-2">
+        <div className="space-y-3">
+          <div className="flex justify-end">
+            <Button size="sm" onClick={() => setDialogOpen(true)}>
+              <Plus className="mr-2 size-4" />
+              {t('cmr.generate')}
+            </Button>
+          </div>
           {documents.map((cmr) => (
             <div
               key={cmr.id}

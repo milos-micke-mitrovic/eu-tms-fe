@@ -1,4 +1,12 @@
-import { createContext, useContext, useState, useCallback, useEffect, useRef, type ReactNode } from 'react'
+import {
+  createContext,
+  useContext,
+  useState,
+  useCallback,
+  useEffect,
+  useRef,
+  type ReactNode,
+} from 'react'
 import { AUTH_STORAGE_KEY } from '@/shared/utils'
 import { decodeJwt, jwtPayloadToUser } from '@/features/auth/utils'
 import { refreshAccessToken } from '@/features/auth/api'
@@ -64,15 +72,21 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }, [])
 
-  const login = useCallback((user: User, token: string, refreshToken: string) => {
-    localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify({ user, token, refreshToken }))
-    setState({
-      user,
-      token,
-      refreshToken,
-      isAuthenticated: true,
-    })
-  }, [])
+  const login = useCallback(
+    (user: User, token: string, refreshToken: string) => {
+      localStorage.setItem(
+        AUTH_STORAGE_KEY,
+        JSON.stringify({ user, token, refreshToken })
+      )
+      setState({
+        user,
+        token,
+        refreshToken,
+        isAuthenticated: true,
+      })
+    },
+    []
+  )
 
   const logout = useCallback(() => {
     clearRefreshTimer()
@@ -89,55 +103,71 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setState((prev) => {
       if (!prev.user) return prev
       const payload = decodeJwt(token)
-      const user = payload ? jwtPayloadToUser(payload) : prev.user
-      const newState = { ...prev, user, token, refreshToken }
-      localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify({
-        user,
-        token,
-        refreshToken,
-      }))
+      const newUser = payload
+        ? {
+            ...jwtPayloadToUser(payload),
+            // Preserve existing name if JWT doesn't have it
+            firstName: payload.first_name || prev.user.firstName,
+            lastName: payload.last_name || prev.user.lastName,
+          }
+        : prev.user
+      const newState = { ...prev, user: newUser, token, refreshToken }
+      localStorage.setItem(
+        AUTH_STORAGE_KEY,
+        JSON.stringify({
+          user: newUser,
+          token,
+          refreshToken,
+        })
+      )
       return newState
     })
   }, [])
 
   // Attempt proactive token refresh with retry logic and exponential backoff
-  const attemptProactiveRefresh = useCallback(async (refreshToken: string, retries = 3): Promise<boolean> => {
-    for (let i = 0; i < retries; i++) {
-      try {
-        const response = await refreshAccessToken(refreshToken)
-        updateTokens(response.accessToken, response.refreshToken)
-        return true
-      } catch {
-        if (i === retries - 1) {
-          return false
+  const attemptProactiveRefresh = useCallback(
+    async (refreshToken: string, retries = 3): Promise<boolean> => {
+      for (let i = 0; i < retries; i++) {
+        try {
+          const response = await refreshAccessToken(refreshToken)
+          updateTokens(response.accessToken, response.refreshToken)
+          return true
+        } catch {
+          if (i === retries - 1) {
+            return false
+          }
+          // Exponential backoff: wait 1s, 2s, 3s between retries
+          await new Promise((resolve) => setTimeout(resolve, 1000 * (i + 1)))
         }
-        // Exponential backoff: wait 1s, 2s, 3s between retries
-        await new Promise(resolve => setTimeout(resolve, 1000 * (i + 1)))
       }
-    }
-    return false
-  }, [updateTokens])
+      return false
+    },
+    [updateTokens]
+  )
 
   // Schedule a proactive refresh based on the token's exp claim
-  const scheduleRefresh = useCallback((token: string, currentRefreshToken: string) => {
-    clearRefreshTimer()
+  const scheduleRefresh = useCallback(
+    (token: string, currentRefreshToken: string) => {
+      clearRefreshTimer()
 
-    const payload = decodeJwt(token)
-    if (!payload?.exp) return
+      const payload = decodeJwt(token)
+      if (!payload?.exp) return
 
-    const expiresAt = payload.exp * 1000
-    const delay = expiresAt - Date.now() - REFRESH_BUFFER_MS
+      const expiresAt = payload.exp * 1000
+      const delay = expiresAt - Date.now() - REFRESH_BUFFER_MS
 
-    if (delay <= 0) {
-      // Token already expired or about to — refresh immediately with retry
-      attemptProactiveRefresh(currentRefreshToken)
-      return
-    }
+      if (delay <= 0) {
+        // Token already expired or about to — refresh immediately with retry
+        attemptProactiveRefresh(currentRefreshToken)
+        return
+      }
 
-    refreshTimerRef.current = setTimeout(() => {
-      attemptProactiveRefresh(currentRefreshToken)
-    }, delay)
-  }, [clearRefreshTimer, attemptProactiveRefresh])
+      refreshTimerRef.current = setTimeout(() => {
+        attemptProactiveRefresh(currentRefreshToken)
+      }, delay)
+    },
+    [clearRefreshTimer, attemptProactiveRefresh]
+  )
 
   // Listen for custom events from http-client
   useEffect(() => {
@@ -171,11 +201,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   // Handle background tab scenarios - check token validity when tab becomes visible
   useEffect(() => {
     const handleVisibilityChange = () => {
-      if (document.visibilityState === 'visible' && state.token && state.refreshToken) {
+      if (
+        document.visibilityState === 'visible' &&
+        state.token &&
+        state.refreshToken
+      ) {
         const payload = decodeJwt(state.token)
         if (!payload?.exp) return
 
-        const expiresIn = (payload.exp * 1000) - Date.now()
+        const expiresIn = payload.exp * 1000 - Date.now()
 
         // If token expires in less than 5 minutes, refresh it proactively
         if (expiresIn < 5 * 60 * 1000 && expiresIn > 0) {
@@ -185,7 +219,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
 
     document.addEventListener('visibilitychange', handleVisibilityChange)
-    return () => document.removeEventListener('visibilitychange', handleVisibilityChange)
+    return () =>
+      document.removeEventListener('visibilitychange', handleVisibilityChange)
   }, [state.token, state.refreshToken, attemptProactiveRefresh])
 
   return (

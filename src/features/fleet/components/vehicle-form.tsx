@@ -20,6 +20,7 @@ import {
   FormMessage,
 } from '@/shared/ui/form'
 import type { VehicleListItem, VehicleRequest } from '../types'
+import { useDrivers } from '../api/use-drivers'
 import {
   useCreateVehicle,
   useUpdateVehicle,
@@ -45,12 +46,14 @@ const defaultValues: VehicleFormData = {
   cargoVolumeM3: null,
   avgConsumptionL100km: null,
   odometerKm: null,
+  currentDriverId: null,
 }
 
 export function VehicleForm({ open, onClose, vehicle }: VehicleFormProps) {
   const { t } = useTranslation('fleet')
   const isEditing = !!vehicle
 
+  const { data: driversData } = useDrivers({ status: 'ACTIVE', size: 100 })
   const createMutation = useCreateVehicle()
   const updateMutation = useUpdateVehicle()
   const isPending = createMutation.isPending || updateMutation.isPending
@@ -77,6 +80,9 @@ export function VehicleForm({ open, onClose, vehicle }: VehicleFormProps) {
         cargoVolumeM3: null,
         avgConsumptionL100km: null,
         odometerKm: vehicle.odometerKm ?? null,
+        currentDriverId: vehicle.currentDriverId
+          ? Number(vehicle.currentDriverId)
+          : null,
       })
     } else {
       form.reset(defaultValues)
@@ -97,6 +103,7 @@ export function VehicleForm({ open, onClose, vehicle }: VehicleFormProps) {
       cargoVolumeM3: data.cargoVolumeM3 ?? undefined,
       avgConsumptionL100km: data.avgConsumptionL100km ?? undefined,
       odometerKm: data.odometerKm ?? undefined,
+      currentDriverId: data.currentDriverId ?? undefined,
     }
 
     if (isEditing) {
@@ -118,6 +125,11 @@ export function VehicleForm({ open, onClose, vehicle }: VehicleFormProps) {
   const ownershipOptions = (['OWNED', 'LEASED', 'RENTED'] as const).map(
     (v) => ({ value: v, label: t(`vehicles.ownershipTypes.${v}`) })
   )
+
+  const driverOptions = (driversData?.drivers?.content ?? []).map((d) => ({
+    value: String(d.id),
+    label: `${d.firstName} ${d.lastName}`,
+  }))
 
   return (
     <Sheet open={open} onOpenChange={(isOpen) => !isOpen && onClose()}>
@@ -266,6 +278,25 @@ export function VehicleForm({ open, onClose, vehicle }: VehicleFormProps) {
                     options={ownershipOptions}
                     value={field.value ?? undefined}
                     onChange={field.onChange}
+                  />
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="currentDriverId"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>{t('vehicles.driver')}</FormLabel>
+                  <Select
+                    options={driverOptions}
+                    value={field.value ? String(field.value) : undefined}
+                    onChange={(v) => field.onChange(v ? Number(v) : null)}
+                    clearable
+                    searchable
+                    placeholder={t('common:select.placeholder')}
                   />
                   <FormMessage />
                 </FormItem>

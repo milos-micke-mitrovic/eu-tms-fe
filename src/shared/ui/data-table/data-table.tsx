@@ -13,6 +13,8 @@ import {
 import { useState, useRef, useEffect, type ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Inbox, SearchX } from 'lucide-react'
+import { cn } from '@/shared/utils'
+import { Skeleton } from '../skeleton'
 import {
   Table,
   TableBody,
@@ -127,6 +129,9 @@ export function DataTable<TData, TValue>({
   })
 
   const showEmptyState = !isTableLoading && !table.getRowModel().rows?.length
+  const isInitialLoad = isTableLoading && displayData.length === 0
+  const isRefetching = isTableLoading && displayData.length > 0
+  const skeletonRows = 5
 
   return (
     <div className="flex max-h-full min-h-0 flex-col gap-4">
@@ -149,14 +154,25 @@ export function DataTable<TData, TValue>({
             ))}
           </TableHeader>
           <TableBody>
-            {table.getRowModel().rows?.length ? (
+            {isInitialLoad ? (
+              // Skeleton rows for initial load
+              Array.from({ length: skeletonRows }).map((_, i) => (
+                <TableRow key={`skeleton-${i}`}>
+                  {columns.map((_, j) => (
+                    <TableCell key={`skeleton-${i}-${j}`}>
+                      <Skeleton className="h-4 w-full" />
+                    </TableCell>
+                  ))}
+                </TableRow>
+              ))
+            ) : table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
                 <TableRow
                   key={row.id}
                   data-state={row.getIsSelected() && 'selected'}
-                  className={
-                    onRowClick ? 'hover:bg-muted/50 cursor-pointer' : undefined
-                  }
+                  className={cn(
+                    onRowClick && 'hover:bg-muted/50 cursor-pointer'
+                  )}
                   onClick={() => onRowClick?.(row.original)}
                 >
                   {row.getVisibleCells().map((cell) => (
@@ -176,8 +192,8 @@ export function DataTable<TData, TValue>({
             )}
           </TableBody>
         </Table>
-        {/* Loading overlay with backdrop */}
-        {isTableLoading && (
+        {/* Loading overlay — only during refetch (sorting, paging), not initial load */}
+        {isRefetching && (
           <div className="bg-background/60 absolute inset-0 top-10 flex items-center justify-center">
             <Spinner />
           </div>

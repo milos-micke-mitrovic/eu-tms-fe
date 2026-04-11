@@ -42,6 +42,16 @@ export function useUpdateTravelOrderStatus() {
   })
 }
 
+export function useDeleteTravelOrder() {
+  const { t } = useTranslation()
+  return useMutation({
+    mutationFn: (id: number) => httpClient.delete(`/travel-orders/${id}`),
+    onSuccess: () => {
+      toast.success(t('common:success.deleted'))
+    },
+  })
+}
+
 export async function downloadTravelOrderPdf(
   orderId: number,
   orderNumber: string

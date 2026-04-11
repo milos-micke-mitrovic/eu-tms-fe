@@ -11,6 +11,7 @@ import { useDrivers } from '../api/use-drivers'
 import { useDeleteDriver } from '../api/use-driver-mutations'
 import { DriverTable } from '../components/driver-table'
 import { DriverForm } from '../components/driver-form'
+import { DriverDetailSheet } from '../components/driver-detail-sheet'
 import type { DriverListItem, DriverFilter } from '../types'
 
 export function DriversPage() {
@@ -29,6 +30,7 @@ export function DriversPage() {
   const [editingDriver, setEditingDriver] = useState<DriverListItem | null>(
     null
   )
+  const [detailDriverId, setDetailDriverId] = useState<string | null>(null)
   const [deleteTarget, setDeleteTarget] = useState<DriverListItem | null>(null)
 
   const filter: DriverFilter = {
@@ -56,6 +58,9 @@ export function DriversPage() {
   const handleEdit = useCallback((d: DriverListItem) => {
     setEditingDriver(d)
     setFormOpen(true)
+  }, [])
+  const handleRowClick = useCallback((d: DriverListItem) => {
+    setDetailDriverId(d.id)
   }, [])
   const handleDelete = useCallback(
     (d: DriverListItem) => setDeleteTarget(d),
@@ -113,6 +118,7 @@ export function DriversPage() {
         onSortingChange={onSortingChange}
         onEdit={handleEdit}
         onDelete={handleDelete}
+        onRowClick={handleRowClick}
         isFiltered={isFiltered}
         onClearFilters={clearFilters}
         emptyAction={
@@ -129,6 +135,21 @@ export function DriversPage() {
           setEditingDriver(null)
         }}
         driver={editingDriver}
+      />
+      <DriverDetailSheet
+        driverId={detailDriverId}
+        open={!!detailDriverId}
+        onClose={() => setDetailDriverId(null)}
+        onEdit={() => {
+          if (detailDriverId) {
+            const d = drivers?.content.find((d) => d.id === detailDriverId)
+            if (d) {
+              setEditingDriver(d)
+              setFormOpen(true)
+            }
+            setDetailDriverId(null)
+          }
+        }}
       />
       <ConfirmDialog
         open={!!deleteTarget}

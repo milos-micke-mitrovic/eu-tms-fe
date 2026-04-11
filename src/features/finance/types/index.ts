@@ -13,11 +13,7 @@ export type InvoiceStatus = 'DRAFT' | 'SENT' | 'PAID' | 'CANCELLED' | 'OVERDUE'
 // ── REST-only types ─────────────────────────────────────────
 export type PerDiemCalculationRequest = {
   routeId: number
-  stops: {
-    countryCode: string
-    entryTime: string
-    exitTime: string
-  }[]
+  countries?: { countryCode: string; days: number }[]
 }
 
 export type PerDiemLineItem = {

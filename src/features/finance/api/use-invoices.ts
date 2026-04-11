@@ -90,7 +90,7 @@ export function useInvoices(filter: InvoiceFilter) {
 
 export function useInvoice(id: string | null) {
   return useQuery<GetInvoiceQuery>(GET_INVOICE, {
-    variables: { id },
+    variables: { id: id ?? '' },
     skip: !id,
   })
 }
