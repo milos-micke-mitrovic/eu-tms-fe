@@ -1,0 +1,13 @@
+{
+  "title": "Upravljanje firmama",
+  "addNew": "Nova firma",
+  "subdomain": "Subdomen",
+  "name": "Naziv firme",
+  "active": "Aktivna",
+  "inactive": "Neaktivna",
+  "status": "Status",
+  "createdAt": "Kreirana",
+  "toggleStatus": "Aktiviraj/Deaktiviraj",
+  "subdomainHint": "Samo slova, brojevi i crtica (npr. acme-transport)",
+  "activeOnly": "Samo aktivne"
+}

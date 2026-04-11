@@ -37,7 +37,8 @@ export function isSuperAdmin(user: User | null): boolean {
   return user?.role === 'SUPER_ADMIN'
 }
 
-export function getDefaultRoute(_user: User | null): string {
+export function getDefaultRoute(user: User | null): string {
+  if (isSuperAdmin(user)) return '/tenants'
   return '/dashboard'
 }
 
@@ -53,7 +54,8 @@ export function getVisibleRoles<T extends string>(
   return roles.filter((role) => {
     if (role === 'SUPER_ADMIN') return false
     if (role === 'DRIVER') return false
-    if (role === 'ADMIN' && viewer?.role !== 'ADMIN' && !isSuperAdmin(viewer)) return false
+    if (role === 'ADMIN' && viewer?.role !== 'ADMIN' && !isSuperAdmin(viewer))
+      return false
     return true
   })
 }

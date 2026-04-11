@@ -11,7 +11,7 @@ export type User = {
     | 'DRIVER'
     | 'ACCOUNTING'
     | 'USER'
-  tenantId: number
+  tenantId: number | null
   companyId?: number
   department?: string
   status: string
@@ -45,7 +45,7 @@ export type RefreshTokenResponse = {
 
 export type JwtPayload = {
   sub: string
-  tenant_id: number
+  tenant_id: number | null
   role: string
   first_name: string
   last_name: string

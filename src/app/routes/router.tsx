@@ -94,6 +94,18 @@ const StatisticsPage = lazy(() =>
   }))
 )
 
+const TenantsPage = lazy(() =>
+  import('@/features/tenants/pages/tenants-page').then((m) => ({
+    default: m.TenantsPage,
+  }))
+)
+
+const TenantLayout = lazy(() =>
+  import('@/features/tenants/layouts/tenant-layout').then((m) => ({
+    default: m.TenantLayout,
+  }))
+)
+
 // Redirects to the user's default route based on role
 function DefaultRedirect() {
   const { user } = useAuth()
@@ -153,6 +165,27 @@ export const router = createBrowserRouter([
         element: (
           <LazyPage>
             <LoginPage />
+          </LazyPage>
+        ),
+      },
+    ],
+  },
+  // SUPER_ADMIN routes (tenant management, no sidebar)
+  {
+    errorElement: <RouterErrorFallback />,
+    element: (
+      <RouteGuard requireAuth={true} allowedRoles={['SUPER_ADMIN']}>
+        <Suspense fallback={<PageLoadingFallback />}>
+          <TenantLayout />
+        </Suspense>
+      </RouteGuard>
+    ),
+    children: [
+      {
+        path: '/tenants',
+        element: (
+          <LazyPage>
+            <TenantsPage />
           </LazyPage>
         ),
       },

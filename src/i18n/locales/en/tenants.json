@@ -1,0 +1,13 @@
+{
+  "title": "Tenant Management",
+  "addNew": "New Tenant",
+  "subdomain": "Subdomain",
+  "name": "Company Name",
+  "active": "Active",
+  "inactive": "Inactive",
+  "status": "Status",
+  "createdAt": "Created",
+  "toggleStatus": "Activate/Deactivate",
+  "subdomainHint": "Letters, numbers and hyphens only (e.g. acme-transport)",
+  "activeOnly": "Active only"
+}
