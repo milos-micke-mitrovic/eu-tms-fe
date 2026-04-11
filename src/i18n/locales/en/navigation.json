@@ -1,4 +1,10 @@
 {
+  "groups": {
+    "operations": "Operations",
+    "fleet": "Fleet",
+    "finance": "Finance",
+    "analytics": "Analytics"
+  },
   "sidebar": {
     "dashboard": "Dashboard",
     "routes": "Routes",

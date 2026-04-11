@@ -1,4 +1,10 @@
 {
+  "groups": {
+    "operations": "Operacije",
+    "fleet": "Vozni park",
+    "finance": "Finansije",
+    "analytics": "Analitika"
+  },
   "sidebar": {
     "dashboard": "Početna",
     "routes": "Nalozi",
