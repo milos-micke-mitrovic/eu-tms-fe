@@ -42,7 +42,7 @@ export type CollectionStats = {
 }
 
 // Queries
-const PROFITABILITY_BY_ROUTE = gql`
+export const PROFITABILITY_BY_ROUTE = gql`
   query ProfitabilityByRoute($from: Date!, $to: Date!, $page: Int, $size: Int) {
     profitabilityByRoute(from: $from, to: $to, page: $page, size: $size) {
       content {
@@ -61,7 +61,7 @@ const PROFITABILITY_BY_ROUTE = gql`
   }
 `
 
-const PROFITABILITY_BY_VEHICLE = gql`
+export const PROFITABILITY_BY_VEHICLE = gql`
   query ProfitabilityByVehicle($from: Date!, $to: Date!) {
     profitabilityByVehicle(from: $from, to: $to) {
       vehicleId
@@ -75,7 +75,7 @@ const PROFITABILITY_BY_VEHICLE = gql`
   }
 `
 
-const PROFITABILITY_BY_PARTNER = gql`
+export const PROFITABILITY_BY_PARTNER = gql`
   query ProfitabilityByPartner($from: Date!, $to: Date!) {
     profitabilityByPartner(from: $from, to: $to) {
       partnerId
@@ -88,7 +88,7 @@ const PROFITABILITY_BY_PARTNER = gql`
   }
 `
 
-const INVOICE_COLLECTION_STATS = gql`
+export const INVOICE_COLLECTION_STATS = gql`
   query InvoiceCollectionStats($from: Date!, $to: Date!) {
     invoiceCollectionStats(from: $from, to: $to) {
       totalInvoiced
