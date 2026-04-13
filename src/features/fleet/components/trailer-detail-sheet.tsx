@@ -18,13 +18,16 @@ type TrailerDetailSheetProps = {
   onEdit?: () => void
 }
 
-const statusVariant: Record<
+const statusConfig: Record<
   TrailerStatus,
-  'default' | 'secondary' | 'outline'
+  {
+    variant?: 'default' | 'secondary' | 'outline'
+    color?: 'success' | 'warning' | 'muted'
+  }
 > = {
-  ACTIVE: 'default',
-  IN_SERVICE: 'secondary',
-  INACTIVE: 'outline',
+  ACTIVE: { color: 'success' },
+  IN_SERVICE: { color: 'warning' },
+  INACTIVE: { variant: 'outline' },
 }
 
 function InfoRow({ label, value }: { label: string; value: React.ReactNode }) {
@@ -93,7 +96,12 @@ export function TrailerDetailSheet({
             <InfoRow
               label={t('trailers.status')}
               value={
-                <Badge variant={statusVariant[trailer.status as TrailerStatus]}>
+                <Badge
+                  variant={
+                    statusConfig[trailer.status as TrailerStatus]?.variant
+                  }
+                  color={statusConfig[trailer.status as TrailerStatus]?.color}
+                >
                   {t(`trailers.statuses.${trailer.status}`)}
                 </Badge>
               }

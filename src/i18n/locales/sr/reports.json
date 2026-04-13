@@ -61,6 +61,10 @@
     "daysTotal": "Ukupno dana",
     "utilizationPercent": "Iskorišćenost %",
     "monthlyPnl": "Mesečni prihod i rashod",
+    "revenue": "Prihod",
+    "expenses": "Troškovi",
+    "profit": "Zarada",
+    "noData": "Nema podataka za izabrani period",
     "agingAnalysis": "Starost dugovanja",
     "agingDays": "dana",
     "topDebtors": "Najveći dužnici",
@@ -75,6 +79,13 @@
     "profitPerDay": "Zarada po danu",
     "litersPer100km": "l/100km",
     "costPerKmLabel": "RSD/km",
-    "selectVehicle": "Izaberite vozilo"
+    "selectVehicle": "Izaberite vozilo",
+    "avgConsumption": "Prosečna potrošnja",
+    "totalKm": "Ukupno km",
+    "totalLiters": "Ukupno litara",
+    "totalExpense": "Ukupan trošak",
+    "costPerKmValue": "Trošak po km",
+    "days": "dana",
+    "utilization": "Iskorišćenost"
   }
 }

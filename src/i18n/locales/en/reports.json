@@ -61,6 +61,10 @@
     "daysTotal": "Total Days",
     "utilizationPercent": "Utilization %",
     "monthlyPnl": "Monthly Revenue and Expenses",
+    "revenue": "Revenue",
+    "expenses": "Expenses",
+    "profit": "Profit",
+    "noData": "No data for selected period",
     "agingAnalysis": "Aging Analysis",
     "agingDays": "days",
     "topDebtors": "Top Debtors",
@@ -75,6 +79,13 @@
     "profitPerDay": "Profit per Day",
     "litersPer100km": "l/100km",
     "costPerKmLabel": "RSD/km",
-    "selectVehicle": "Select Vehicle"
+    "selectVehicle": "Select Vehicle",
+    "avgConsumption": "Average Consumption",
+    "totalKm": "Total km",
+    "totalLiters": "Total Liters",
+    "totalExpense": "Total Expense",
+    "costPerKmValue": "Cost per km",
+    "days": "days",
+    "utilization": "Utilization"
   }
 }

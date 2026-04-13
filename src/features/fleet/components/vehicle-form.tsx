@@ -19,8 +19,9 @@ import {
   FormLabel,
   FormMessage,
 } from '@/shared/ui/form'
-import type { VehicleListItem, VehicleRequest } from '../types'
+import type { VehicleRequest } from '../types'
 import { useDrivers } from '../api/use-drivers'
+import { useVehicle } from '../api/use-vehicles'
 import {
   useCreateVehicle,
   useUpdateVehicle,
@@ -30,7 +31,7 @@ import { vehicleSchema, type VehicleFormData } from '../schemas'
 type VehicleFormProps = {
   open: boolean
   onClose: () => void
-  vehicle?: VehicleListItem | null
+  vehicleId?: string | null
 }
 
 const defaultValues: VehicleFormData = {
@@ -49,10 +50,12 @@ const defaultValues: VehicleFormData = {
   currentDriverId: null,
 }
 
-export function VehicleForm({ open, onClose, vehicle }: VehicleFormProps) {
+export function VehicleForm({ open, onClose, vehicleId }: VehicleFormProps) {
   const { t } = useTranslation('fleet')
-  const isEditing = !!vehicle
+  const isEditing = !!vehicleId
 
+  const { data: vehicleData } = useVehicle(vehicleId ?? null)
+  const vehicle = vehicleData?.vehicle
   const { data: driversData } = useDrivers({ status: 'ACTIVE', size: 100 })
   const createMutation = useCreateVehicle()
   const updateMutation = useUpdateVehicle()
@@ -71,23 +74,23 @@ export function VehicleForm({ open, onClose, vehicle }: VehicleFormProps) {
         make: vehicle.make ?? '',
         model: vehicle.model ?? '',
         year: vehicle.year ?? null,
-        vin: null,
+        vin: vehicle.vin ?? null,
         vehicleType: vehicle.vehicleType as VehicleRequest['vehicleType'],
         fuelType: vehicle.fuelType as VehicleRequest['fuelType'],
         ownership:
           (vehicle.ownership as VehicleRequest['ownership']) ?? 'OWNED',
-        cargoCapacityKg: null,
-        cargoVolumeM3: null,
-        avgConsumptionL100km: null,
+        cargoCapacityKg: vehicle.cargoCapacityKg ?? null,
+        cargoVolumeM3: vehicle.cargoVolumeM3 ?? null,
+        avgConsumptionL100km: vehicle.avgConsumptionL100km ?? null,
         odometerKm: vehicle.odometerKm ?? null,
         currentDriverId: vehicle.currentDriverId
           ? Number(vehicle.currentDriverId)
           : null,
       })
-    } else {
+    } else if (!vehicleId) {
       form.reset(defaultValues)
     }
-  }, [vehicle, form])
+  }, [vehicle, vehicleId, form])
 
   const onSubmit = async (data: VehicleFormData) => {
     const request: VehicleRequest = {
@@ -106,8 +109,8 @@ export function VehicleForm({ open, onClose, vehicle }: VehicleFormProps) {
       currentDriverId: data.currentDriverId ?? undefined,
     }
 
-    if (isEditing) {
-      await updateMutation.mutateAsync({ id: vehicle.id, data: request })
+    if (isEditing && vehicleId) {
+      await updateMutation.mutateAsync({ id: vehicleId, data: request })
     } else {
       await createMutation.mutateAsync(request)
     }

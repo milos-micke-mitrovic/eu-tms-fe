@@ -106,11 +106,11 @@ export function StatisticsPage() {
         {/* KLIJENTI */}
         <TabsContent value="clients">
           <div className="flex flex-col gap-6">
-            <RouteCountByPartnerChart from={from} to={to} />
             <div className="grid gap-6 lg:grid-cols-2">
-              <ProfitabilityTable from={from} to={to} />
+              <RouteCountByPartnerChart from={from} to={to} />
               <PartnerProfitabilityChart from={from} to={to} />
             </div>
+            <ProfitabilityTable from={from} to={to} />
           </div>
         </TabsContent>
       </Tabs>

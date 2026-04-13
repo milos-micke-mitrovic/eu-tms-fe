@@ -183,7 +183,7 @@ export function AppSidebar() {
                                 className={({ isActive }) =>
                                   `flex items-center gap-2 rounded-sm px-2 py-1.5 text-sm transition-colors ${
                                     isActive
-                                      ? 'bg-accent text-accent-foreground'
+                                      ? 'bg-sidebar-accent text-sidebar-accent-foreground border-sidebar-primary border-l-[3px] pl-[5px] font-medium'
                                       : 'hover:bg-accent/50'
                                   }`
                                 }

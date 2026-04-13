@@ -11,6 +11,7 @@ import {
   ResponsiveContainer,
 } from 'recharts'
 import { formatCurrency } from '@/shared/utils'
+import { ExpandableChartCard } from '@/shared/components'
 import { useRouteCountByPartner } from '../api/use-advanced-stats'
 import { Skeleton } from '@/shared/ui/skeleton'
 
@@ -35,10 +36,7 @@ export function RouteCountByPartnerChart({
   const chartData = data?.routeCountByPartner ?? []
 
   return (
-    <div className="rounded-lg border p-4">
-      <h3 className="mb-4 text-sm font-semibold">
-        {t('stats.routesByPartner')}
-      </h3>
+    <ExpandableChartCard title={t('stats.routesByPartner')}>
       {loading ? (
         <Skeleton className="h-[300px] w-full" />
       ) : chartData.length === 0 ? (
@@ -129,6 +127,6 @@ export function RouteCountByPartnerChart({
           </ComposedChart>
         </ResponsiveContainer>
       )}
-    </div>
+    </ExpandableChartCard>
   )
 }

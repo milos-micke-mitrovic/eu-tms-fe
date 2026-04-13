@@ -10,6 +10,7 @@ import {
   Legend,
   ResponsiveContainer,
 } from 'recharts'
+import { ExpandableChartCard } from '@/shared/components'
 import { useFuelConsumptionAllVehicles } from '../api/use-advanced-stats'
 import { Skeleton } from '@/shared/ui/skeleton'
 
@@ -84,10 +85,7 @@ export function FuelConsumptionTrendChart({
   }, [data])
 
   return (
-    <div className="rounded-lg border p-4">
-      <h3 className="mb-4 text-sm font-semibold">
-        {t('stats.fuelConsumptionTrend')}
-      </h3>
+    <ExpandableChartCard title={t('stats.fuelConsumptionTrend')}>
       {loading ? (
         <Skeleton className="h-[300px] w-full" />
       ) : chartData.length === 0 ? (
@@ -159,6 +157,6 @@ export function FuelConsumptionTrendChart({
           </LineChart>
         </ResponsiveContainer>
       )}
-    </div>
+    </ExpandableChartCard>
   )
 }

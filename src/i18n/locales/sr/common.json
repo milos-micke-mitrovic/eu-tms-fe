@@ -30,6 +30,8 @@
     "inRsd": "U dinarima (RSD)",
     "addFirst": "Dodajte prvu stavku"
   },
+  "yes": "Da",
+  "no": "Ne",
   "selectDate": "Izaberite datum",
   "selectTime": "Izaberite vreme",
   "status": {
@@ -72,6 +74,27 @@
     "notFound": "Resurs nije pronađen.",
     "unauthorized": "Nemate ovlašćenje za ovu akciju.",
     "uploadFailed": "Otpremanje nije uspelo"
+  },
+  "apiErrors": {
+    "DUPLICATE_RESOURCE": "Zapis sa istim podatkom već postoji.",
+    "NOT_FOUND": "Traženi zapis nije pronađen.",
+    "INVALID_JMBG": "Neispravan JMBG (kontrolna cifra nije validna).",
+    "INVALID_PIB": "Neispravan PIB (kontrolna cifra nije validna).",
+    "INVALID_STATUS_TRANSITION": "Nije moguća promena statusa na izabrani.",
+    "ACCESS_DENIED": "Nemate pristup ovom resursu.",
+    "AUTH_INVALID_CREDENTIALS": "Pogrešno korisničko ime ili lozinka.",
+    "AUTH_INVALID_TOKEN": "Sesija je istekla. Prijavite se ponovo.",
+    "INSUFFICIENT_FUEL": "Nedovoljno goriva u rezervoaru.",
+    "TANK_OVERFLOW": "Količina prelazi kapacitet rezervoara.",
+    "INVALID_TRANSACTION_TYPE": "Nepoznat tip transakcije.",
+    "PERMIT_NOT_AVAILABLE": "Dozvola nije dostupna.",
+    "PERMIT_NOT_ASSIGNED": "Dozvola nije dodeljena.",
+    "INVALID_ENTITY_TYPE": "Nepoznat tip entiteta.",
+    "CMR_GENERATION_FAILED": "Generisanje CMR dokumenta nije uspelo.",
+    "PDF_RENDER_ERROR": "Greška pri generisanju PDF-a.",
+    "REPORT_GENERATION_FAILED": "Generisanje izveštaja nije uspelo.",
+    "FILE_UPLOAD_ERROR": "Otpremanje fajla nije uspelo.",
+    "INTERNAL_ERROR": "Došlo je do neočekivane greške na serveru."
   },
   "success": {
     "saved": "Uspešno sačuvano",

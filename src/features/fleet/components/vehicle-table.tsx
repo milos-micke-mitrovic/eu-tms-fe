@@ -42,13 +42,16 @@ type VehicleTableProps = {
   getRowName?: (row: any) => string
 }
 
-const statusVariant: Record<
+const statusConfig: Record<
   VehicleStatus,
-  'default' | 'secondary' | 'outline'
+  {
+    variant?: 'default' | 'secondary' | 'outline'
+    color?: 'success' | 'warning' | 'muted'
+  }
 > = {
-  ACTIVE: 'default',
-  IN_SERVICE: 'secondary',
-  INACTIVE: 'outline',
+  ACTIVE: { color: 'success' },
+  IN_SERVICE: { color: 'warning' },
+  INACTIVE: { variant: 'outline' },
 }
 
 export function VehicleTable({
@@ -121,7 +124,12 @@ export function VehicleTable({
           <DataTableColumnHeader column={column} title={t('vehicles.status')} />
         ),
         cell: ({ row }) => (
-          <Badge variant={statusVariant[row.original.status as VehicleStatus]}>
+          <Badge
+            variant={
+              statusConfig[row.original.status as VehicleStatus]?.variant
+            }
+            color={statusConfig[row.original.status as VehicleStatus]?.color}
+          >
             {t(`vehicles.statuses.${row.original.status}`)}
           </Badge>
         ),

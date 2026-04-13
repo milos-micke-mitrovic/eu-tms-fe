@@ -8,8 +8,8 @@ type StatusConfig = {
 }
 
 const STATUS_CONFIG: Record<InvoiceStatus, StatusConfig> = {
-  DRAFT: { variant: 'outline' },
-  SENT: { variant: 'secondary' },
+  UNPAID: { color: 'info' },
+  PARTIAL: { color: 'warning' },
   PAID: { color: 'success' },
   OVERDUE: { variant: 'destructive' },
   CANCELLED: { variant: 'outline' },

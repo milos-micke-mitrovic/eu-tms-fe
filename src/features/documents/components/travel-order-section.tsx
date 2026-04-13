@@ -22,6 +22,41 @@ type RouteInfo = {
   departureDate?: string | null
   returnDate?: string | null
   notes?: string | null
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  expenses?: any[] | null
+  [key: string]: unknown
+}
+
+function calcAdvances(
+  expenses: { category: string; amountRsd?: number | null }[]
+) {
+  let fuel = 0
+  let perDiem = 0
+  let toll = 0
+  let other = 0
+  for (const e of expenses) {
+    const amt = e.amountRsd ?? 0
+    switch (e.category) {
+      case 'FUEL':
+        fuel += amt
+        break
+      case 'PER_DIEM':
+        perDiem += amt
+        break
+      case 'TOLL_DOMESTIC':
+      case 'TOLL_INTERNATIONAL':
+        toll += amt
+        break
+      default:
+        other += amt
+    }
+  }
+  return {
+    fuelAdvance: fuel,
+    perDiemAdvance: perDiem,
+    tollAdvance: toll,
+    otherAdvance: other,
+  }
 }
 
 type TravelOrderSectionProps = {
@@ -29,14 +64,17 @@ type TravelOrderSectionProps = {
   route: RouteInfo
 }
 
-const STATUS_VARIANT: Record<
+const STATUS_CONFIG: Record<
   string,
-  'default' | 'secondary' | 'outline' | 'destructive'
+  {
+    variant?: 'default' | 'secondary' | 'outline' | 'destructive'
+    color?: 'success' | 'warning' | 'info' | 'destructive' | 'muted'
+  }
 > = {
-  DRAFT: 'outline',
-  APPROVED: 'default',
-  COMPLETED: 'secondary',
-  CANCELLED: 'destructive',
+  DRAFT: { variant: 'outline' },
+  ISSUED: { color: 'info' },
+  COMPLETED: { color: 'success' },
+  CANCELLED: { color: 'destructive' },
 }
 
 export function TravelOrderSection({
@@ -55,18 +93,21 @@ export function TravelOrderSection({
   const handleCreate = async () => {
     if (!route.driverId || !route.vehicleId) return
 
+    const advances = calcAdvances(route.expenses ?? [])
+
     await createMutation.mutateAsync({
       routeId: Number(routeId),
       driverId: Number(route.driverId),
       vehicleId: Number(route.vehicleId),
-      departureDateTime: route.departureDate
+      departureDatetime: route.departureDate
         ? `${route.departureDate}T08:00:00Z`
         : undefined,
-      returnDateTime: route.returnDate
+      returnDatetime: route.returnDate
         ? `${route.returnDate}T18:00:00Z`
         : undefined,
       purpose: 'Transport robe',
       notes: route.notes ?? undefined,
+      ...advances,
     })
     queryClient.invalidateQueries({
       queryKey: ['travelOrders', 'byRoute', routeId],
@@ -120,8 +161,13 @@ export function TravelOrderSection({
               <BodySmall className="font-mono font-medium">
                 {order.orderNumber}
               </BodySmall>
-              <Badge variant={STATUS_VARIANT[order.status] ?? 'outline'}>
-                {order.status}
+              <Badge
+                variant={STATUS_CONFIG[order.status]?.variant}
+                color={STATUS_CONFIG[order.status]?.color}
+              >
+                {t(`travelOrder.statuses.${order.status}`, {
+                  defaultValue: order.status,
+                })}
               </Badge>
             </div>
             <div className="flex items-center gap-2">

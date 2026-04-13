@@ -39,9 +39,7 @@ export function VehiclesPage() {
 
   // Sheet state
   const [formOpen, setFormOpen] = useState(false)
-  const [editingVehicle, setEditingVehicle] = useState<VehicleListItem | null>(
-    null
-  )
+  const [editingVehicleId, setEditingVehicleId] = useState<string | null>(null)
   const [detailVehicleId, setDetailVehicleId] = useState<string | null>(null)
   const [deleteTarget, setDeleteTarget] = useState<VehicleListItem | null>(null)
 
@@ -69,12 +67,12 @@ export function VehiclesPage() {
 
   // Handlers
   const handleCreate = () => {
-    setEditingVehicle(null)
+    setEditingVehicleId(null)
     setFormOpen(true)
   }
 
   const handleEdit = useCallback((vehicle: VehicleListItem) => {
-    setEditingVehicle(vehicle)
+    setEditingVehicleId(vehicle.id)
     setFormOpen(true)
   }, [])
 
@@ -173,9 +171,9 @@ export function VehiclesPage() {
         open={formOpen}
         onClose={() => {
           setFormOpen(false)
-          setEditingVehicle(null)
+          setEditingVehicleId(null)
         }}
-        vehicle={editingVehicle}
+        vehicleId={editingVehicleId}
       />
 
       {/* Detail Sheet */}
@@ -188,11 +186,8 @@ export function VehiclesPage() {
         }}
         onEdit={() => {
           if (detailVehicleId) {
-            const v = vehicles?.content.find((v) => v.id === detailVehicleId)
-            if (v) {
-              setEditingVehicle(v)
-              setFormOpen(true)
-            }
+            setEditingVehicleId(detailVehicleId)
+            setFormOpen(true)
             setDetailVehicleId(null)
           }
         }}

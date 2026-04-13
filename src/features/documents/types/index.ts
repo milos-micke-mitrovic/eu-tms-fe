@@ -42,9 +42,13 @@ export type TravelOrderRequest = {
   routeId: number
   driverId: number
   vehicleId: number
-  departureDateTime?: string | null
-  returnDateTime?: string | null
+  departureDatetime?: string | null
+  returnDatetime?: string | null
   destination?: string
   purpose?: string
   notes?: string
+  fuelAdvance?: number
+  perDiemAdvance?: number
+  tollAdvance?: number
+  otherAdvance?: number
 }

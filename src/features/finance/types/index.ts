@@ -8,7 +8,12 @@ export type {
 } from '@/generated/graphql'
 
 // ── Union literal types ─────────────────────────────────────
-export type InvoiceStatus = 'DRAFT' | 'SENT' | 'PAID' | 'CANCELLED' | 'OVERDUE'
+export type InvoiceStatus =
+  | 'UNPAID'
+  | 'PARTIAL'
+  | 'PAID'
+  | 'OVERDUE'
+  | 'CANCELLED'
 
 // ── REST-only types ─────────────────────────────────────────
 export type PerDiemCalculationRequest = {

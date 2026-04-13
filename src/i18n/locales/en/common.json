@@ -30,6 +30,8 @@
     "inRsd": "In RSD",
     "addFirst": "Add the first item"
   },
+  "yes": "Yes",
+  "no": "No",
   "selectDate": "Select date",
   "selectTime": "Select time",
   "status": {
@@ -72,6 +74,27 @@
     "notFound": "Resource not found.",
     "unauthorized": "You are not authorized to perform this action.",
     "uploadFailed": "Upload failed"
+  },
+  "apiErrors": {
+    "DUPLICATE_RESOURCE": "A record with the same data already exists.",
+    "NOT_FOUND": "The requested record was not found.",
+    "INVALID_JMBG": "Invalid JMBG (checksum digit is incorrect).",
+    "INVALID_PIB": "Invalid PIB (checksum digit is incorrect).",
+    "INVALID_STATUS_TRANSITION": "Cannot change status to the selected value.",
+    "ACCESS_DENIED": "You do not have access to this resource.",
+    "AUTH_INVALID_CREDENTIALS": "Invalid username or password.",
+    "AUTH_INVALID_TOKEN": "Session expired. Please log in again.",
+    "INSUFFICIENT_FUEL": "Insufficient fuel in the tank.",
+    "TANK_OVERFLOW": "Amount exceeds tank capacity.",
+    "INVALID_TRANSACTION_TYPE": "Unknown transaction type.",
+    "PERMIT_NOT_AVAILABLE": "Permit is not available.",
+    "PERMIT_NOT_ASSIGNED": "Permit is not assigned.",
+    "INVALID_ENTITY_TYPE": "Unknown entity type.",
+    "CMR_GENERATION_FAILED": "CMR document generation failed.",
+    "PDF_RENDER_ERROR": "Error generating PDF.",
+    "REPORT_GENERATION_FAILED": "Report generation failed.",
+    "FILE_UPLOAD_ERROR": "File upload failed.",
+    "INTERNAL_ERROR": "An unexpected server error occurred."
   },
   "success": {
     "saved": "Changes saved successfully",

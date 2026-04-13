@@ -21,7 +21,7 @@ import {
 } from '@/shared/ui/overlay/dropdown-menu'
 import { BodySmall } from '@/shared/ui/typography'
 import { formatDate } from '@/shared/utils'
-import { PERMIT_STATUS_COLORS } from '../constants'
+import { PERMIT_STATUS_COLORS, PERMIT_TYPE_COLORS } from '../constants'
 import type { Permit } from '../types'
 import type { ReactNode } from 'react'
 
@@ -90,11 +90,14 @@ export function PermitTable({
         header: ({ column }) => (
           <DataTableColumnHeader column={column} title={t('permitType')} />
         ),
-        cell: ({ row }) => (
-          <Badge variant="outline">
-            {t(`types.${row.original.permitType}`)}
-          </Badge>
-        ),
+        cell: ({ row }) => {
+          const type = row.original.permitType
+          return (
+            <Badge variant="outline" className={PERMIT_TYPE_COLORS[type] ?? ''}>
+              {t(`types.${type}`)}
+            </Badge>
+          )
+        },
       },
       {
         accessorKey: 'countryName',

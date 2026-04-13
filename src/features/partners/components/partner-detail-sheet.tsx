@@ -18,10 +18,16 @@ type PartnerDetailSheetProps = {
   onEdit?: () => void
 }
 
-const typeVariant: Record<PartnerType, 'default' | 'secondary' | 'outline'> = {
-  CLIENT: 'default',
-  SUPPLIER: 'secondary',
-  BOTH: 'outline',
+const typeConfig: Record<
+  PartnerType,
+  {
+    variant?: 'default' | 'secondary' | 'outline'
+    color?: 'success' | 'info' | 'warning'
+  }
+> = {
+  CLIENT: { color: 'info' },
+  SUPPLIER: { color: 'warning' },
+  BOTH: { color: 'success' },
 }
 
 function InfoRow({ label, value }: { label: string; value: React.ReactNode }) {
@@ -75,7 +81,10 @@ export function PartnerDetailSheet({
               label={t('type')}
               value={
                 <Badge
-                  variant={typeVariant[partner.partnerType as PartnerType]}
+                  variant={
+                    typeConfig[partner.partnerType as PartnerType]?.variant
+                  }
+                  color={typeConfig[partner.partnerType as PartnerType]?.color}
                 >
                   {t(`partnerTypes.${partner.partnerType}`)}
                 </Badge>

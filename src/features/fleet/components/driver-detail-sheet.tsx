@@ -15,7 +15,20 @@ import { Separator } from '@/shared/ui/separator'
 import { BodySmall, Caption } from '@/shared/ui/typography'
 import { formatDate } from '@/shared/utils'
 import { useDriver } from '../api/use-drivers'
+import type { DriverStatus } from '../types'
 import { DocumentUploadDialog } from './document-upload-dialog'
+
+const statusConfig: Record<
+  DriverStatus,
+  {
+    variant?: 'default' | 'secondary' | 'outline'
+    color?: 'success' | 'warning' | 'muted'
+  }
+> = {
+  ACTIVE: { color: 'success' },
+  ON_LEAVE: { color: 'warning' },
+  INACTIVE: { variant: 'outline' },
+}
 
 type DocItem = {
   id: string
@@ -188,9 +201,14 @@ export function DriverDetailSheet({
                 />
                 <Separator className="my-2" />
                 <InfoRow
-                  label={t('common:status.active')}
+                  label={t('drivers.status')}
                   value={
-                    <Badge variant="outline">
+                    <Badge
+                      variant={
+                        statusConfig[driver.status as DriverStatus]?.variant
+                      }
+                      color={statusConfig[driver.status as DriverStatus]?.color}
+                    >
                       {t(`drivers.statuses.${driver.status}`)}
                     </Badge>
                   }

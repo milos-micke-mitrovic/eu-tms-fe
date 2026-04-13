@@ -42,10 +42,16 @@ type PartnerTableProps = {
   onClearFilters?: () => void
 }
 
-const typeVariant: Record<PartnerType, 'default' | 'secondary' | 'outline'> = {
-  CLIENT: 'default',
-  SUPPLIER: 'secondary',
-  BOTH: 'outline',
+const typeConfig: Record<
+  PartnerType,
+  {
+    variant?: 'default' | 'secondary' | 'outline'
+    color?: 'success' | 'info' | 'warning'
+  }
+> = {
+  CLIENT: { color: 'info' },
+  SUPPLIER: { color: 'warning' },
+  BOTH: { color: 'success' },
 }
 
 export function PartnerTable({
@@ -101,7 +107,12 @@ export function PartnerTable({
           <DataTableColumnHeader column={column} title={t('type')} />
         ),
         cell: ({ row }) => (
-          <Badge variant={typeVariant[row.original.partnerType as PartnerType]}>
+          <Badge
+            variant={
+              typeConfig[row.original.partnerType as PartnerType]?.variant
+            }
+            color={typeConfig[row.original.partnerType as PartnerType]?.color}
+          >
             {t(`partnerTypes.${row.original.partnerType}`)}
           </Badge>
         ),

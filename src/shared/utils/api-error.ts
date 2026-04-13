@@ -1,16 +1,19 @@
 import { HttpError } from '@/shared/api/http-client'
+import i18n from '@/i18n'
 
 type ValidationErrors = Record<string, string>
 
 type ApiErrorData = {
   message?: string
   error?: string
+  errorCode?: string
   errors?: ValidationErrors
 } & ValidationErrors
 
 /**
  * Extracts a user-friendly error message from an API error response.
  * Handles multiple backend error formats:
+ * - { errorCode: "DUPLICATE_RESOURCE", message: "..." } → translated by errorCode
  * - { message: "error" }
  * - { error: "error" }
  * - { field: "error message" } (validation errors)
@@ -19,6 +22,13 @@ type ApiErrorData = {
 export function getApiErrorMessage(error: unknown, fallback: string): string {
   if (error instanceof HttpError && error.data) {
     const data = error.data as ApiErrorData
+
+    // Check for errorCode → use localized message
+    if (data.errorCode) {
+      const key = `common:apiErrors.${data.errorCode}`
+      const translated = i18n.t(key, { defaultValue: '' })
+      if (translated) return translated
+    }
 
     // Check for explicit message field
     if (data.message) {
@@ -40,7 +50,10 @@ export function getApiErrorMessage(error: unknown, fallback: string): string {
 
     // Check for flat validation errors (field: "error message")
     const fieldErrors = Object.entries(data)
-      .filter(([key, value]) => typeof value === 'string' && !['message', 'error'].includes(key))
+      .filter(
+        ([key, value]) =>
+          typeof value === 'string' && !['message', 'error'].includes(key)
+      )
       .map(([, value]) => value)
 
     if (fieldErrors.length > 0) {

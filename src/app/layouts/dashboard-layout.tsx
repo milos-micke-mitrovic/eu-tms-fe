@@ -28,7 +28,7 @@ export function DashboardLayout() {
               <NotificationBell />
             </div>
           </header>
-          <div className="min-h-0 min-w-0 flex-1 overflow-auto p-4">
+          <div className="relative min-h-0 min-w-0 flex-1 overflow-auto p-4">
             <Outlet />
           </div>
         </SidebarInset>

@@ -96,7 +96,13 @@
     "destination": "Destination",
     "purpose": "Purpose",
     "advances": "Advances",
-    "actuals": "Actual Costs"
+    "actuals": "Actual Costs",
+    "statuses": {
+      "DRAFT": "Draft",
+      "ISSUED": "Issued",
+      "COMPLETED": "Completed",
+      "CANCELLED": "Cancelled"
+    }
   },
   "perDiem": {
     "calculate": "Calculate Per Diem",

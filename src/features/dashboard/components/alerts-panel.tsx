@@ -11,6 +11,7 @@ import { Badge } from '@/shared/ui/badge'
 import { BodySmall, Caption } from '@/shared/ui/typography'
 import { Skeleton } from '@/shared/ui/skeleton'
 import { cn, formatCurrency } from '@/shared/utils'
+import { PERMIT_TYPE_COLORS } from '@/features/permits/constants'
 import type { DashboardData } from '../api/use-dashboard'
 
 type AlertsPanelProps = {
@@ -80,9 +81,8 @@ export function AlertsPanel({
               >
                 <div className="flex items-center gap-2">
                   <Badge
-                    variant={
-                      permit.permitType === 'CEMT' ? 'default' : 'secondary'
-                    }
+                    variant="outline"
+                    className={PERMIT_TYPE_COLORS[permit.permitType] ?? ''}
                   >
                     {permit.permitType}
                   </Badge>

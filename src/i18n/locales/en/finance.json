@@ -18,12 +18,21 @@
     "quantity": "Quantity",
     "unitPrice": "Unit Price",
     "amount": "Amount",
+    "itemDescription": "Description",
+    "unit": "Unit",
+    "unitDefault": "pcs",
+    "subtotal": "Subtotal",
+    "vat": "VAT",
+    "total": "Total",
+    "totals": "Totals",
+    "downloadPdf": "Download PDF",
+    "downloadXml": "Download XML",
     "statuses": {
-      "DRAFT": "Draft",
-      "SENT": "Sent",
+      "UNPAID": "Unpaid",
+      "PARTIAL": "Partially Paid",
       "PAID": "Paid",
-      "CANCELLED": "Cancelled",
-      "OVERDUE": "Overdue"
+      "OVERDUE": "Overdue",
+      "CANCELLED": "Cancelled"
     },
     "actions": {
       "markSent": "Mark as Sent",

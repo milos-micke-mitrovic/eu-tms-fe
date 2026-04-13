@@ -10,6 +10,7 @@ import {
   ResponsiveContainer,
 } from 'recharts'
 import { formatCurrency } from '@/shared/utils'
+import { ExpandableChartCard } from '@/shared/components'
 import { useProfitabilityByPartner } from '../api/use-statistics'
 import { Skeleton } from '@/shared/ui/skeleton'
 
@@ -28,10 +29,7 @@ export function PartnerProfitabilityChart({
   const chartData = data?.profitabilityByPartner ?? []
 
   return (
-    <div className="rounded-lg border p-4">
-      <h3 className="mb-4 text-sm font-semibold">
-        {t('statistics.partnerProfitability')}
-      </h3>
+    <ExpandableChartCard title={t('statistics.partnerProfitability')}>
       {loading ? (
         <Skeleton className="h-[300px] w-full" />
       ) : chartData.length === 0 ? (
@@ -118,6 +116,6 @@ export function PartnerProfitabilityChart({
           </BarChart>
         </ResponsiveContainer>
       )}
-    </div>
+    </ExpandableChartCard>
   )
 }

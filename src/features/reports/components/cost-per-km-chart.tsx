@@ -11,6 +11,7 @@ import {
   ResponsiveContainer,
 } from 'recharts'
 import { formatCurrency } from '@/shared/utils'
+import { ExpandableChartCard } from '@/shared/components'
 import { useCostPerKm } from '../api/use-advanced-stats'
 import { Skeleton } from '@/shared/ui/skeleton'
 
@@ -35,8 +36,7 @@ export function CostPerKmChart({ from, to }: CostPerKmChartProps) {
   }, [data])
 
   return (
-    <div className="rounded-lg border p-4">
-      <h3 className="mb-4 text-sm font-semibold">{t('stats.costPerKm')}</h3>
+    <ExpandableChartCard title={t('stats.costPerKm')}>
       {loading ? (
         <Skeleton className="h-[300px] w-full" />
       ) : chartData.length === 0 ? (
@@ -117,6 +117,6 @@ export function CostPerKmChart({ from, to }: CostPerKmChartProps) {
           </BarChart>
         </ResponsiveContainer>
       )}
-    </div>
+    </ExpandableChartCard>
   )
 }

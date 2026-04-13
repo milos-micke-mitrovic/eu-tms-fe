@@ -33,7 +33,7 @@ type InvoiceRow = {
   partner?: { id: string; name: string; pib?: string | null } | null
 }
 
-const STATUSES = ['DRAFT', 'SENT', 'PAID', 'OVERDUE', 'CANCELLED'] as const
+const STATUSES = ['UNPAID', 'PARTIAL', 'PAID', 'OVERDUE', 'CANCELLED'] as const
 
 export function InvoicesPage() {
   const { t } = useTranslation('finance')

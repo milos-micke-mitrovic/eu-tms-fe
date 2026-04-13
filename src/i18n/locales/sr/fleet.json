@@ -59,6 +59,7 @@
     "healthCheckExpiry": "Pregled važi do",
     "employment": "Datum zaposlenja",
     "vehicle": "Vozilo",
+    "status": "Status",
     "statuses": {
       "ACTIVE": "Aktivan",
       "ON_LEAVE": "Na odmoru",

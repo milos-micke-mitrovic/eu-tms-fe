@@ -11,6 +11,7 @@ import {
   LabelList,
 } from 'recharts'
 import { formatCurrency } from '@/shared/utils'
+import { ExpandableChartCard } from '@/shared/components'
 import { useAgingAnalysis } from '../api/use-advanced-stats'
 import { Skeleton } from '@/shared/ui/skeleton'
 
@@ -29,8 +30,7 @@ export function AgingAnalysisChart() {
   const chartData = data?.agingAnalysis ?? []
 
   return (
-    <div className="rounded-lg border p-4">
-      <h3 className="mb-4 text-sm font-semibold">{t('stats.agingAnalysis')}</h3>
+    <ExpandableChartCard title={t('stats.agingAnalysis')}>
       {loading ? (
         <Skeleton className="h-[300px] w-full" />
       ) : chartData.length === 0 ? (
@@ -103,6 +103,6 @@ export function AgingAnalysisChart() {
           </BarChart>
         </ResponsiveContainer>
       )}
-    </div>
+    </ExpandableChartCard>
   )
 }

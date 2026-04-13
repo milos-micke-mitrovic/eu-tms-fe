@@ -11,6 +11,7 @@ import {
   ResponsiveContainer,
   Cell,
 } from 'recharts'
+import { ExpandableChartCard } from '@/shared/components'
 import { useDriverFuelComparison } from '../api/use-advanced-stats'
 import { Skeleton } from '@/shared/ui/skeleton'
 
@@ -41,10 +42,7 @@ export function DriverFuelComparisonChart({
   }, [data])
 
   return (
-    <div className="rounded-lg border p-4">
-      <h3 className="mb-4 text-sm font-semibold">
-        {t('stats.driverFuelComparison')}
-      </h3>
+    <ExpandableChartCard title={t('stats.driverFuelComparison')}>
       {loading ? (
         <Skeleton className="h-[300px] w-full" />
       ) : chartData.length === 0 ? (
@@ -115,7 +113,7 @@ export function DriverFuelComparisonChart({
               stroke="#6B7280"
               strokeDasharray="3 3"
               label={{
-                value: 'Prosek',
+                value: t('stats.fleetAverage'),
                 position: 'top',
                 style: { fontSize: 11, fill: '#6B7280' },
               }}
@@ -133,6 +131,6 @@ export function DriverFuelComparisonChart({
           </BarChart>
         </ResponsiveContainer>
       )}
-    </div>
+    </ExpandableChartCard>
   )
 }

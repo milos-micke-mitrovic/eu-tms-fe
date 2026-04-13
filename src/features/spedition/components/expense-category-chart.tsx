@@ -10,6 +10,7 @@ import {
 import { Inbox } from 'lucide-react'
 import { BodySmall } from '@/shared/ui/typography'
 import { Skeleton } from '@/shared/ui/skeleton'
+import { ExpandableChartCard, useChartExpanded } from '@/shared/components'
 import { formatCurrency } from '@/shared/utils'
 import type { ExpenseSummaryItem } from '../types'
 
@@ -29,6 +30,50 @@ type ExpenseCategoryChartProps = {
   isLoading: boolean
 }
 
+type ChartEntry = { name: string; value: number }
+
+function PieChartInner({ chartData }: { chartData: ChartEntry[] }) {
+  const expanded = useChartExpanded()
+  const height = expanded ? 500 : 280
+  const outerRadius = expanded ? 200 : 100
+
+  return (
+    <ResponsiveContainer width="100%" height={height}>
+      <PieChart>
+        <Pie
+          data={chartData}
+          dataKey="value"
+          nameKey="name"
+          cx="50%"
+          cy="50%"
+          outerRadius={outerRadius}
+          label={false}
+        >
+          {chartData.map((_, index) => (
+            <Cell key={index} fill={COLORS[index % COLORS.length]} />
+          ))}
+        </Pie>
+        <Tooltip
+          cursor={false}
+          content={({ active, payload }) => {
+            if (!active || !payload?.length) return null
+            const item = payload[0]
+            return (
+              <div className="bg-popover rounded-md border px-3 py-2 text-sm shadow-md">
+                <p className="text-muted-foreground text-xs">{item.name}</p>
+                <p className="font-medium">
+                  {formatCurrency(Number(item.value), 'RSD')}
+                </p>
+              </div>
+            )
+          }}
+        />
+        <Legend />
+      </PieChart>
+    </ResponsiveContainer>
+  )
+}
+
 export function ExpenseCategoryChart({
   data,
   isLoading,
@@ -41,10 +86,7 @@ export function ExpenseCategoryChart({
   }))
 
   return (
-    <div className="rounded-lg border p-4">
-      <BodySmall className="mb-4 font-medium">
-        {t('expenses.byCategory')}
-      </BodySmall>
+    <ExpandableChartCard title={t('expenses.byCategory')}>
       {isLoading ? (
         <Skeleton className="h-64 w-full" />
       ) : chartData.length === 0 ? (
@@ -57,30 +99,8 @@ export function ExpenseCategoryChart({
           </BodySmall>
         </div>
       ) : (
-        <ResponsiveContainer width="100%" height={280}>
-          <PieChart>
-            <Pie
-              data={chartData}
-              dataKey="value"
-              nameKey="name"
-              cx="50%"
-              cy="50%"
-              outerRadius={100}
-              label={({ name, percent }) =>
-                `${name} ${((percent ?? 0) * 100).toFixed(0)}%`
-              }
-            >
-              {chartData.map((_, index) => (
-                <Cell key={index} fill={COLORS[index % COLORS.length]} />
-              ))}
-            </Pie>
-            <Tooltip
-              formatter={(value) => formatCurrency(Number(value), 'RSD')}
-            />
-            <Legend />
-          </PieChart>
-        </ResponsiveContainer>
+        <PieChartInner chartData={chartData} />
       )}
-    </div>
+    </ExpandableChartCard>
   )
 }

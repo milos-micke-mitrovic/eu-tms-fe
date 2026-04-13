@@ -1,5 +1,6 @@
 export { DocumentsSection, FormSection } from './form'
 export { EmptyState } from './empty-state'
+export { ExpandableChartCard, useChartExpanded } from './expandable-chart-card'
 export { TableSkeleton, CardSkeleton, KpiSkeleton } from './loading-skeleton'
 export { Logo } from './logo'
 export { PageHeader } from './page-header'

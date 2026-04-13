@@ -343,8 +343,15 @@ export function RouteDetailSheet({
                           </div>
                           <div className="flex-1 pb-4">
                             <div className="flex items-center gap-2">
-                              <Badge variant="outline" className="text-xs">
-                                {stop.stopType}
+                              <Badge
+                                variant="outline"
+                                className={cn(
+                                  'text-xs',
+                                  STOP_TYPE_COLORS[stop.stopType as StopType] ??
+                                    STOP_TYPE_COLORS.OTHER
+                                )}
+                              >
+                                {t(`stops.types.${stop.stopType}`)}
                               </Badge>
                               <BodySmall className="font-medium">
                                 {stop.city ?? stop.address}

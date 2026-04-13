@@ -96,7 +96,13 @@
     "destination": "Destinacija",
     "purpose": "Svrha",
     "advances": "Avansi",
-    "actuals": "Stvarni troškovi"
+    "actuals": "Stvarni troškovi",
+    "statuses": {
+      "DRAFT": "Nacrt",
+      "ISSUED": "Izdat",
+      "COMPLETED": "Završen",
+      "CANCELLED": "Otkazan"
+    }
   },
   "perDiem": {
     "calculate": "Izračunaj dnevnice",

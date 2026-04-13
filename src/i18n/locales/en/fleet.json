@@ -59,6 +59,7 @@
     "healthCheckExpiry": "Health Check Valid Until",
     "employment": "Employment Date",
     "vehicle": "Vehicle",
+    "status": "Status",
     "statuses": {
       "ACTIVE": "Active",
       "ON_LEAVE": "On Leave",

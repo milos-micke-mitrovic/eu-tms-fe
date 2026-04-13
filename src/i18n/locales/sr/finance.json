@@ -18,12 +18,21 @@
     "quantity": "Količina",
     "unitPrice": "Jedinična cena",
     "amount": "Iznos",
+    "itemDescription": "Opis",
+    "unit": "JM",
+    "unitDefault": "kom",
+    "subtotal": "Osnovica",
+    "vat": "PDV",
+    "total": "Ukupno",
+    "totals": "Iznosi",
+    "downloadPdf": "Preuzmi PDF",
+    "downloadXml": "Preuzmi XML",
     "statuses": {
-      "DRAFT": "Nacrt",
-      "SENT": "Poslata",
+      "UNPAID": "Neplaćena",
+      "PARTIAL": "Delimično plaćena",
       "PAID": "Plaćena",
-      "CANCELLED": "Stornirana",
-      "OVERDUE": "Dospela"
+      "OVERDUE": "Dospela",
+      "CANCELLED": "Stornirana"
     },
     "actions": {
       "markSent": "Označi kao poslatu",

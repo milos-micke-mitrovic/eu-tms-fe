@@ -10,6 +10,7 @@ import {
   Cell,
 } from 'recharts'
 import { formatCurrency } from '@/shared/utils'
+import { ExpandableChartCard } from '@/shared/components'
 import { useProfitabilityByVehicle } from '../api/use-statistics'
 import { Skeleton } from '@/shared/ui/skeleton'
 
@@ -28,10 +29,7 @@ export function VehicleProfitabilityChart({
   const chartData = data?.profitabilityByVehicle ?? []
 
   return (
-    <div className="rounded-lg border p-4">
-      <h3 className="mb-4 text-sm font-semibold">
-        {t('statistics.vehicleProfitability')}
-      </h3>
+    <ExpandableChartCard title={t('statistics.vehicleProfitability')}>
       {loading ? (
         <Skeleton className="h-[300px] w-full" />
       ) : chartData.length === 0 ? (
@@ -112,6 +110,6 @@ export function VehicleProfitabilityChart({
           </BarChart>
         </ResponsiveContainer>
       )}
-    </div>
+    </ExpandableChartCard>
   )
 }

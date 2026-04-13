@@ -42,12 +42,17 @@ type DriverTableProps = {
   getRowName?: (row: any) => string
 }
 
-const statusVariant: Record<DriverStatus, 'default' | 'secondary' | 'outline'> =
+const statusConfig: Record<
+  DriverStatus,
   {
-    ACTIVE: 'default',
-    ON_LEAVE: 'secondary',
-    INACTIVE: 'outline',
+    variant?: 'default' | 'secondary' | 'outline'
+    color?: 'success' | 'warning' | 'muted'
   }
+> = {
+  ACTIVE: { color: 'success' },
+  ON_LEAVE: { color: 'warning' },
+  INACTIVE: { variant: 'outline' },
+}
 
 export function DriverTable({
   data,
@@ -120,7 +125,10 @@ export function DriverTable({
           />
         ),
         cell: ({ row }) => (
-          <Badge variant={statusVariant[row.original.status as DriverStatus]}>
+          <Badge
+            variant={statusConfig[row.original.status as DriverStatus]?.variant}
+            color={statusConfig[row.original.status as DriverStatus]?.color}
+          >
             {t(`drivers.statuses.${row.original.status}`)}
           </Badge>
         ),

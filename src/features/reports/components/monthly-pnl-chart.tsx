@@ -1,8 +1,7 @@
 import { useTranslation } from 'react-i18next'
 import {
-  ComposedChart,
+  BarChart,
   Bar,
-  Line,
   XAxis,
   YAxis,
   CartesianGrid,
@@ -11,6 +10,7 @@ import {
   ResponsiveContainer,
 } from 'recharts'
 import { formatCurrency } from '@/shared/utils'
+import { ExpandableChartCard } from '@/shared/components'
 import { useMonthlyPnl } from '../api/use-advanced-stats'
 import { Skeleton } from '@/shared/ui/skeleton'
 
@@ -49,8 +49,7 @@ export function MonthlyPnlChart({ from, to }: MonthlyPnlChartProps) {
   }))
 
   return (
-    <div className="rounded-lg border p-4">
-      <h3 className="mb-4 text-sm font-semibold">{t('stats.monthlyPnl')}</h3>
+    <ExpandableChartCard title={t('stats.monthlyPnl')}>
       {loading ? (
         <Skeleton className="h-[300px] w-full" />
       ) : chartData.length === 0 ? (
@@ -59,9 +58,11 @@ export function MonthlyPnlChart({ from, to }: MonthlyPnlChartProps) {
         </div>
       ) : (
         <ResponsiveContainer width="100%" height={350}>
-          <ComposedChart
+          <BarChart
             data={chartData}
-            margin={{ top: 5, right: 30, left: 10, bottom: 5 }}
+            margin={{ top: 5, right: 20, left: 10, bottom: 5 }}
+            barGap={4}
+            barCategoryGap="30%"
           >
             <CartesianGrid
               strokeDasharray="3 3"
@@ -76,9 +77,10 @@ export function MonthlyPnlChart({ from, to }: MonthlyPnlChartProps) {
             />
             <YAxis
               tickFormatter={(value: number) => {
-                if (value >= 1_000_000)
+                if (Math.abs(value) >= 1_000_000)
                   return `${(value / 1_000_000).toFixed(1)}M`
-                if (value >= 1_000) return `${(value / 1_000).toFixed(0)}k`
+                if (Math.abs(value) >= 1_000)
+                  return `${(value / 1_000).toFixed(0)}k`
                 return String(value)
               }}
               axisLine={false}
@@ -122,26 +124,16 @@ export function MonthlyPnlChart({ from, to }: MonthlyPnlChartProps) {
               name={t('stats.revenue')}
               fill="#10B981"
               radius={[4, 4, 0, 0]}
-              maxBarSize={40}
             />
             <Bar
               dataKey="expenses"
               name={t('stats.expenses')}
               fill="#EF4444"
               radius={[4, 4, 0, 0]}
-              maxBarSize={40}
             />
-            <Line
-              type="monotone"
-              dataKey="profit"
-              name={t('stats.profit')}
-              stroke="#3B82F6"
-              strokeWidth={2}
-              dot={true}
-            />
-          </ComposedChart>
+          </BarChart>
         </ResponsiveContainer>
       )}
-    </div>
+    </ExpandableChartCard>
   )
 }
