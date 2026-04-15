@@ -61,6 +61,10 @@
     "byCategory": "Troškovi po kategorijama",
     "trend": "Trend troškova",
     "topVehicles": "Top 10 vozila po trošku",
+    "exchangeRate": "Kurs ({{currency}} → RSD)",
+    "exchangeRateUnavailable": "Kurs nije dostupan — unesite ručno",
+    "manualRate": "Ručno",
+    "autoRate": "Auto",
     "categories": {
       "FUEL": "Gorivo",
       "TOLL_DOMESTIC": "Putarina (domaća)",

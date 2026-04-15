@@ -51,38 +51,38 @@ function parseValue(value: Date | string | undefined): Date | undefined {
   }
 }
 
-// Format date input as user types: DD/MM/YYYY
+// Format date input as user types: DD.MM.YYYY
 function formatDateInput(input: string): string {
   const digits = input.replace(/\D/g, '')
 
   if (digits.length === 0) return ''
   if (digits.length <= 2) return digits
   if (digits.length <= 4) {
-    return `${digits.slice(0, 2)}/${digits.slice(2)}`
+    return `${digits.slice(0, 2)}.${digits.slice(2)}`
   }
-  return `${digits.slice(0, 2)}/${digits.slice(2, 4)}/${digits.slice(4, 8)}`
+  return `${digits.slice(0, 2)}.${digits.slice(2, 4)}.${digits.slice(4, 8)}`
 }
 
-// Parse user input (DD/MM/YYYY) to Date
+// Parse user input (DD.MM.YYYY) to Date
 function parseUserInput(input: string): Date | null {
-  // Try DD/MM/YYYY format
-  const parsed = parse(input, 'dd/MM/yyyy', new Date())
+  // Try DD.MM.YYYY format
+  const parsed = parse(input, 'dd.MM.yyyy', new Date())
   if (isValid(parsed)) {
     return parsed
   }
   return null
 }
 
-// Format Date to display string (DD/MM/YYYY)
+// Format Date to display string (DD.MM.YYYY)
 function formatForDisplay(date: Date | undefined): string {
   if (!date) return ''
-  return format(date, 'dd/MM/yyyy')
+  return format(date, 'dd.MM.yyyy')
 }
 
 function DatePicker({
   value,
   onChange,
-  placeholder = 'DD/MM/YYYY',
+  placeholder = 'DD.MM.YYYY',
   label,
   required,
   error,
@@ -97,7 +97,9 @@ function DatePicker({
   const { t } = useTranslation('common')
   const [open, setOpen] = React.useState(false)
   const dateValue = parseValue(value)
-  const [inputValue, setInputValue] = React.useState(formatForDisplay(dateValue))
+  const [inputValue, setInputValue] = React.useState(
+    formatForDisplay(dateValue)
+  )
   const inputRef = React.useRef<HTMLInputElement>(null)
 
   // Sync input value with prop

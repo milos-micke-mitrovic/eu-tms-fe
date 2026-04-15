@@ -57,26 +57,26 @@ function formatDateTimeInput(input: string): string {
 
   if (digits.length === 0) return ''
   if (digits.length <= 2) return digits
-  if (digits.length <= 4) return `${digits.slice(0, 2)}/${digits.slice(2)}`
+  if (digits.length <= 4) return `${digits.slice(0, 2)}.${digits.slice(2)}`
   if (digits.length <= 8)
-    return `${digits.slice(0, 2)}/${digits.slice(2, 4)}/${digits.slice(4, 8)}`
+    return `${digits.slice(0, 2)}.${digits.slice(2, 4)}.${digits.slice(4, 8)}`
   if (digits.length <= 10)
-    return `${digits.slice(0, 2)}/${digits.slice(2, 4)}/${digits.slice(4, 8)} ${digits.slice(8, 10)}`
-  return `${digits.slice(0, 2)}/${digits.slice(2, 4)}/${digits.slice(4, 8)} ${digits.slice(8, 10)}:${digits.slice(10, 12)}`
+    return `${digits.slice(0, 2)}.${digits.slice(2, 4)}.${digits.slice(4, 8)} ${digits.slice(8, 10)}`
+  return `${digits.slice(0, 2)}.${digits.slice(2, 4)}.${digits.slice(4, 8)} ${digits.slice(8, 10)}:${digits.slice(10, 12)}`
 }
 
 function parseUserInput(input: string): Date | null {
-  const parsed = parse(input, 'dd/MM/yyyy HH:mm', new Date())
+  const parsed = parse(input, 'dd.MM.yyyy HH:mm', new Date())
   if (isValid(parsed)) return parsed
   // Also try date-only input
-  const dateOnly = parse(input, 'dd/MM/yyyy', new Date())
+  const dateOnly = parse(input, 'dd.MM.yyyy', new Date())
   if (isValid(dateOnly)) return dateOnly
   return null
 }
 
 function formatForDisplay(date: Date | undefined): string {
   if (!date) return ''
-  return format(date, 'dd/MM/yyyy HH:mm')
+  return format(date, 'dd.MM.yyyy HH:mm')
 }
 
 function formatTimeInput(input: string): string {
@@ -93,7 +93,7 @@ function isValidTime(time: string): boolean {
 function DateTimePicker({
   value,
   onChange,
-  placeholder = 'DD/MM/YYYY HH:MM',
+  placeholder = 'DD.MM.YYYY HH:MM',
   label,
   required,
   error,
@@ -108,7 +108,9 @@ function DateTimePicker({
   const { t } = useTranslation('common')
   const [open, setOpen] = React.useState(false)
   const dateValue = parseValue(value)
-  const [inputValue, setInputValue] = React.useState(formatForDisplay(dateValue))
+  const [inputValue, setInputValue] = React.useState(
+    formatForDisplay(dateValue)
+  )
   const inputRef = React.useRef<HTMLInputElement>(null)
   const [timeInputValue, setTimeInputValue] = React.useState(
     dateValue ? format(dateValue, 'HH:mm') : ''
@@ -132,7 +134,7 @@ function DateTimePicker({
     const formatted = formatDateTimeInput(e.target.value)
     setInputValue(formatted)
 
-    // Auto-submit if valid complete datetime (DD/MM/YYYY HH:MM = 16 chars)
+    // Auto-submit if valid complete datetime (DD.MM.YYYY HH:MM = 16 chars)
     if (formatted.length === 16) {
       const parsed = parseUserInput(formatted)
       if (parsed) {
@@ -285,7 +287,7 @@ function DateTimePicker({
                 return false
               }}
             />
-            <div className="border-l flex flex-col items-center justify-center px-3 gap-1.5">
+            <div className="flex flex-col items-center justify-center gap-1.5 border-l px-3">
               <Clock className="text-muted-foreground size-4 opacity-50" />
               <input
                 type="text"
@@ -296,7 +298,7 @@ function DateTimePicker({
                 onKeyDown={handleTimeInputKeyDown}
                 placeholder="HH:MM"
                 className={cn(
-                  'w-16 rounded-md border border-input bg-transparent px-2 py-1.5 text-center text-sm outline-none',
+                  'border-input w-16 rounded-md border bg-transparent px-2 py-1.5 text-center text-sm outline-none',
                   'focus:border-ring focus:ring-ring/50 focus:ring-[3px]',
                   'placeholder:text-muted-foreground'
                 )}

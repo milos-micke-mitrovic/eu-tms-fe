@@ -1,14 +1,15 @@
-import { useEffect } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import { useForm, useWatch } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useTranslation } from 'react-i18next'
+import { Pencil, Zap } from 'lucide-react'
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
 } from '@/shared/ui/overlay/dialog'
-import { Button } from '@/shared/ui/button'
+import { Button, IconButton } from '@/shared/ui/button'
 import { Input } from '@/shared/ui/input'
 import { Select } from '@/shared/ui/select'
 import { DatePicker } from '@/shared/ui/date-time/date-picker'
@@ -22,11 +23,18 @@ import {
 } from '@/shared/ui/form'
 import { Caption } from '@/shared/ui/typography'
 import { formatCurrency } from '@/shared/utils'
+import { httpClient } from '@/shared/api/http-client'
 import { EXPENSE_CATEGORIES, CURRENCIES } from '../constants'
 import { useCreateExpense, useUpdateExpense } from '../api/use-expenses'
 import type { RouteExpense, ExpenseRequest } from '../types'
 import { format } from 'date-fns'
 import { expenseSchema, type ExpenseFormData } from '../schemas'
+
+type ExchangeRateResponse = {
+  currencyCode: string
+  rateToRsd: number
+  rateDate: string
+}
 
 type ExpenseFormProps = {
   open: boolean
@@ -34,6 +42,9 @@ type ExpenseFormProps = {
   routeId: string
   expense?: RouteExpense | null
 }
+
+// Simple cache to avoid re-fetching rates for same currency
+const rateCache = new Map<string, ExchangeRateResponse>()
 
 export function ExpenseForm({
   open,
@@ -48,6 +59,12 @@ export function ExpenseForm({
   const updateMutation = useUpdateExpense()
   const isPending = createMutation.isPending || updateMutation.isPending
 
+  const [manualOverride, setManualOverride] = useState(false)
+  const [isRateLoading, setIsRateLoading] = useState(false)
+  const [fetchedRate, setFetchedRate] = useState<ExchangeRateResponse | null>(
+    null
+  )
+
   const form = useForm<ExpenseFormData>({
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     resolver: zodResolver(expenseSchema) as any,
@@ -61,7 +78,7 @@ export function ExpenseForm({
     },
   })
 
-  useEffect(() => {
+  const handleReset = useCallback(() => {
     if (expense) {
       form.reset({
         category: expense.category,
@@ -81,7 +98,13 @@ export function ExpenseForm({
         expenseDate: format(new Date(), 'yyyy-MM-dd'),
       })
     }
+    setManualOverride(false)
+    setFetchedRate(null)
   }, [expense, form])
+
+  useEffect(() => {
+    handleReset()
+  }, [handleReset])
 
   // Live RSD calculation
   const amount = useWatch({ control: form.control, name: 'amount' })
@@ -90,6 +113,67 @@ export function ExpenseForm({
   const showExchangeRate = currency !== 'RSD'
   const calculatedRsd =
     showExchangeRate && amount && exchangeRate ? amount * exchangeRate : null
+
+  const rateUnavailable =
+    showExchangeRate && !isRateLoading && !fetchedRate?.rateToRsd
+
+  // Fetch rate for a given currency — called from event handlers, not effects
+  const fetchRate = useCallback(
+    async (curr: string) => {
+      if (!curr || curr === 'RSD') {
+        setFetchedRate(null)
+        return
+      }
+
+      // Check cache first
+      const cached = rateCache.get(curr)
+      if (cached) {
+        setFetchedRate(cached)
+        form.setValue('exchangeRate', cached.rateToRsd)
+        return
+      }
+
+      setIsRateLoading(true)
+      try {
+        const data = await httpClient.get<ExchangeRateResponse>(
+          `/exchange-rates/latest/${curr}`
+        )
+        rateCache.set(curr, data)
+        setFetchedRate(data)
+        if (data?.rateToRsd) {
+          form.setValue('exchangeRate', data.rateToRsd)
+        } else {
+          setManualOverride(true)
+        }
+      } catch {
+        setFetchedRate(null)
+        setManualOverride(true)
+      } finally {
+        setIsRateLoading(false)
+      }
+    },
+    [form]
+  )
+
+  // Handle currency change — fetch rate and reset manual override
+  const handleCurrencyChange = useCallback(
+    (newCurrency: string) => {
+      form.setValue('currency', newCurrency)
+      form.setValue('exchangeRate', null)
+      setManualOverride(false)
+      setFetchedRate(null)
+      fetchRate(newCurrency)
+    },
+    [form, fetchRate]
+  )
+
+  // Fetch rate on initial load if editing with a non-RSD currency
+  useEffect(() => {
+    if (expense?.currency && expense.currency !== 'RSD') {
+      fetchRate(expense.currency)
+    }
+    // Only run on expense change, not on every fetchRate ref change
+  }, [expense])
 
   const onSubmit = async (data: ExpenseFormData) => {
     const request: ExpenseRequest = {
@@ -172,7 +256,7 @@ export function ExpenseForm({
                   <Select
                     options={currencyOptions}
                     value={field.value}
-                    onChange={field.onChange}
+                    onChange={handleCurrencyChange}
                   />
                   <FormMessage />
                 </FormItem>
@@ -187,7 +271,41 @@ export function ExpenseForm({
                 name="exchangeRate"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Kurs ({currency} → RSD)</FormLabel>
+                    <div className="flex items-center justify-between">
+                      <FormLabel>
+                        {t('expenses.exchangeRate', { currency })}
+                      </FormLabel>
+                      {!rateUnavailable && (
+                        <IconButton
+                          type="button"
+                          variant="ghost"
+                          size="xs"
+                          icon={
+                            manualOverride ? (
+                              <Zap className="size-3.5" />
+                            ) : (
+                              <Pencil className="size-3.5" />
+                            )
+                          }
+                          onClick={() => {
+                            const newValue = !manualOverride
+                            setManualOverride(newValue)
+                            if (!newValue && fetchedRate?.rateToRsd) {
+                              form.setValue(
+                                'exchangeRate',
+                                fetchedRate.rateToRsd
+                              )
+                            }
+                          }}
+                          aria-label={
+                            manualOverride
+                              ? t('expenses.autoRate')
+                              : t('expenses.manualRate')
+                          }
+                          className="text-muted-foreground hover:text-foreground -mr-1"
+                        />
+                      )}
+                    </div>
                     <FormControl>
                       <Input
                         type="number"
@@ -198,8 +316,20 @@ export function ExpenseForm({
                             e.target.value ? Number(e.target.value) : null
                           )
                         }
+                        readOnly={!manualOverride}
+                        disabled={isRateLoading}
+                        className={
+                          !manualOverride
+                            ? 'bg-muted cursor-default'
+                            : undefined
+                        }
                       />
                     </FormControl>
+                    {rateUnavailable && (
+                      <Caption className="text-warning">
+                        {t('expenses.exchangeRateUnavailable')}
+                      </Caption>
+                    )}
                     <FormMessage />
                   </FormItem>
                 )}

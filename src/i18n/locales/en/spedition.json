@@ -61,6 +61,10 @@
     "byCategory": "Expenses by Category",
     "trend": "Expense Trend",
     "topVehicles": "Top 10 Vehicles by Expense",
+    "exchangeRate": "Rate ({{currency}} → RSD)",
+    "exchangeRateUnavailable": "Rate unavailable — enter manually",
+    "manualRate": "Manual",
+    "autoRate": "Auto",
     "categories": {
       "FUEL": "Fuel",
       "TOLL_DOMESTIC": "Toll (Domestic)",
