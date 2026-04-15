@@ -94,7 +94,8 @@
     "PDF_RENDER_ERROR": "Error generating PDF.",
     "REPORT_GENERATION_FAILED": "Report generation failed.",
     "FILE_UPLOAD_ERROR": "File upload failed.",
-    "INTERNAL_ERROR": "An unexpected server error occurred."
+    "INTERNAL_ERROR": "An unexpected server error occurred.",
+    "VALIDATION_ERROR": "Validation failed. Please check your input."
   },
   "success": {
     "saved": "Changes saved successfully",

@@ -14,6 +14,7 @@ import {
 } from '../api/use-tenant-mutations'
 import { TenantTable } from '../components/tenant-table'
 import { TenantForm } from '../components/tenant-form'
+import { TenantDetailSheet } from '../components/tenant-detail-sheet'
 import type { Tenant } from '../types'
 
 export function TenantsPage() {
@@ -26,6 +27,7 @@ export function TenantsPage() {
 
   const [formOpen, setFormOpen] = useState(false)
   const [editingTenant, setEditingTenant] = useState<Tenant | null>(null)
+  const [detailTenant, setDetailTenant] = useState<Tenant | null>(null)
   const [deleteTarget, setDeleteTarget] = useState<Tenant | null>(null)
 
   const tenantsQuery = useTenants(activeOnly)
@@ -35,13 +37,11 @@ export function TenantsPage() {
   const data = isSearching ? searchQuery.data : tenantsQuery.data
   const isLoading = isSearching ? searchQuery.isLoading : tenantsQuery.isLoading
 
-  // Filter active-only on search results client-side
   const filteredData = useMemo(() => {
     if (!data) return []
-    if (isSearching && activeOnly) {
-      return data.filter((t) => t.active)
-    }
-    return data
+    const list =
+      isSearching && activeOnly ? data.filter((t) => t.active) : [...data]
+    return list.sort((a, b) => a.id - b.id)
   }, [data, isSearching, activeOnly])
 
   const deleteMutation = useDeleteTenant()
@@ -51,6 +51,10 @@ export function TenantsPage() {
     setEditingTenant(null)
     setFormOpen(true)
   }
+
+  const handleRowClick = useCallback((tenant: Tenant) => {
+    setDetailTenant(tenant)
+  }, [])
 
   const handleEdit = useCallback((tenant: Tenant) => {
     setEditingTenant(tenant)
@@ -105,6 +109,7 @@ export function TenantsPage() {
       <TenantTable
         data={filteredData}
         isLoading={isLoading}
+        onRowClick={handleRowClick}
         onEdit={handleEdit}
         onDelete={handleDelete}
         onToggleStatus={handleToggleStatus}
@@ -115,6 +120,22 @@ export function TenantsPage() {
           </Button>
         }
       />
+
+      {/* Detail Drawer */}
+      <TenantDetailSheet
+        tenant={detailTenant}
+        open={!!detailTenant}
+        onClose={() => setDetailTenant(null)}
+        onEdit={() => {
+          if (detailTenant) {
+            setEditingTenant(detailTenant)
+            setFormOpen(true)
+            setDetailTenant(null)
+          }
+        }}
+      />
+
+      {/* Edit/Create Form */}
       <TenantForm
         open={formOpen}
         onClose={() => {
@@ -123,6 +144,8 @@ export function TenantsPage() {
         }}
         tenant={editingTenant}
       />
+
+      {/* Delete Confirmation */}
       <ConfirmDialog
         open={!!deleteTarget}
         onOpenChange={(open) => !open && setDeleteTarget(null)}

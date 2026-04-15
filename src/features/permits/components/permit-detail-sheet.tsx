@@ -10,7 +10,7 @@ import { Badge } from '@/shared/ui/badge'
 import { Button } from '@/shared/ui/button'
 import { BodySmall, Caption } from '@/shared/ui/typography'
 import { formatDate } from '@/shared/utils'
-import { PERMIT_TYPE_COLORS } from '../constants'
+import { PERMIT_TYPE_STYLES } from '../constants'
 import type { Permit } from '../types'
 
 type PermitDetailSheetProps = {
@@ -67,12 +67,15 @@ export function PermitDetailSheet({
         </SheetHeader>
         <div className="space-y-4 overflow-y-auto p-4">
           <div className="flex items-center gap-2">
-            <Badge
-              variant="outline"
-              className={PERMIT_TYPE_COLORS[permit.permitType] ?? ''}
+            <span
+              className="inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium"
+              style={{
+                backgroundColor: PERMIT_TYPE_STYLES[permit.permitType]?.bg,
+                color: PERMIT_TYPE_STYLES[permit.permitType]?.text,
+              }}
             >
               {t(`types.${permit.permitType}`)}
-            </Badge>
+            </span>
             <Badge variant={STATUS_VARIANT[permit.status] ?? 'outline'}>
               {t(`status.${permit.status}`)}
             </Badge>

@@ -1,9 +1,10 @@
 {
   "groups": {
-    "operations": "Operacije",
+    "spedition": "Špedicija",
     "fleet": "Vozni park",
     "finance": "Finansije",
-    "analytics": "Analitika"
+    "analytics": "Analitika",
+    "admin": "Administracija"
   },
   "sidebar": {
     "dashboard": "Početna",
@@ -20,7 +21,8 @@
     "reports": "Izveštaji",
     "statistics": "Statistika",
     "notifications": "Obaveštenja",
-    "settings": "Podešavanja"
+    "settings": "Podešavanja",
+    "users": "Korisnici"
   },
   "breadcrumbs": {
     "home": "Početna"

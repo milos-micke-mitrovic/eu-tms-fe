@@ -18,6 +18,7 @@ import type { ReactNode } from 'react'
 type TenantTableProps = {
   data: Tenant[]
   isLoading: boolean
+  onRowClick: (tenant: Tenant) => void
   onEdit: (tenant: Tenant) => void
   onDelete: (tenant: Tenant) => void
   onToggleStatus: (tenant: Tenant) => void
@@ -27,6 +28,7 @@ type TenantTableProps = {
 export function TenantTable({
   data,
   isLoading,
+  onRowClick,
   onEdit,
   onDelete,
   onToggleStatus,
@@ -37,8 +39,12 @@ export function TenantTable({
   const columns = useMemo<ColumnDef<Tenant, unknown>[]>(
     () => [
       {
+        accessorKey: 'name',
+        header: t('columns.name'),
+      },
+      {
         accessorKey: 'subdomain',
-        header: t('subdomain'),
+        header: t('columns.code'),
         cell: ({ row }) => (
           <code className="bg-muted rounded px-1.5 py-0.5 font-mono text-sm">
             {row.original.subdomain}
@@ -46,22 +52,18 @@ export function TenantTable({
         ),
       },
       {
-        accessorKey: 'name',
-        header: t('name'),
-      },
-      {
         accessorKey: 'active',
-        header: t('status'),
+        header: t('columns.status'),
         cell: ({ row }) =>
           row.original.active ? (
-            <Badge variant="default">{t('active')}</Badge>
+            <Badge color="success">{t('status.active')}</Badge>
           ) : (
-            <Badge variant="secondary">{t('inactive')}</Badge>
+            <Badge variant="outline">{t('status.inactive')}</Badge>
           ),
       },
       {
         accessorKey: 'createdAt',
-        header: t('createdAt'),
+        header: t('columns.createdAt'),
         cell: ({ row }) => formatDate(row.original.createdAt),
       },
       {
@@ -70,30 +72,32 @@ export function TenantTable({
         cell: ({ row }) => {
           const tenant = row.original
           return (
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="icon" className="size-8">
-                  <MoreHorizontal className="size-4" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <DropdownMenuItem onClick={() => onEdit(tenant)}>
-                  <Pencil className="mr-2 size-4" />
-                  {t('common:actions.edit')}
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => onToggleStatus(tenant)}>
-                  <Power className="mr-2 size-4" />
-                  {t('toggleStatus')}
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                  onClick={() => onDelete(tenant)}
-                  className="text-destructive focus:text-destructive"
-                >
-                  <Trash2 className="mr-2 size-4" />
-                  {t('common:actions.delete')}
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+            <div onClick={(e) => e.stopPropagation()}>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" size="icon" className="size-8">
+                    <MoreHorizontal className="size-4" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuItem onClick={() => onEdit(tenant)}>
+                    <Pencil className="mr-2 size-4" />
+                    {t('common:actions.edit')}
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => onToggleStatus(tenant)}>
+                    <Power className="mr-2 size-4" />
+                    {t('toggleStatus')}
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    onClick={() => onDelete(tenant)}
+                    className="text-destructive focus:text-destructive"
+                  >
+                    <Trash2 className="mr-2 size-4" />
+                    {t('common:actions.delete')}
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
           )
         },
       },
@@ -109,6 +113,7 @@ export function TenantTable({
       pagination={false}
       emptyText={t('title')}
       emptyAction={emptyAction}
+      onRowClick={onRowClick}
     />
   )
 }

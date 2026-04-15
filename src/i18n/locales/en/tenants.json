@@ -1,13 +1,52 @@
 {
   "title": "Tenant Management",
   "addNew": "New Tenant",
-  "subdomain": "Subdomain",
-  "name": "Company Name",
-  "active": "Active",
-  "inactive": "Inactive",
-  "status": "Status",
-  "createdAt": "Created",
+  "activeOnly": "Active only",
+  "columns": {
+    "name": "Name",
+    "code": "Code",
+    "status": "Status",
+    "createdAt": "Created"
+  },
+  "status": {
+    "active": "Active",
+    "inactive": "Inactive"
+  },
   "toggleStatus": "Activate/Deactivate",
-  "subdomainHint": "Letters, numbers and hyphens only (e.g. acme-transport)",
-  "activeOnly": "Active only"
+  "sheet": {
+    "addTitle": "New Tenant",
+    "editTitle": "Edit Tenant",
+    "name": "Name",
+    "code": "Code",
+    "isActive": "Active",
+    "save": "Save",
+    "delete": "Delete"
+  },
+  "companies": {
+    "title": "Companies",
+    "addCompany": "Add Company",
+    "empty": "No companies registered",
+    "name": "Company Name",
+    "pib": "Tax ID (PIB)",
+    "address": "Address",
+    "phone": "Phone",
+    "createSuccess": "Company created successfully",
+    "dialogTitle": "New Company"
+  },
+  "admins": {
+    "title": "Administrators",
+    "addAdmin": "Add Admin",
+    "empty": "No administrators"
+  },
+  "adminSheet": {
+    "addTitle": "New Administrator",
+    "company": "Company",
+    "selectCompany": "Select company...",
+    "firstName": "First Name",
+    "lastName": "Last Name",
+    "email": "Email",
+    "password": "Password",
+    "noCompanies": "Add a company first",
+    "createSuccess": "Administrator created successfully"
+  }
 }

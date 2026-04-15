@@ -7,11 +7,10 @@ import {
   Shield,
   Receipt,
 } from 'lucide-react'
-import { Badge } from '@/shared/ui/badge'
 import { BodySmall, Caption } from '@/shared/ui/typography'
 import { Skeleton } from '@/shared/ui/skeleton'
 import { cn, formatCurrency } from '@/shared/utils'
-import { PERMIT_TYPE_COLORS } from '@/features/permits/constants'
+import { PERMIT_TYPE_STYLES } from '@/features/permits/constants'
 import type { DashboardData } from '../api/use-dashboard'
 
 type AlertsPanelProps = {
@@ -80,12 +79,16 @@ export function AlertsPanel({
                 className="hover:bg-accent flex items-center justify-between rounded border p-2 transition-colors"
               >
                 <div className="flex items-center gap-2">
-                  <Badge
-                    variant="outline"
-                    className={PERMIT_TYPE_COLORS[permit.permitType] ?? ''}
+                  <span
+                    className="inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium"
+                    style={{
+                      backgroundColor:
+                        PERMIT_TYPE_STYLES[permit.permitType]?.bg,
+                      color: PERMIT_TYPE_STYLES[permit.permitType]?.text,
+                    }}
                   >
                     {permit.permitType}
-                  </Badge>
+                  </span>
                   <div>
                     <BodySmall>{permit.permitNumber}</BodySmall>
                     <Caption>{permit.countryName}</Caption>

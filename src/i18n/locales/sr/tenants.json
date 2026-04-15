@@ -1,13 +1,52 @@
 {
   "title": "Upravljanje firmama",
   "addNew": "Nova firma",
-  "subdomain": "Subdomen",
-  "name": "Naziv firme",
-  "active": "Aktivna",
-  "inactive": "Neaktivna",
-  "status": "Status",
-  "createdAt": "Kreirana",
+  "activeOnly": "Samo aktivne",
+  "columns": {
+    "name": "Naziv",
+    "code": "Šifra",
+    "status": "Status",
+    "createdAt": "Kreiran"
+  },
+  "status": {
+    "active": "Aktivan",
+    "inactive": "Neaktivan"
+  },
   "toggleStatus": "Aktiviraj/Deaktiviraj",
-  "subdomainHint": "Samo slova, brojevi i crtica (npr. acme-transport)",
-  "activeOnly": "Samo aktivne"
+  "sheet": {
+    "addTitle": "Nova firma",
+    "editTitle": "Izmena firme",
+    "name": "Naziv",
+    "code": "Šifra",
+    "isActive": "Aktivan",
+    "save": "Sačuvaj",
+    "delete": "Obriši"
+  },
+  "companies": {
+    "title": "Pravna lica",
+    "addCompany": "Dodaj pravno lice",
+    "empty": "Nema registrovanih pravnih lica",
+    "name": "Naziv firme",
+    "pib": "PIB",
+    "address": "Adresa",
+    "phone": "Telefon",
+    "createSuccess": "Pravno lice uspešno kreirano",
+    "dialogTitle": "Novo pravno lice"
+  },
+  "admins": {
+    "title": "Administratori",
+    "addAdmin": "Dodaj admina",
+    "empty": "Nema administratora"
+  },
+  "adminSheet": {
+    "addTitle": "Novi administrator",
+    "company": "Firma",
+    "selectCompany": "Izaberite firmu...",
+    "firstName": "Ime",
+    "lastName": "Prezime",
+    "email": "Email",
+    "password": "Lozinka",
+    "noCompanies": "Prvo dodajte pravno lice",
+    "createSuccess": "Administrator uspešno kreiran"
+  }
 }

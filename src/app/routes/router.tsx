@@ -94,6 +94,12 @@ const StatisticsPage = lazy(() =>
   }))
 )
 
+const UsersPage = lazy(() =>
+  import('@/features/users/pages/users-page').then((m) => ({
+    default: m.UsersPage,
+  }))
+)
+
 const TenantsPage = lazy(() =>
   import('@/features/tenants/pages/tenants-page').then((m) => ({
     default: m.TenantsPage,
@@ -301,6 +307,14 @@ export const router = createBrowserRouter([
         element: (
           <LazyPage>
             <StatisticsPage />
+          </LazyPage>
+        ),
+      },
+      {
+        path: '/users',
+        element: (
+          <LazyPage>
+            <UsersPage />
           </LazyPage>
         ),
       },

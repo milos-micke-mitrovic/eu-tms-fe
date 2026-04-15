@@ -2,7 +2,14 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 import { httpClient } from '@/shared/api/http-client'
-import type { TenantRequest, Tenant } from '../types'
+import type {
+  TenantRequest,
+  Tenant,
+  CreateCompanyRequest,
+  TenantCompany,
+  CreateUserRequest,
+  TenantAdmin,
+} from '../types'
 
 export function useCreateTenant() {
   const { t } = useTranslation()
@@ -51,6 +58,36 @@ export function useToggleTenantStatus() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['tenants'] })
       toast.success(t('common:success.saved'))
+    },
+  })
+}
+
+export function useCreateTenantCompany(tenantId: number) {
+  const { t } = useTranslation('tenants')
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: (data: CreateCompanyRequest) =>
+      httpClient.post<TenantCompany>(`/tenants/${tenantId}/companies`, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ['tenants', 'admins', tenantId],
+      })
+      toast.success(t('companies.createSuccess'))
+    },
+  })
+}
+
+export function useCreateTenantUser(tenantId: number) {
+  const { t } = useTranslation('tenants')
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: (data: CreateUserRequest) =>
+      httpClient.post<TenantAdmin>(`/tenants/${tenantId}/users`, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ['tenants', 'admins', tenantId],
+      })
+      toast.success(t('adminSheet.createSuccess'))
     },
   })
 }

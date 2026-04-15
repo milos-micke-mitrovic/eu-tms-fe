@@ -17,6 +17,7 @@ import {
   PieChart,
   ShieldCheck,
   ChevronRight,
+  UserCog,
   type LucideIcon,
 } from 'lucide-react'
 import {
@@ -45,18 +46,28 @@ import {
   getUserInitials,
 } from '@/features/auth'
 
-type NavItem = { key: string; path: string; icon: LucideIcon }
-type NavGroup = { label: string; icon: LucideIcon; items: NavItem[] }
+type NavItem = {
+  key: string
+  path: string
+  icon: LucideIcon
+  roles?: string[]
+}
+type NavGroup = {
+  label: string
+  icon: LucideIcon
+  items: NavItem[]
+  roles?: string[]
+}
 
 const navStructure: (NavItem | NavGroup)[] = [
   { key: 'dashboard', path: '/dashboard', icon: LayoutDashboard },
   {
-    label: 'groups.operations',
+    label: 'groups.spedition',
     icon: ClipboardList,
     items: [
       { key: 'routes', path: '/routes', icon: ClipboardList },
-      { key: 'expenses', path: '/expenses', icon: Receipt },
       { key: 'partners', path: '/partners', icon: Handshake },
+      { key: 'permits', path: '/permits', icon: ShieldCheck },
     ],
   },
   {
@@ -66,6 +77,7 @@ const navStructure: (NavItem | NavGroup)[] = [
       { key: 'vehicles', path: '/vehicles', icon: Truck },
       { key: 'drivers', path: '/drivers', icon: Users },
       { key: 'trailers', path: '/trailers', icon: Container },
+      { key: 'fuel', path: '/fuel', icon: Fuel },
     ],
   },
   {
@@ -73,9 +85,8 @@ const navStructure: (NavItem | NavGroup)[] = [
     icon: Coins,
     items: [
       { key: 'invoices', path: '/invoices', icon: FileText },
+      { key: 'expenses', path: '/expenses', icon: Receipt },
       { key: 'exchangeRates', path: '/exchange-rates', icon: Coins },
-      { key: 'fuel', path: '/fuel', icon: Fuel },
-      { key: 'permits', path: '/permits', icon: ShieldCheck },
     ],
   },
   {
@@ -86,6 +97,10 @@ const navStructure: (NavItem | NavGroup)[] = [
       { key: 'statistics', path: '/statistics', icon: PieChart },
     ],
   },
+]
+
+const bottomNavItems: NavItem[] = [
+  { key: 'users', path: '/users', icon: UserCog, roles: ['ADMIN'] },
 ]
 
 function isGroup(item: NavItem | NavGroup): item is NavGroup {
@@ -129,6 +144,9 @@ export function AppSidebar() {
     </SidebarMenuItem>
   )
 
+  const hasAccess = (entry: NavItem | NavGroup) =>
+    !entry.roles || entry.roles.includes(user?.role ?? '')
+
   const isGroupActive = (group: NavGroup) =>
     group.items.some(
       (item) => pathname === item.path || pathname.startsWith(item.path)
@@ -146,8 +164,8 @@ export function AppSidebar() {
           {!isCollapsed && <H4>{t('common:app.name')}</H4>}
         </div>
       </SidebarHeader>
-      <SidebarContent>
-        {navStructure.map((entry) => {
+      <SidebarContent className="py-2">
+        {navStructure.filter(hasAccess).map((entry) => {
           if (isGroup(entry)) {
             const active = isGroupActive(entry)
 
@@ -238,6 +256,16 @@ export function AppSidebar() {
             </SidebarGroup>
           )
         })}
+        {/* Bottom nav items — pushed to end */}
+        {bottomNavItems.filter(hasAccess).length > 0 && (
+          <SidebarGroup className="mt-auto py-0.5">
+            <SidebarGroupContent>
+              <SidebarMenu>
+                {bottomNavItems.filter(hasAccess).map(renderItem)}
+              </SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
+        )}
       </SidebarContent>
       <SidebarFooter className="border-primary/20 border-t p-2">
         <SidebarMenu>

@@ -94,7 +94,8 @@
     "PDF_RENDER_ERROR": "Greška pri generisanju PDF-a.",
     "REPORT_GENERATION_FAILED": "Generisanje izveštaja nije uspelo.",
     "FILE_UPLOAD_ERROR": "Otpremanje fajla nije uspelo.",
-    "INTERNAL_ERROR": "Došlo je do neočekivane greške na serveru."
+    "INTERNAL_ERROR": "Došlo je do neočekivane greške na serveru.",
+    "VALIDATION_ERROR": "Podaci nisu ispravni. Proverite unos."
   },
   "success": {
     "saved": "Uspešno sačuvano",

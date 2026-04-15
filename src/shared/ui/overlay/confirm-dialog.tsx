@@ -41,13 +41,15 @@ export function ConfirmDialog({
         <DialogHeader>
           <div className="flex items-center gap-3">
             {variant === 'destructive' && (
-              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-destructive/10">
-                <AlertTriangle className="h-5 w-5 text-destructive" />
+              <div className="bg-destructive/10 flex h-10 w-10 shrink-0 items-center justify-center rounded-full">
+                <AlertTriangle className="text-destructive h-5 w-5" />
               </div>
             )}
             <div>
               <DialogTitle>{title}</DialogTitle>
-              <DialogDescription className="mt-1">{description}</DialogDescription>
+              <DialogDescription className="mt-1">
+                {description}
+              </DialogDescription>
             </div>
           </div>
         </DialogHeader>
@@ -56,14 +58,11 @@ export function ConfirmDialog({
             variant="outline"
             onClick={() => onOpenChange(false)}
             disabled={loading}
+            className="focus-visible:ring-0"
           >
             {cancelLabel || t('actions.cancel')}
           </Button>
-          <Button
-            variant={variant}
-            onClick={onConfirm}
-            loading={loading}
-          >
+          <Button variant={variant} onClick={onConfirm} loading={loading}>
             {confirmLabel || t('actions.delete')}
           </Button>
         </DialogFooter>

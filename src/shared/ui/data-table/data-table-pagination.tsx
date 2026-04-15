@@ -62,7 +62,7 @@ export function DataTablePagination<TData>({
             }))}
             value={String(pageSize)}
             onChange={(value) => table.setPageSize(Number(value))}
-            className="w-[70px]"
+            className="w-[90px]"
           />
         </div>
 

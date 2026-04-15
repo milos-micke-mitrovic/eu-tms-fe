@@ -21,7 +21,7 @@ import {
 } from '@/shared/ui/overlay/dropdown-menu'
 import { BodySmall } from '@/shared/ui/typography'
 import { formatDate } from '@/shared/utils'
-import { PERMIT_STATUS_COLORS, PERMIT_TYPE_COLORS } from '../constants'
+import { PERMIT_STATUS_COLORS, PERMIT_TYPE_STYLES } from '../constants'
 import type { Permit } from '../types'
 import type { ReactNode } from 'react'
 
@@ -93,9 +93,15 @@ export function PermitTable({
         cell: ({ row }) => {
           const type = row.original.permitType
           return (
-            <Badge variant="outline" className={PERMIT_TYPE_COLORS[type] ?? ''}>
+            <span
+              className="inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium"
+              style={{
+                backgroundColor: PERMIT_TYPE_STYLES[type]?.bg,
+                color: PERMIT_TYPE_STYLES[type]?.text,
+              }}
+            >
               {t(`types.${type}`)}
-            </Badge>
+            </span>
           )
         },
       },

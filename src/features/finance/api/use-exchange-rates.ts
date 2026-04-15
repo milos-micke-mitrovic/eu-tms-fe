@@ -42,3 +42,22 @@ export function useConvertCurrency() {
       httpClient.post<ConvertCurrencyResponse>('/exchange-rates/convert', data),
   })
 }
+
+type ManualRateRequest = {
+  currencyCode: string
+  rateToRsd: number
+  rateDate: string
+}
+
+export function useManualRateEntry() {
+  return useMutation({
+    mutationFn: (data: ManualRateRequest) =>
+      httpClient.post('/exchange-rates/manual', data),
+  })
+}
+
+export function useFetchNbsRates() {
+  return useMutation({
+    mutationFn: () => httpClient.post('/exchange-rates/fetch'),
+  })
+}

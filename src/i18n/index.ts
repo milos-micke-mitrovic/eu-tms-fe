@@ -14,6 +14,7 @@ import financeSr from './locales/sr/finance.json'
 import reportsSr from './locales/sr/reports.json'
 import permitsSr from './locales/sr/permits.json'
 import tenantsSr from './locales/sr/tenants.json'
+import usersSr from './locales/sr/users.json'
 
 // English (fallback)
 import commonEn from './locales/en/common.json'
@@ -28,6 +29,7 @@ import financeEn from './locales/en/finance.json'
 import reportsEn from './locales/en/reports.json'
 import permitsEn from './locales/en/permits.json'
 import tenantsEn from './locales/en/tenants.json'
+import usersEn from './locales/en/users.json'
 
 export const defaultNS = 'common'
 
@@ -45,6 +47,7 @@ export const resources = {
     reports: reportsSr,
     permits: permitsSr,
     tenants: tenantsSr,
+    users: usersSr,
   },
   en: {
     common: commonEn,
@@ -59,6 +62,7 @@ export const resources = {
     reports: reportsEn,
     permits: permitsEn,
     tenants: tenantsEn,
+    users: usersEn,
   },
 } as const
 

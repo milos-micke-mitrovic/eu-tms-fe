@@ -31,6 +31,17 @@ export function useTravelOrdersByRoute(routeId: string | number) {
   })
 }
 
+export function useUpdateTravelOrder() {
+  const { t } = useTranslation()
+  return useMutation({
+    mutationFn: ({ id, data }: { id: number; data: TravelOrderRequest }) =>
+      httpClient.put<TravelOrder>(`/travel-orders/${id}`, data),
+    onSuccess: () => {
+      toast.success(t('common:success.saved'))
+    },
+  })
+}
+
 export function useUpdateTravelOrderStatus() {
   const { t } = useTranslation()
   return useMutation({
