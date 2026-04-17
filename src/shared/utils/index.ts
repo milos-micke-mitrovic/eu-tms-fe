@@ -1,7 +1,11 @@
 export { cn } from './cn'
 export { AUTH_STORAGE_KEY } from './constants'
 export { formatDate, formatDateTime, formatRelative } from './format-date'
-export { getApiErrorMessage, getApiFieldErrors } from './api-error'
+export {
+  getApiErrorMessage,
+  getApiFieldErrors,
+  setFormFieldErrors,
+} from './api-error'
 export {
   EMAIL_REGEX,
   isValidEmail,

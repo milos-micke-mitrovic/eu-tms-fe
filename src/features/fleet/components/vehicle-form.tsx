@@ -2,6 +2,7 @@ import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useTranslation } from 'react-i18next'
+import { setFormFieldErrors } from '@/shared/utils'
 import {
   Sheet,
   SheetContent,
@@ -109,12 +110,16 @@ export function VehicleForm({ open, onClose, vehicleId }: VehicleFormProps) {
       currentDriverId: data.currentDriverId ?? undefined,
     }
 
-    if (isEditing && vehicleId) {
-      await updateMutation.mutateAsync({ id: vehicleId, data: request })
-    } else {
-      await createMutation.mutateAsync(request)
+    try {
+      if (isEditing && vehicleId) {
+        await updateMutation.mutateAsync({ id: vehicleId, data: request })
+      } else {
+        await createMutation.mutateAsync(request)
+      }
+      onClose()
+    } catch (error) {
+      setFormFieldErrors(error, form.setError)
     }
-    onClose()
   }
 
   const vehicleTypeOptions = (

@@ -1,6 +1,7 @@
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useTranslation } from 'react-i18next'
+import { setFormFieldErrors } from '@/shared/utils'
 import {
   Dialog,
   DialogContent,
@@ -47,14 +48,18 @@ export function FuelTankForm({ open, onClose }: FuelTankFormProps) {
   ]
 
   const onSubmit = async (data: TankFormData) => {
-    await createMutation.mutateAsync({
-      name: data.name,
-      capacityLiters: data.capacityLiters,
-      fuelType: data.fuelType,
-      location: data.location || undefined,
-    })
-    form.reset()
-    onClose()
+    try {
+      await createMutation.mutateAsync({
+        name: data.name,
+        capacityLiters: data.capacityLiters,
+        fuelType: data.fuelType,
+        location: data.location || undefined,
+      })
+      form.reset()
+      onClose()
+    } catch (error) {
+      setFormFieldErrors(error, form.setError)
+    }
   }
 
   return (

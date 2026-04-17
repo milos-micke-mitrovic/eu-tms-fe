@@ -2,6 +2,7 @@ import { useEffect, useState, useCallback } from 'react'
 import { useForm, useFieldArray } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useTranslation } from 'react-i18next'
+import { setFormFieldErrors } from '@/shared/utils'
 import {
   Sheet,
   SheetContent,
@@ -209,10 +210,14 @@ export function RouteForm({ open, onClose, route }: RouteFormProps) {
         notes: s.notes || undefined,
       })),
     }
-    if (isEditing)
-      await updateMutation.mutateAsync({ id: route.id, data: request })
-    else await createMutation.mutateAsync(request)
-    onClose()
+    try {
+      if (isEditing)
+        await updateMutation.mutateAsync({ id: route.id, data: request })
+      else await createMutation.mutateAsync(request)
+      onClose()
+    } catch (error) {
+      setFormFieldErrors(error, form.setError)
+    }
   }
 
   const handlePartnerSearch = useCallback(

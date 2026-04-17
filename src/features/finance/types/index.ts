@@ -39,7 +39,7 @@ export type PerDiemCalculationResponse = {
 
 export type InvoiceRequest = {
   partnerId: number
-  issueDate: string
+  invoiceDate: string
   dueDate: string
   currency: string
   notes?: string

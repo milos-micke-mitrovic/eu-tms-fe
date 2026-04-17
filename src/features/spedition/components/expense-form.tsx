@@ -22,7 +22,7 @@ import {
   FormMessage,
 } from '@/shared/ui/form'
 import { Caption } from '@/shared/ui/typography'
-import { formatCurrency } from '@/shared/utils'
+import { formatCurrency, setFormFieldErrors } from '@/shared/utils'
 import { httpClient } from '@/shared/api/http-client'
 import { EXPENSE_CATEGORIES, CURRENCIES } from '../constants'
 import { useCreateExpense, useUpdateExpense } from '../api/use-expenses'
@@ -187,12 +187,16 @@ export function ExpenseForm({
       expenseDate: data.expenseDate,
     }
 
-    if (isEditing && expense) {
-      await updateMutation.mutateAsync({ id: expense.id, data: request })
-    } else {
-      await createMutation.mutateAsync(request)
+    try {
+      if (isEditing && expense) {
+        await updateMutation.mutateAsync({ id: expense.id, data: request })
+      } else {
+        await createMutation.mutateAsync(request)
+      }
+      onClose()
+    } catch (error) {
+      setFormFieldErrors(error, form.setError)
     }
-    onClose()
   }
 
   const categoryOptions = EXPENSE_CATEGORIES.map((c) => ({

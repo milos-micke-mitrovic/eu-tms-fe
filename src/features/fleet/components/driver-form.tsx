@@ -2,6 +2,7 @@ import { useEffect, useCallback } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useTranslation } from 'react-i18next'
+import { setFormFieldErrors } from '@/shared/utils'
 import {
   Sheet,
   SheetContent,
@@ -148,12 +149,16 @@ export function DriverForm({ open, onClose, driver }: DriverFormProps) {
       vehicleId: data.vehicleId ?? undefined,
     }
 
-    if (isEditing) {
-      await updateMutation.mutateAsync({ id: driver.id, data: request })
-    } else {
-      await createMutation.mutateAsync(request)
+    try {
+      if (isEditing) {
+        await updateMutation.mutateAsync({ id: driver.id, data: request })
+      } else {
+        await createMutation.mutateAsync(request)
+      }
+      onClose()
+    } catch (error) {
+      setFormFieldErrors(error, form.setError)
     }
-    onClose()
   }
 
   return (

@@ -1,6 +1,7 @@
 import { useForm, useWatch } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useTranslation } from 'react-i18next'
+import { setFormFieldErrors } from '@/shared/utils'
 import { format } from 'date-fns'
 import {
   Dialog,
@@ -89,9 +90,13 @@ export function FuelTransactionForm({
       transactionDate: `${data.transactionDate}T00:00:00Z`,
       notes: data.notes || undefined,
     }
-    await createMutation.mutateAsync(request)
-    form.reset()
-    onClose()
+    try {
+      await createMutation.mutateAsync(request)
+      form.reset()
+      onClose()
+    } catch (error) {
+      setFormFieldErrors(error, form.setError)
+    }
   }
 
   return (

@@ -8,6 +8,7 @@ type ApiErrorData = {
   error?: string
   errorCode?: string
   errors?: ValidationErrors
+  fieldErrors?: ValidationErrors
 } & ValidationErrors
 
 /**
@@ -38,6 +39,14 @@ export function getApiErrorMessage(error: unknown, fallback: string): string {
     // Check for error field
     if (data.error) {
       return data.error
+    }
+
+    // Check for fieldErrors (BE VALIDATION_ERROR shape)
+    if (data.fieldErrors && typeof data.fieldErrors === 'object') {
+      const messages = Object.values(data.fieldErrors).filter(Boolean)
+      if (messages.length > 0) {
+        return messages.join('. ')
+      }
     }
 
     // Check for nested errors object
@@ -77,6 +86,11 @@ export function getApiFieldErrors(error: unknown): ValidationErrors | null {
   if (error instanceof HttpError && error.data) {
     const data = error.data as ApiErrorData
 
+    // Check for fieldErrors (BE VALIDATION_ERROR shape)
+    if (data.fieldErrors && typeof data.fieldErrors === 'object') {
+      return data.fieldErrors
+    }
+
     // Check for nested errors object
     if (data.errors && typeof data.errors === 'object') {
       return data.errors
@@ -96,4 +110,22 @@ export function getApiFieldErrors(error: unknown): ValidationErrors | null {
   }
 
   return null
+}
+
+/**
+ * Extracts field validation errors from an API error and sets them on a
+ * react-hook-form instance. Returns true if field errors were found and set,
+ * so the caller can skip showing a generic toast.
+ */
+export function setFormFieldErrors(
+  error: unknown,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  setError: (name: any, error: { message: string }) => void
+): boolean {
+  const fieldErrors = getApiFieldErrors(error)
+  if (!fieldErrors) return false
+  for (const [field, message] of Object.entries(fieldErrors)) {
+    setError(field, { message })
+  }
+  return true
 }

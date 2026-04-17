@@ -25,7 +25,7 @@ import {
   FormMessage,
 } from '@/shared/ui/form'
 import { BodySmall, Caption, H4 } from '@/shared/ui/typography'
-import { formatCurrency } from '@/shared/utils'
+import { formatCurrency, setFormFieldErrors } from '@/shared/utils'
 import { usePartners } from '@/features/partners/api/use-partners'
 import { CURRENCIES } from '@/features/spedition/constants'
 import {
@@ -129,7 +129,7 @@ export function InvoiceForm({ open, onClose, invoice }: InvoiceFormProps) {
   const onSubmit = async (data: InvoiceFormData) => {
     const request: InvoiceRequest = {
       partnerId: data.partnerId,
-      issueDate: data.invoiceDate,
+      invoiceDate: data.invoiceDate,
       dueDate: data.dueDate,
       currency: data.currency,
       notes: data.notes || undefined,
@@ -140,12 +140,16 @@ export function InvoiceForm({ open, onClose, invoice }: InvoiceFormProps) {
       })),
     }
 
-    if (isEditing) {
-      await updateMutation.mutateAsync({ id: invoice.id, data: request })
-    } else {
-      await createMutation.mutateAsync(request)
+    try {
+      if (isEditing) {
+        await updateMutation.mutateAsync({ id: invoice.id, data: request })
+      } else {
+        await createMutation.mutateAsync(request)
+      }
+      onClose()
+    } catch (error) {
+      setFormFieldErrors(error, form.setError)
     }
-    onClose()
   }
 
   const handlePartnerSearch = useCallback(
