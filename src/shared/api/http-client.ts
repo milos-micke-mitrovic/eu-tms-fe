@@ -29,7 +29,11 @@ let isRefreshing = false
 let refreshPromise: Promise<boolean> | null = null
 
 // Get stored auth data from localStorage
-function getStoredAuth(): { token: string; refreshToken: string; user: unknown } | null {
+function getStoredAuth(): {
+  token: string
+  refreshToken: string
+  user: unknown
+} | null {
   try {
     const stored = localStorage.getItem(AUTH_STORAGE_KEY)
     if (stored) {
@@ -87,7 +91,10 @@ async function attemptTokenRefresh(): Promise<boolean> {
       updateStoredTokens(response.accessToken, response.refreshToken)
       window.dispatchEvent(
         new CustomEvent('auth:tokens-updated', {
-          detail: { accessToken: response.accessToken, refreshToken: response.refreshToken },
+          detail: {
+            accessToken: response.accessToken,
+            refreshToken: response.refreshToken,
+          },
         })
       )
       return true
@@ -128,7 +135,9 @@ async function handleResponse<T>(
     return null as T
   }
 
-  return response.json()
+  const text = await response.text()
+  if (!text) return null as T
+  return JSON.parse(text)
 }
 
 function getHeaders(options: RequestOptions = {}): Headers {

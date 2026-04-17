@@ -1,15 +1,16 @@
 import { describe, it, expect } from 'vitest'
 
-
-const API = 'http://localhost:8080/api'
+const API = process.env.TEST_API_URL || 'http://localhost:8080/api'
 
 describe('Auth API', () => {
-  // Single login call — verifies response shape
   it('POST /auth/login — valid credentials return correct shape', async () => {
     const res = await fetch(`${API}/auth/login`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email: 'ana@demo.rs', password: 'demo123' }),
+      body: JSON.stringify({
+        email: process.env.TEST_ACCOUNTING_EMAIL || 'ana@demo.rs',
+        password: process.env.TEST_ACCOUNTING_PASSWORD || 'demo123',
+      }),
     })
     // May be 200 or 429 if rate limited
     if (res.status === 429) return // skip — rate limited

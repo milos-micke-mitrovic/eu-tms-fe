@@ -1,5 +1,5 @@
-const API = 'http://localhost:8080/api'
-const GRAPHQL = 'http://localhost:8080/graphql'
+const API = process.env.TEST_API_URL || 'http://localhost:8080/api'
+const GRAPHQL = API.replace('/api', '/graphql')
 
 let token: string | null = null
 
@@ -14,7 +14,10 @@ export async function ensureToken(): Promise<void> {
     const res = await fetch(`${API}/auth/login`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email: 'marko@demo.rs', password: 'demo123' }),
+      body: JSON.stringify({
+        email: process.env.TEST_USER_EMAIL || 'marko@demo.rs',
+        password: process.env.TEST_USER_PASSWORD || 'demo123',
+      }),
     })
 
     if (res.ok) {

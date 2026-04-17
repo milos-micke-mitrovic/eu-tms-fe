@@ -1,5 +1,12 @@
 import { describe, it, expect } from 'vitest'
-import { EXPENSE_CATEGORIES, EXPENSE_CATEGORY_COLORS, CURRENCIES, COUNTRY_CODES, VALID_NEXT_STATUSES, STOP_TYPE_COLORS } from './index'
+import {
+  EXPENSE_CATEGORIES,
+  EXPENSE_CATEGORY_COLORS,
+  CURRENCIES,
+  COUNTRY_CODES,
+  VALID_NEXT_STATUSES,
+  STOP_TYPE_COLORS,
+} from './index'
 
 describe('EXPENSE_CATEGORIES', () => {
   it('has 14 categories', () => {
@@ -76,7 +83,15 @@ describe('VALID_NEXT_STATUSES', () => {
 
 describe('STOP_TYPE_COLORS', () => {
   it('has colors for all stop types', () => {
-    const types = ['LOADING', 'UNLOADING', 'BORDER', 'CUSTOMS', 'REST', 'FUEL', 'OTHER'] as const
+    const types = [
+      'LOADING',
+      'UNLOADING',
+      'BORDER',
+      'CUSTOMS',
+      'REST',
+      'FUEL',
+      'OTHER',
+    ] as const
     for (const t of types) {
       expect(STOP_TYPE_COLORS[t]).toBeTruthy()
     }

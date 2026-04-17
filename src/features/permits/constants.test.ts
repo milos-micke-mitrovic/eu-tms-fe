@@ -1,5 +1,9 @@
 import { describe, it, expect } from 'vitest'
-import { COUNTRY_CODES, PERMIT_STATUS_COLORS } from './constants'
+import {
+  COUNTRY_CODES,
+  PERMIT_STATUS_COLORS,
+  PERMIT_TYPE_STYLES,
+} from './constants'
 
 describe('Permits constants', () => {
   describe('COUNTRY_CODES', () => {
@@ -52,6 +56,29 @@ describe('Permits constants', () => {
 
     it('EXPIRED uses destructive variant', () => {
       expect(PERMIT_STATUS_COLORS.EXPIRED.variant).toBe('destructive')
+    })
+  })
+
+  describe('PERMIT_TYPE_STYLES', () => {
+    it('has styles for all 3 permit types', () => {
+      expect(PERMIT_TYPE_STYLES).toHaveProperty('CEMT')
+      expect(PERMIT_TYPE_STYLES).toHaveProperty('BILATERAL')
+      expect(PERMIT_TYPE_STYLES).toHaveProperty('ECMT')
+    })
+
+    it('each type has bg and text color', () => {
+      for (const [, style] of Object.entries(PERMIT_TYPE_STYLES)) {
+        expect(style.bg).toMatch(/^#[0-9a-f]{6}$/i)
+        expect(style.text).toMatch(/^#[0-9a-f]{6}$/i)
+      }
+    })
+
+    it('bg colors are light (hex value > #c)', () => {
+      for (const [, style] of Object.entries(PERMIT_TYPE_STYLES)) {
+        // First hex pair > 0xC0 means light color
+        const r = parseInt(style.bg.slice(1, 3), 16)
+        expect(r).toBeGreaterThan(0xc0)
+      }
     })
   })
 })

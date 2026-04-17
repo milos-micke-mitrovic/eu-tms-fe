@@ -33,6 +33,22 @@ describe('Exchange Rates API', () => {
     expect([200, 400, 500]).toContain(status)
     if (status !== 200) console.warn(`Exchange rate convert returned ${status}`)
   })
+
+  it('REST — manual rate entry (ADMIN)', async () => {
+    const { status } = await rest('POST', '/exchange-rates/manual', {
+      currencyCode: 'CHF',
+      rateToRsd: 120.5,
+      rateDate: '2026-04-17',
+    })
+    // 201 = success, 403 = not admin role
+    expect([201, 403]).toContain(status)
+  })
+
+  it('REST — fetch NBS rates (ADMIN)', async () => {
+    const { status } = await rest('POST', '/exchange-rates/fetch')
+    // 200 = success, 403 = not admin, 500 = NBS service down
+    expect([200, 403, 500]).toContain(status)
+  })
 })
 
 describe('Per Diem API', () => {

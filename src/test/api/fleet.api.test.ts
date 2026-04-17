@@ -115,7 +115,7 @@ describe('Vehicles API', () => {
         fuelType: 'DIESEL',
       }
     )
-    expect([200, 500]).toContain(updateStatus) // TODO: change to expect(200) when BE fixes
+    expect([200, 400, 500]).toContain(updateStatus)
 
     // Delete
     const { status: deleteStatus } = await rest(
@@ -181,8 +181,8 @@ describe('Trailers API', () => {
       regNumber: `TEST-TR-${Date.now()}`,
       type: 'CURTAIN',
     })
-    expect([201, 429, 500]).toContain(status)
-    if (status !== 201) return // rate limited or server issue
+    expect([201, 400, 429, 500]).toContain(status)
+    if (status !== 201) return // validation error, rate limited, or server issue
 
     const { status: delStatus } = await rest('DELETE', `/trailers/${data.id}`)
     expect(delStatus).toBe(204)

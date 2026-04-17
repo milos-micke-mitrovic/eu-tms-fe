@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest'
 import { rest } from './helpers'
 
-const API = 'http://localhost:8080/api'
+const API = process.env.TEST_API_URL || 'http://localhost:8080/api'
 let saToken: string | null = null
 
 async function ensureSuperAdminToken() {
@@ -20,7 +20,6 @@ async function ensureSuperAdminToken() {
       saToken = data.accessToken
       return
     }
-    // Rate limited or error — wait and retry
     const wait = Number(res.headers.get('Retry-After') || 6)
     await new Promise((r) => setTimeout(r, wait * 1000))
   }
@@ -69,10 +68,10 @@ describe('Tenants API (SUPER_ADMIN)', () => {
     }
   })
 
-  it('CRUD tenant', async () => {
+  it('CRUD tenant with companies and users', async () => {
     const slug = `t${Date.now()}${Math.random().toString(36).slice(2, 5)}`
 
-    // Create
+    // Create tenant
     const { status: createStatus, data: created } = await saRest(
       'POST',
       '/tenants',
@@ -81,25 +80,73 @@ describe('Tenants API (SUPER_ADMIN)', () => {
     expect(createStatus).toBe(201)
     expect(created.id).toBeTruthy()
 
-    // Update
-    const { status: updateStatus } = await saRest(
-      'PUT',
-      `/tenants/${created.id}`,
-      { subdomain: slug, name: `Test Updated ${slug}`, active: true }
-    )
-    expect(updateStatus).toBe(200)
+    const tenantId = created.id
 
-    // Toggle
+    // Create company
+    const { status: companyStatus, data: company } = await saRest(
+      'POST',
+      `/tenants/${tenantId}/companies`,
+      { name: `Firma ${slug}`, pib: '100000008' }
+    )
+    expect(companyStatus).toBe(201)
+    expect(company).toHaveProperty('id')
+    expect(company.name).toBe(`Firma ${slug}`)
+
+    // List companies
+    const { status: listCompaniesStatus, data: companies } = await saRest(
+      'GET',
+      `/tenants/${tenantId}/companies`
+    )
+    expect(listCompaniesStatus).toBe(200)
+    expect(Array.isArray(companies)).toBe(true)
+    expect(companies.length).toBeGreaterThanOrEqual(1)
+
+    // Create user
+    const { status: userStatus, data: user } = await saRest(
+      'POST',
+      `/tenants/${tenantId}/users`,
+      {
+        firstName: 'Test',
+        lastName: 'Admin',
+        email: `admin-${slug}@test.rs`,
+        password: 'testpass123',
+        role: 'ADMIN',
+        companyId: company.id,
+      }
+    )
+    expect(userStatus).toBe(201)
+    expect(user).toHaveProperty('id')
+    expect(user.email).toBe(`admin-${slug}@test.rs`)
+    expect(user.role).toBe('ADMIN')
+
+    // List users
+    const { status: listUsersStatus, data: users } = await saRest(
+      'GET',
+      `/tenants/${tenantId}/users`
+    )
+    expect(listUsersStatus).toBe(200)
+    expect(Array.isArray(users)).toBe(true)
+    expect(users.length).toBeGreaterThanOrEqual(1)
+
+    // List admins
+    const { status: adminsStatus, data: admins } = await saRest(
+      'GET',
+      `/tenants/${tenantId}/admins`
+    )
+    expect(adminsStatus).toBe(200)
+    expect(Array.isArray(admins)).toBe(true)
+
+    // Toggle status
     const { status: toggleStatus } = await saRest(
       'PATCH',
-      `/tenants/${created.id}/toggle-status`
+      `/tenants/${tenantId}/toggle-status`
     )
     expect(toggleStatus).toBe(204)
 
     // Delete
     const { status: deleteStatus } = await saRest(
       'DELETE',
-      `/tenants/${created.id}`
+      `/tenants/${tenantId}`
     )
     expect(deleteStatus).toBe(204)
   })

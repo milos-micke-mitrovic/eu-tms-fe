@@ -74,8 +74,7 @@ describe('Travel Orders API', () => {
     expect([201, 400]).toContain(status)
   })
 
-  it('GET /travel-orders/{id}/pdf downloads or returns PDF error', async () => {
-    // Check if any travel orders exist first
+  it('GET /travel-orders/by-route/{id} — list by route', async () => {
     const routes = await graphql(`
       {
         routes(page: 0, size: 1) {
@@ -88,9 +87,50 @@ describe('Travel Orders API', () => {
     const routeId = routes.data.routes.content[0]?.id
     if (!routeId) return
 
-    const { status } = await rest('GET', `/travel-orders/by-route/${routeId}`)
-    // Just check endpoint exists
-    expect([200, 404]).toContain(status)
+    const { status, data } = await rest(
+      'GET',
+      `/travel-orders/by-route/${routeId}`
+    )
+    expect(status).toBe(200)
+    expect(Array.isArray(data)).toBe(true)
+  })
+
+  it('PUT /travel-orders/{id} — update travel order', async () => {
+    const routes = await graphql(`
+      {
+        routes(page: 0, size: 1) {
+          content {
+            id
+            driverId
+            vehicleId
+          }
+        }
+      }
+    `)
+    const route = routes.data.routes.content[0]
+    if (!route?.driverId || !route?.vehicleId) return
+
+    // Get existing travel orders for this route
+    const { data: orders } = await rest(
+      'GET',
+      `/travel-orders/by-route/${route.id}`
+    )
+    if (!orders?.length) return
+
+    const order = orders[0]
+    const { status } = await rest('PUT', `/travel-orders/${order.id}`, {
+      routeId: Number(route.id),
+      driverId: Number(route.driverId),
+      vehicleId: Number(route.vehicleId),
+      departureDatetime: '2026-05-01T08:00:00Z',
+      returnDatetime: '2026-05-15T18:00:00Z',
+      purpose: 'Transport robe',
+      fuelAdvance: 500,
+      perDiemAdvance: 300,
+      tollAdvance: 200,
+      otherAdvance: 100,
+    })
+    expect([200, 400]).toContain(status)
   })
 })
 
