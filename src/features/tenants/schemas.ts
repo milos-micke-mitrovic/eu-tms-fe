@@ -26,12 +26,21 @@ export const companySchema = z.object({
 
 export type CompanyFormData = z.infer<typeof companySchema>
 
+export const TENANT_USER_ROLES = [
+  'ADMIN',
+  'SPEDITER',
+  'ACCOUNTING',
+  'READONLY',
+  'DRIVER',
+] as const
+
 export const adminSchema = z.object({
   companyId: z.number().min(1),
   firstName: z.string().min(1),
   lastName: z.string().min(1),
   email: z.string().email(),
   password: z.string().min(8),
+  role: z.enum(TENANT_USER_ROLES),
 })
 
 export type AdminFormData = z.infer<typeof adminSchema>

@@ -34,19 +34,27 @@
     "dialogTitle": "Novo pravno lice"
   },
   "admins": {
-    "title": "Administratori",
-    "addAdmin": "Dodaj admina",
-    "empty": "Nema administratora"
+    "title": "Korisnici",
+    "addAdmin": "Dodaj korisnika",
+    "empty": "Nema korisnika"
   },
   "adminSheet": {
-    "addTitle": "Novi administrator",
+    "addTitle": "Novi korisnik",
     "company": "Firma",
     "selectCompany": "Izaberite firmu...",
     "firstName": "Ime",
     "lastName": "Prezime",
     "email": "Email",
     "password": "Lozinka",
+    "role": "Uloga",
     "noCompanies": "Prvo dodajte pravno lice",
-    "createSuccess": "Administrator uspešno kreiran"
+    "createSuccess": "Korisnik uspešno kreiran",
+    "roles": {
+      "ADMIN": "Administrator",
+      "SPEDITER": "Špediter",
+      "ACCOUNTING": "Računovodstvo",
+      "READONLY": "Samo čitanje",
+      "DRIVER": "Vozač"
+    }
   }
 }

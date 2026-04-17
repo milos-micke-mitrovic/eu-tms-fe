@@ -70,7 +70,7 @@ export function useCreateTenantCompany(tenantId: number) {
       httpClient.post<TenantCompany>(`/tenants/${tenantId}/companies`, data),
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: ['tenants', 'admins', tenantId],
+        queryKey: ['tenants', 'companies', tenantId],
       })
       toast.success(t('companies.createSuccess'))
     },
@@ -84,6 +84,9 @@ export function useCreateTenantUser(tenantId: number) {
     mutationFn: (data: CreateUserRequest) =>
       httpClient.post<TenantAdmin>(`/tenants/${tenantId}/users`, data),
     onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ['tenants', 'users', tenantId],
+      })
       queryClient.invalidateQueries({
         queryKey: ['tenants', 'admins', tenantId],
       })

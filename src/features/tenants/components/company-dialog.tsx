@@ -2,6 +2,7 @@ import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useTranslation } from 'react-i18next'
+import { setFormFieldErrors } from '@/shared/utils'
 import {
   Dialog,
   DialogContent,
@@ -43,13 +44,17 @@ export function CompanyDialog({ open, onClose, tenantId }: CompanyDialogProps) {
   }, [open, form])
 
   const onSubmit = async (data: CompanyFormData) => {
-    await createMutation.mutateAsync({
-      name: data.name,
-      pib: data.pib || undefined,
-      address: data.address || undefined,
-      phone: data.phone || undefined,
-    })
-    onClose()
+    try {
+      await createMutation.mutateAsync({
+        name: data.name,
+        pib: data.pib || undefined,
+        address: data.address || undefined,
+        phone: data.phone || undefined,
+      })
+      onClose()
+    } catch (error) {
+      setFormFieldErrors(error, form.setError)
+    }
   }
 
   return (

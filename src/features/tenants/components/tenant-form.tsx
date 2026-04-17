@@ -30,7 +30,7 @@ import {
   useUpdateTenant,
   useDeleteTenant,
 } from '../api/use-tenant-mutations'
-import { useTenantAdmins } from '../api/use-tenants'
+import { useTenantCompanies, useTenantUsers } from '../api/use-tenants'
 import { CompanyDialog } from './company-dialog'
 import { AdminDialog } from './admin-dialog'
 import type { Tenant } from '../types'
@@ -60,22 +60,8 @@ export function TenantForm({ open, onClose, tenant }: TenantFormProps) {
   const deleteMutation = useDeleteTenant()
   const isPending = createMutation.isPending || updateMutation.isPending
 
-  const { data: admins } = useTenantAdmins(tenant?.id ?? 0)
-
-  // Derive companies from admins (BE has no GET companies endpoint yet)
-  const companies = (admins ?? []).reduce(
-    (acc, admin) => {
-      if (
-        admin.companyId &&
-        admin.companyName &&
-        !acc.some((c) => c.id === admin.companyId)
-      ) {
-        acc.push({ id: admin.companyId, name: admin.companyName })
-      }
-      return acc
-    },
-    [] as { id: number; name: string }[]
-  )
+  const { data: companies = [] } = useTenantCompanies(tenant?.id ?? 0)
+  const { data: users = [] } = useTenantUsers(tenant?.id ?? 0)
 
   useEffect(() => {
     if (open && tenant) {
@@ -233,7 +219,7 @@ export function TenantForm({ open, onClose, tenant }: TenantFormProps) {
               {isEditing && (
                 <>
                   <SectionDivider title={t('admins.title')} />
-                  {(admins ?? []).length === 0 ? (
+                  {users.length === 0 ? (
                     <div className="flex flex-col items-center gap-3 py-6">
                       <div className="bg-muted rounded-full p-3">
                         <UserCog className="text-muted-foreground size-5" />
@@ -244,7 +230,7 @@ export function TenantForm({ open, onClose, tenant }: TenantFormProps) {
                     </div>
                   ) : (
                     <div className="space-y-2">
-                      {(admins ?? []).map((admin) => (
+                      {users.map((admin) => (
                         <div
                           key={admin.id}
                           className="flex items-center justify-between rounded-md border p-3"

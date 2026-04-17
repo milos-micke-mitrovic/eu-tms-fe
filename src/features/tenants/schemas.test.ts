@@ -78,6 +78,7 @@ describe('adminSchema', () => {
     lastName: 'Petrovic',
     email: 'marko@test.rs',
     password: 'test1234',
+    role: 'ADMIN' as const,
   }
 
   it('accepts valid admin', () => {

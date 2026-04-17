@@ -2,6 +2,7 @@ import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useTranslation } from 'react-i18next'
+import { setFormFieldErrors } from '@/shared/utils'
 import {
   Dialog,
   DialogContent,
@@ -20,7 +21,7 @@ import {
   FormLabel,
   FormMessage,
 } from '@/shared/ui/form'
-import { adminSchema, type AdminFormData } from '../schemas'
+import { adminSchema, TENANT_USER_ROLES, type AdminFormData } from '../schemas'
 import { useCreateTenantUser } from '../api/use-tenant-mutations'
 
 type AdminDialogProps = {
@@ -48,6 +49,7 @@ export function AdminDialog({
       lastName: '',
       email: '',
       password: '',
+      role: 'ADMIN' as const,
     },
   })
 
@@ -59,6 +61,7 @@ export function AdminDialog({
         lastName: '',
         email: '',
         password: '',
+        role: 'ADMIN',
       })
     }
   }, [open, form, companies])
@@ -68,16 +71,25 @@ export function AdminDialog({
     label: c.name,
   }))
 
+  const roleOptions = TENANT_USER_ROLES.map((role) => ({
+    value: role,
+    label: t(`adminSheet.roles.${role}`),
+  }))
+
   const onSubmit = async (data: AdminFormData) => {
-    await createMutation.mutateAsync({
-      firstName: data.firstName,
-      lastName: data.lastName,
-      email: data.email,
-      password: data.password,
-      role: 'ADMIN',
-      companyId: data.companyId,
-    })
-    onClose()
+    try {
+      await createMutation.mutateAsync({
+        firstName: data.firstName,
+        lastName: data.lastName,
+        email: data.email,
+        password: data.password,
+        role: data.role,
+        companyId: data.companyId,
+      })
+      onClose()
+    } catch (error) {
+      setFormFieldErrors(error, form.setError)
+    }
   }
 
   return (
@@ -99,6 +111,21 @@ export function AdminDialog({
                     value={String(field.value)}
                     onChange={(v) => field.onChange(Number(v))}
                     placeholder={t('adminSheet.selectCompany')}
+                  />
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="role"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel required>{t('adminSheet.role')}</FormLabel>
+                  <Select
+                    options={roleOptions}
+                    value={field.value}
+                    onChange={field.onChange}
                   />
                   <FormMessage />
                 </FormItem>

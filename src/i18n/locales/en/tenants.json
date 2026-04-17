@@ -34,19 +34,27 @@
     "dialogTitle": "New Company"
   },
   "admins": {
-    "title": "Administrators",
-    "addAdmin": "Add Admin",
-    "empty": "No administrators"
+    "title": "Users",
+    "addAdmin": "Add User",
+    "empty": "No users"
   },
   "adminSheet": {
-    "addTitle": "New Administrator",
+    "addTitle": "New User",
     "company": "Company",
     "selectCompany": "Select company...",
     "firstName": "First Name",
     "lastName": "Last Name",
     "email": "Email",
     "password": "Password",
+    "role": "Role",
     "noCompanies": "Add a company first",
-    "createSuccess": "Administrator created successfully"
+    "createSuccess": "User created successfully",
+    "roles": {
+      "ADMIN": "Administrator",
+      "SPEDITER": "Spediter",
+      "ACCOUNTING": "Accounting",
+      "READONLY": "Read Only",
+      "DRIVER": "Driver"
+    }
   }
 }
