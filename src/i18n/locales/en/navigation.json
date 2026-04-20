@@ -22,7 +22,8 @@
     "statistics": "Statistics",
     "notifications": "Notifications",
     "settings": "Settings",
-    "users": "Users"
+    "users": "Users",
+    "tachograph": "Tachograph"
   },
   "breadcrumbs": {
     "home": "Home"

@@ -1,0 +1,139 @@
+{
+  "title": "Tahograf",
+  "tabs": {
+    "driverOverview": "Pregled vozača",
+    "weeklyView": "Nedeljni pregled",
+    "dashboard": "Kontrolna tabla"
+  },
+  "summary": {
+    "totalDrivers": "Ukupno vozača",
+    "warnings": "Upozorenja",
+    "violations": "Prekršaji"
+  },
+  "columns": {
+    "driver": "Vozač",
+    "status": "Status",
+    "weeklyDriving": "Vožnja ove nedelje",
+    "fortnightDriving": "Dvonedeljno",
+    "violationCount": "Prekršaji",
+    "lastEntry": "Poslednji unos"
+  },
+  "status": {
+    "ok": "U redu",
+    "warning": "Upozorenje",
+    "violation": "Prekršaj"
+  },
+  "entry": {
+    "addTitle": "Novi unos",
+    "editTitle": "Izmena unosa",
+    "addToday": "Dodaj unos za danas",
+    "entryInfo": "Podaci o unosu",
+    "driver": "Vozač",
+    "selectDriver": "Izaberite vozača...",
+    "date": "Datum",
+    "activities": "Aktivnosti",
+    "driving": "Vožnja",
+    "rest": "Odmor",
+    "otherWork": "Drugi posao",
+    "availability": "Raspoloživost",
+    "hours": "h",
+    "minutes": "min",
+    "total": "Ukupno",
+    "remaining": "Preostalo",
+    "excess": "Višak",
+    "additional": "Dodatno",
+    "startOdometer": "Početni km",
+    "endOdometer": "Krajnji km",
+    "distance": "Pređeno",
+    "notes": "Napomena",
+    "save": "Sačuvaj",
+    "cancel": "Otkaži",
+    "delete": "Obriši",
+    "confirm": "Potvrdi",
+    "confirmed": "Potvrđen",
+    "draft": "Nacrt",
+    "createSuccess": "Unos uspešno kreiran",
+    "updateSuccess": "Unos uspešno ažuriran",
+    "deleteSuccess": "Unos obrisan",
+    "confirmSuccess": "Unos potvrđen",
+    "error": "Greška pri čuvanju unosa",
+    "totalMustBe24": "Ukupno vreme mora biti 24 sata (1440 minuta)"
+  },
+  "weekly": {
+    "title": "Nedelja",
+    "drivingTotal": "Vožnja",
+    "restTotal": "Odmor",
+    "otherWorkTotal": "Drugi posao",
+    "daysWithEntries": "Unosi",
+    "weeklyLimit": "Nedeljni limit",
+    "fortnightLimit": "Dvonedeljni limit",
+    "noDriverSelected": "Izaberite vozača za prikaz nedeljnog pregleda",
+    "noEntries": "Nema unosa za ovu nedelju",
+    "addEntry": "Dodaj unos"
+  },
+  "violations": {
+    "title": "Prekršaji",
+    "empty": "Nema prekršaja",
+    "types": {
+      "DAILY_DRIVING_EXCEEDED": "Prekoračenje dnevne vožnje",
+      "DAILY_REST_INSUFFICIENT": "Nedovoljan dnevni odmor",
+      "WEEKLY_DRIVING_EXCEEDED": "Prekoračenje nedeljne vožnje",
+      "FORTNIGHTLY_DRIVING_EXCEEDED": "Prekoračenje dvonedeljne vožnje",
+      "CONTINUOUS_DRIVING_NO_BREAK": "Vožnja bez pauze",
+      "WEEKLY_REST_INSUFFICIENT": "Nedovoljan nedeljni odmor"
+    }
+  },
+  "source": {
+    "MANUAL": "Ručni",
+    "DDD_IMPORT": "DDD",
+    "REMOTE": "Daljinski"
+  },
+  "deleteConfirm": {
+    "title": "Obriši unos",
+    "description": "Da li ste sigurni da želite da obrišete ovaj unos tahografa? Ova akcija se ne može poništiti."
+  },
+  "ddd": {
+    "uploadButton": "Učitaj DDD fajl",
+    "dialogTitle": "Import DDD fajla",
+    "step1Title": "Izaberite fajl",
+    "dropzone": "Prevucite .ddd fajl ovde ili kliknite za izbor",
+    "acceptedFormats": "Dozvoljeni formati: .ddd, .tgd, .esm (max 5MB)",
+    "reading": "Čitanje fajla...",
+    "step2Title": "Pregled podataka",
+    "cardInfo": "Kartica",
+    "period": "Period",
+    "totalDays": "Ukupno dana",
+    "selectDriver": "Za kog vozača importovati?",
+    "cardHolder": "Kartica glasi na",
+    "daysToImport": "dana za import",
+    "daysSkippedPreview": "dana nepotpuno",
+    "back": "Nazad",
+    "import": "Importuj",
+    "importing": "Importovanje...",
+    "step3Title": "Rezultat importa",
+    "imported": "Importovano",
+    "skipped": "Preskočeno",
+    "skippedReason": "već postoje unosi",
+    "errors": "Greške",
+    "violationsDetected": "Detektovano prekršaja u importovanim podacima",
+    "close": "Zatvori",
+    "retry": "Pokušaj ponovo",
+    "parseError": "Greška pri čitanju DDD fajla",
+    "importError": "Greška pri importu"
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "dateRange": "Period",
+    "monthlyDriving": "Mesečna vožnja po vozaču",
+    "compliance": "Usklađenost",
+    "complianceSubtitle": "unosa bez prekršaja",
+    "topViolators": "Najčešći prekršioci",
+    "noViolations": "Nema prekršaja u izabranom periodu",
+    "avgDailyDriving": "Prosečna dnevna vožnja",
+    "others": "Ostali"
+  },
+  "report": {
+    "downloadPdf": "Preuzmi PDF izveštaj",
+    "downloading": "Preuzimanje..."
+  }
+}

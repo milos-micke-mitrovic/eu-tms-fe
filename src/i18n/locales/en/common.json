@@ -95,7 +95,10 @@
     "REPORT_GENERATION_FAILED": "Report generation failed.",
     "FILE_UPLOAD_ERROR": "File upload failed.",
     "INTERNAL_ERROR": "An unexpected server error occurred.",
-    "VALIDATION_ERROR": "Validation failed. Please check your input."
+    "VALIDATION_ERROR": "Validation failed. Please check your input.",
+    "TACHOGRAPH_ENTRY_DUPLICATE": "Entry already exists for this driver on this date.",
+    "DDD_PARSE_ERROR": "Error reading DDD file.",
+    "INVALID_FILE_TYPE": "Unsupported file format."
   },
   "success": {
     "saved": "Changes saved successfully",

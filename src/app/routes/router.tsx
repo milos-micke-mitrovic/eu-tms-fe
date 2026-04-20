@@ -100,6 +100,12 @@ const UsersPage = lazy(() =>
   }))
 )
 
+const TachographPage = lazy(() =>
+  import('@/features/tachograph/pages/tachograph-page').then((m) => ({
+    default: m.TachographPage,
+  }))
+)
+
 const TenantsPage = lazy(() =>
   import('@/features/tenants/pages/tenants-page').then((m) => ({
     default: m.TenantsPage,
@@ -315,6 +321,14 @@ export const router = createBrowserRouter([
         element: (
           <LazyPage>
             <UsersPage />
+          </LazyPage>
+        ),
+      },
+      {
+        path: '/tachograph',
+        element: (
+          <LazyPage>
+            <TachographPage />
           </LazyPage>
         ),
       },

@@ -18,6 +18,7 @@ import {
   ShieldCheck,
   ChevronRight,
   UserCog,
+  Timer,
   type LucideIcon,
 } from 'lucide-react'
 import {
@@ -78,6 +79,7 @@ const navStructure: (NavItem | NavGroup)[] = [
       { key: 'drivers', path: '/drivers', icon: Users },
       { key: 'trailers', path: '/trailers', icon: Container },
       { key: 'fuel', path: '/fuel', icon: Fuel },
+      { key: 'tachograph', path: '/tachograph', icon: Timer },
     ],
   },
   {

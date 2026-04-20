@@ -1,0 +1,139 @@
+{
+  "title": "Tachograph",
+  "tabs": {
+    "driverOverview": "Driver Overview",
+    "weeklyView": "Weekly View",
+    "dashboard": "Dashboard"
+  },
+  "summary": {
+    "totalDrivers": "Total Drivers",
+    "warnings": "Warnings",
+    "violations": "Violations"
+  },
+  "columns": {
+    "driver": "Driver",
+    "status": "Status",
+    "weeklyDriving": "Weekly Driving",
+    "fortnightDriving": "Fortnight",
+    "violationCount": "Violations",
+    "lastEntry": "Last Entry"
+  },
+  "status": {
+    "ok": "OK",
+    "warning": "Warning",
+    "violation": "Violation"
+  },
+  "entry": {
+    "addTitle": "New Entry",
+    "editTitle": "Edit Entry",
+    "addToday": "Add Entry for Today",
+    "entryInfo": "Entry Information",
+    "driver": "Driver",
+    "selectDriver": "Select driver...",
+    "date": "Date",
+    "activities": "Activities",
+    "driving": "Driving",
+    "rest": "Rest",
+    "otherWork": "Other Work",
+    "availability": "Availability",
+    "hours": "h",
+    "minutes": "min",
+    "total": "Total",
+    "remaining": "Remaining",
+    "excess": "Excess",
+    "additional": "Additional",
+    "startOdometer": "Start Odometer (km)",
+    "endOdometer": "End Odometer (km)",
+    "distance": "Distance",
+    "notes": "Notes",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "confirm": "Confirm",
+    "confirmed": "Confirmed",
+    "draft": "Draft",
+    "createSuccess": "Entry created successfully",
+    "updateSuccess": "Entry updated successfully",
+    "deleteSuccess": "Entry deleted",
+    "confirmSuccess": "Entry confirmed",
+    "error": "Error saving entry",
+    "totalMustBe24": "Total time must be 24 hours (1440 minutes)"
+  },
+  "weekly": {
+    "title": "Week",
+    "drivingTotal": "Driving",
+    "restTotal": "Rest",
+    "otherWorkTotal": "Other Work",
+    "daysWithEntries": "Entries",
+    "weeklyLimit": "Weekly Limit",
+    "fortnightLimit": "Fortnight Limit",
+    "noDriverSelected": "Select a driver to view weekly summary",
+    "noEntries": "No entries for this week",
+    "addEntry": "Add Entry"
+  },
+  "violations": {
+    "title": "Violations",
+    "empty": "No violations",
+    "types": {
+      "DAILY_DRIVING_EXCEEDED": "Daily driving limit exceeded",
+      "DAILY_REST_INSUFFICIENT": "Insufficient daily rest",
+      "WEEKLY_DRIVING_EXCEEDED": "Weekly driving limit exceeded",
+      "FORTNIGHTLY_DRIVING_EXCEEDED": "Fortnight driving limit exceeded",
+      "CONTINUOUS_DRIVING_NO_BREAK": "Continuous driving without break",
+      "WEEKLY_REST_INSUFFICIENT": "Insufficient weekly rest"
+    }
+  },
+  "source": {
+    "MANUAL": "Manual",
+    "DDD_IMPORT": "DDD",
+    "REMOTE": "Remote"
+  },
+  "deleteConfirm": {
+    "title": "Delete Entry",
+    "description": "Are you sure you want to delete this tachograph entry? This action cannot be undone."
+  },
+  "ddd": {
+    "uploadButton": "Upload DDD File",
+    "dialogTitle": "DDD File Import",
+    "step1Title": "Select File",
+    "dropzone": "Drag and drop .ddd file here or click to browse",
+    "acceptedFormats": "Accepted formats: .ddd, .tgd, .esm (max 5MB)",
+    "reading": "Reading file...",
+    "step2Title": "Preview Data",
+    "cardInfo": "Card",
+    "period": "Period",
+    "totalDays": "Total Days",
+    "selectDriver": "Import for which driver?",
+    "cardHolder": "Card holder",
+    "daysToImport": "days to import",
+    "daysSkippedPreview": "days incomplete",
+    "back": "Back",
+    "import": "Import",
+    "importing": "Importing...",
+    "step3Title": "Import Results",
+    "imported": "Imported",
+    "skipped": "Skipped",
+    "skippedReason": "entries already exist",
+    "errors": "Errors",
+    "violationsDetected": "Violations detected in imported data",
+    "close": "Close",
+    "retry": "Retry",
+    "parseError": "Error reading DDD file",
+    "importError": "Import error"
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "dateRange": "Period",
+    "monthlyDriving": "Monthly Driving by Driver",
+    "compliance": "Compliance",
+    "complianceSubtitle": "entries without violations",
+    "topViolators": "Top Violators",
+    "noViolations": "No violations in selected period",
+    "avgDailyDriving": "Average Daily Driving",
+    "others": "Others"
+  },
+  "report": {
+    "downloadPdf": "Download PDF Report",
+    "downloading": "Downloading..."
+  }
+}

@@ -192,6 +192,30 @@ export const httpClient = {
     return handleResponse<T>(response, retryFn)
   },
 
+  async postFormData<T>(
+    endpoint: string,
+    formData: FormData,
+    options: RequestOptions = {}
+  ): Promise<T> {
+    const headers = new Headers()
+    if (!options.skipAuth) {
+      const token = getAuthToken()
+      if (token) headers.set('Authorization', `Bearer ${token}`)
+    }
+
+    const makeRequest = () =>
+      fetch(`${API_BASE_URL}${endpoint}`, {
+        method: 'POST',
+        headers,
+        body: formData,
+        signal: options.signal,
+      })
+
+    const response = await makeRequest()
+    const retryFn = options.skipAuth ? undefined : makeRequest
+    return handleResponse<T>(response, retryFn)
+  },
+
   async put<T>(
     endpoint: string,
     data?: unknown,

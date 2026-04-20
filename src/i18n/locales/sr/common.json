@@ -95,7 +95,10 @@
     "REPORT_GENERATION_FAILED": "Generisanje izveštaja nije uspelo.",
     "FILE_UPLOAD_ERROR": "Otpremanje fajla nije uspelo.",
     "INTERNAL_ERROR": "Došlo je do neočekivane greške na serveru.",
-    "VALIDATION_ERROR": "Podaci nisu ispravni. Proverite unos."
+    "VALIDATION_ERROR": "Podaci nisu ispravni. Proverite unos.",
+    "TACHOGRAPH_ENTRY_DUPLICATE": "Unos za ovog vozača na ovaj datum već postoji.",
+    "DDD_PARSE_ERROR": "Greška pri čitanju DDD fajla.",
+    "INVALID_FILE_TYPE": "Nepodržan format fajla."
   },
   "success": {
     "saved": "Uspešno sačuvano",

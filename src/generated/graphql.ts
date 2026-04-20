@@ -340,6 +340,13 @@ export type Query = {
   route?: Maybe<Route>
   routeCountByPartner: Array<RouteCountByPartner>
   routes: RoutePage
+  tachographCompliance: TachographCompliance
+  tachographDriverStatuses: Array<TachographDriverStatus>
+  tachographEntries: Array<TachographEntry>
+  tachographMonthlySummary: Array<TachographMonthlySummary>
+  tachographTopViolators: Array<TachographTopViolator>
+  tachographViolations: Array<TachographViolation>
+  tachographWeeklySummary: TachographWeeklySummary
   topDebtors: Array<TopDebtor>
   topProfitableRoutes: Array<TopRoute>
   trailers: TrailerPage
@@ -478,6 +485,39 @@ export type QueryRoutesArgs = {
   vehicleId?: InputMaybe<Scalars['ID']['input']>
 }
 
+export type QueryTachographComplianceArgs = {
+  from: Scalars['Date']['input']
+  to: Scalars['Date']['input']
+}
+
+export type QueryTachographEntriesArgs = {
+  driverId: Scalars['ID']['input']
+  from: Scalars['Date']['input']
+  to: Scalars['Date']['input']
+}
+
+export type QueryTachographMonthlySummaryArgs = {
+  from: Scalars['Date']['input']
+  to: Scalars['Date']['input']
+}
+
+export type QueryTachographTopViolatorsArgs = {
+  from: Scalars['Date']['input']
+  limit?: InputMaybe<Scalars['Int']['input']>
+  to: Scalars['Date']['input']
+}
+
+export type QueryTachographViolationsArgs = {
+  driverId: Scalars['ID']['input']
+  from: Scalars['Date']['input']
+  to: Scalars['Date']['input']
+}
+
+export type QueryTachographWeeklySummaryArgs = {
+  driverId: Scalars['ID']['input']
+  weekStart: Scalars['Date']['input']
+}
+
 export type QueryTopDebtorsArgs = {
   limit?: InputMaybe<Scalars['Int']['input']>
 }
@@ -605,6 +645,93 @@ export type RouteSummary = {
   partnerName?: Maybe<Scalars['String']['output']>
   price?: Maybe<Scalars['BigDecimal']['output']>
   status: Scalars['String']['output']
+}
+
+export type TachographCompliance = {
+  compliancePercent: Scalars['Float']['output']
+  compliantEntries: Scalars['Int']['output']
+  nonCompliantEntries: Scalars['Int']['output']
+  totalEntries: Scalars['Int']['output']
+}
+
+export type TachographDriverStatus = {
+  currentWeekDrivingLimit: Scalars['Int']['output']
+  currentWeekDrivingMinutes: Scalars['Int']['output']
+  currentWeekDrivingPercent: Scalars['Float']['output']
+  driverFirstName: Scalars['String']['output']
+  driverId: Scalars['ID']['output']
+  driverLastName: Scalars['String']['output']
+  fortnightDrivingLimit: Scalars['Int']['output']
+  fortnightDrivingMinutes: Scalars['Int']['output']
+  lastEntryDate?: Maybe<Scalars['Date']['output']>
+  openViolationCount: Scalars['Int']['output']
+  status: Scalars['String']['output']
+  worstSeverity?: Maybe<Scalars['String']['output']>
+}
+
+export type TachographEntry = {
+  availabilityMinutes: Scalars['Int']['output']
+  createdAt?: Maybe<Scalars['DateTime']['output']>
+  driverFirstName?: Maybe<Scalars['String']['output']>
+  driverId: Scalars['ID']['output']
+  driverLastName?: Maybe<Scalars['String']['output']>
+  drivingMinutes: Scalars['Int']['output']
+  endOdometerKm?: Maybe<Scalars['Int']['output']>
+  entryDate: Scalars['Date']['output']
+  id: Scalars['ID']['output']
+  notes?: Maybe<Scalars['String']['output']>
+  otherWorkMinutes: Scalars['Int']['output']
+  restMinutes: Scalars['Int']['output']
+  source: Scalars['String']['output']
+  startOdometerKm?: Maybe<Scalars['Int']['output']>
+  status: Scalars['String']['output']
+  violations: Array<TachographViolation>
+}
+
+export type TachographMonthlySummary = {
+  avgDailyDrivingMinutes?: Maybe<Scalars['Float']['output']>
+  driverId: Scalars['ID']['output']
+  driverName?: Maybe<Scalars['String']['output']>
+  entryCount: Scalars['Int']['output']
+  month: Scalars['String']['output']
+  totalDrivingMinutes: Scalars['Int']['output']
+  totalOtherWorkMinutes: Scalars['Int']['output']
+  totalRestMinutes: Scalars['Int']['output']
+}
+
+export type TachographTopViolator = {
+  driverId: Scalars['ID']['output']
+  driverName?: Maybe<Scalars['String']['output']>
+  seriousViolations: Scalars['Int']['output']
+  totalViolations: Scalars['Int']['output']
+  warnings: Scalars['Int']['output']
+}
+
+export type TachographViolation = {
+  description?: Maybe<Scalars['String']['output']>
+  drivingMinutesActual?: Maybe<Scalars['Int']['output']>
+  drivingMinutesLimit?: Maybe<Scalars['Int']['output']>
+  id: Scalars['ID']['output']
+  restMinutesActual?: Maybe<Scalars['Int']['output']>
+  restMinutesLimit?: Maybe<Scalars['Int']['output']>
+  severity: Scalars['String']['output']
+  violationDate: Scalars['Date']['output']
+  violationType: Scalars['String']['output']
+}
+
+export type TachographWeeklySummary = {
+  daysWithEntries: Scalars['Int']['output']
+  driverId: Scalars['ID']['output']
+  driverName?: Maybe<Scalars['String']['output']>
+  entries: Array<TachographEntry>
+  totalDrivingMinutes: Scalars['Int']['output']
+  totalOtherWorkMinutes: Scalars['Int']['output']
+  totalRestMinutes: Scalars['Int']['output']
+  violationCount: Scalars['Int']['output']
+  violations: Array<TachographViolation>
+  weekEnd: Scalars['Date']['output']
+  weekStart: Scalars['Date']['output']
+  worstSeverity?: Maybe<Scalars['String']['output']>
 }
 
 export type TopDebtor = {
@@ -1420,4 +1547,172 @@ export type GetRoutesQuery = {
       driver?: { id: string; firstName: string; lastName: string } | null
     }>
   }
+}
+
+export type GetTachographEntriesQueryVariables = Exact<{
+  driverId: Scalars['ID']['input']
+  from: Scalars['Date']['input']
+  to: Scalars['Date']['input']
+}>
+
+export type GetTachographEntriesQuery = {
+  tachographEntries: Array<{
+    id: string
+    driverId: string
+    driverFirstName?: string | null
+    driverLastName?: string | null
+    entryDate: string
+    drivingMinutes: number
+    restMinutes: number
+    otherWorkMinutes: number
+    availabilityMinutes: number
+    startOdometerKm?: number | null
+    endOdometerKm?: number | null
+    notes?: string | null
+    source: string
+    status: string
+    createdAt?: string | null
+    violations: Array<{
+      id: string
+      violationType: string
+      severity: string
+      description?: string | null
+      violationDate: string
+      drivingMinutesActual?: number | null
+      drivingMinutesLimit?: number | null
+      restMinutesActual?: number | null
+      restMinutesLimit?: number | null
+    }>
+  }>
+}
+
+export type GetTachographWeeklySummaryQueryVariables = Exact<{
+  driverId: Scalars['ID']['input']
+  weekStart: Scalars['Date']['input']
+}>
+
+export type GetTachographWeeklySummaryQuery = {
+  tachographWeeklySummary: {
+    driverId: string
+    driverName?: string | null
+    weekStart: string
+    weekEnd: string
+    totalDrivingMinutes: number
+    totalRestMinutes: number
+    totalOtherWorkMinutes: number
+    daysWithEntries: number
+    violationCount: number
+    worstSeverity?: string | null
+    entries: Array<{
+      id: string
+      entryDate: string
+      drivingMinutes: number
+      restMinutes: number
+      otherWorkMinutes: number
+      availabilityMinutes: number
+      status: string
+      violations: Array<{
+        id: string
+        violationType: string
+        severity: string
+        description?: string | null
+      }>
+    }>
+    violations: Array<{
+      id: string
+      violationType: string
+      severity: string
+      description?: string | null
+      violationDate: string
+    }>
+  }
+}
+
+export type GetTachographDriverStatusesQueryVariables = Exact<{
+  [key: string]: never
+}>
+
+export type GetTachographDriverStatusesQuery = {
+  tachographDriverStatuses: Array<{
+    driverId: string
+    driverFirstName: string
+    driverLastName: string
+    lastEntryDate?: string | null
+    currentWeekDrivingMinutes: number
+    currentWeekDrivingLimit: number
+    currentWeekDrivingPercent: number
+    fortnightDrivingMinutes: number
+    fortnightDrivingLimit: number
+    openViolationCount: number
+    worstSeverity?: string | null
+    status: string
+  }>
+}
+
+export type GetTachographViolationsQueryVariables = Exact<{
+  driverId: Scalars['ID']['input']
+  from: Scalars['Date']['input']
+  to: Scalars['Date']['input']
+}>
+
+export type GetTachographViolationsQuery = {
+  tachographViolations: Array<{
+    id: string
+    violationType: string
+    severity: string
+    description?: string | null
+    violationDate: string
+    drivingMinutesActual?: number | null
+    drivingMinutesLimit?: number | null
+    restMinutesActual?: number | null
+    restMinutesLimit?: number | null
+  }>
+}
+
+export type GetTachographMonthlySummaryQueryVariables = Exact<{
+  from: Scalars['Date']['input']
+  to: Scalars['Date']['input']
+}>
+
+export type GetTachographMonthlySummaryQuery = {
+  tachographMonthlySummary: Array<{
+    driverId: string
+    driverName?: string | null
+    month: string
+    totalDrivingMinutes: number
+    totalRestMinutes: number
+    totalOtherWorkMinutes: number
+    entryCount: number
+    avgDailyDrivingMinutes?: number | null
+  }>
+}
+
+export type GetTachographComplianceQueryVariables = Exact<{
+  from: Scalars['Date']['input']
+  to: Scalars['Date']['input']
+}>
+
+export type GetTachographComplianceQuery = {
+  tachographCompliance: {
+    totalEntries: number
+    compliantEntries: number
+    nonCompliantEntries: number
+    compliancePercent: number
+  }
+}
+
+export type GetTachographTopViolatorsQueryVariables = Exact<{
+  from: Scalars['Date']['input']
+  to: Scalars['Date']['input']
+  limit?: InputMaybe<Scalars['Int']['input']>
+}>
+
+export type GetTachographTopViolatorsQuery = {
+  tachographTopViolators: Array<{
+    driverId: string
+    driverName?: string | null
+    totalViolations: number
+    seriousViolations: number
+    warnings: number
+  }>
 }
