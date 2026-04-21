@@ -73,6 +73,16 @@ describe('Dashboard API', () => {
         }
       }
     `)
+    if (res.errors?.length) {
+      // Show the actual BE error so we know exactly what failed
+      const errMsg = res.errors
+        .map(
+          (e: { message: string; path?: string[] }) =>
+            `${e.path?.join('.') ?? 'root'}: ${e.message}`
+        )
+        .join('; ')
+      throw new Error(`BE ERROR: ${errMsg}`)
+    }
     expect(res.data?.dashboard).toBeTruthy()
     const d = res.data.dashboard
 
