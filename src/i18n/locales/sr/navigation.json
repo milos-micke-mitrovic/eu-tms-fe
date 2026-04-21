@@ -23,7 +23,9 @@
     "notifications": "Obaveštenja",
     "settings": "Podešavanja",
     "users": "Korisnici",
-    "tachograph": "Tahograf"
+    "tachograph": "Tahograf",
+    "payroll": "Plate",
+    "collections": "Naplata"
   },
   "breadcrumbs": {
     "home": "Početna"

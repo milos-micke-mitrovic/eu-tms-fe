@@ -19,6 +19,8 @@ import {
   ChevronRight,
   UserCog,
   Timer,
+  Banknote,
+  HandCoins,
   type LucideIcon,
 } from 'lucide-react'
 import {
@@ -89,6 +91,8 @@ const navStructure: (NavItem | NavGroup)[] = [
       { key: 'invoices', path: '/invoices', icon: FileText },
       { key: 'expenses', path: '/expenses', icon: Receipt },
       { key: 'exchangeRates', path: '/exchange-rates', icon: Coins },
+      { key: 'payroll', path: '/payroll', icon: Banknote },
+      { key: 'collections', path: '/collections', icon: HandCoins },
     ],
   },
   {

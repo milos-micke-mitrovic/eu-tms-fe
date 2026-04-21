@@ -106,6 +106,18 @@ const TachographPage = lazy(() =>
   }))
 )
 
+const PayrollPage = lazy(() =>
+  import('@/features/payroll/pages/payroll-page').then((m) => ({
+    default: m.PayrollPage,
+  }))
+)
+
+const CollectionsPage = lazy(() =>
+  import('@/features/collections/pages/collections-page').then((m) => ({
+    default: m.CollectionsPage,
+  }))
+)
+
 const TenantsPage = lazy(() =>
   import('@/features/tenants/pages/tenants-page').then((m) => ({
     default: m.TenantsPage,
@@ -329,6 +341,22 @@ export const router = createBrowserRouter([
         element: (
           <LazyPage>
             <TachographPage />
+          </LazyPage>
+        ),
+      },
+      {
+        path: '/payroll',
+        element: (
+          <LazyPage>
+            <PayrollPage />
+          </LazyPage>
+        ),
+      },
+      {
+        path: '/collections',
+        element: (
+          <LazyPage>
+            <CollectionsPage />
           </LazyPage>
         ),
       },

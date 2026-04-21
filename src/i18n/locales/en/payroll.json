@@ -1,0 +1,137 @@
+{
+  "title": "Payroll",
+  "tabs": {
+    "monthly": "Monthly Payroll",
+    "config": "Configuration"
+  },
+  "month": {
+    "january": "january",
+    "february": "february",
+    "march": "march",
+    "april": "april",
+    "may": "may",
+    "june": "june",
+    "july": "july",
+    "august": "august",
+    "september": "september",
+    "october": "october",
+    "november": "november",
+    "december": "december"
+  },
+  "summary": {
+    "drivers": "Drivers",
+    "gross": "Gross Total",
+    "net": "Net Total",
+    "perDiem": "Per Diem Total",
+    "draft": "Draft",
+    "confirmed": "Confirmed",
+    "paid": "Paid"
+  },
+  "actions": {
+    "generateAll": "Generate all payrolls",
+    "generateForDriver": "Generate for driver",
+    "recalculate": "Recalculate",
+    "confirm": "Confirm",
+    "markPaid": "Mark as paid",
+    "adjust": "Adjust",
+    "downloadPdf": "Download PDF",
+    "addConfig": "Add configuration",
+    "addAdvance": "Add advance",
+    "save": "Save",
+    "delete": "Delete"
+  },
+  "table": {
+    "driver": "Driver",
+    "base": "Base",
+    "perDiem": "Per Diem",
+    "overtime": "Overtime",
+    "gross": "Gross",
+    "deductions": "Deductions",
+    "net": "Net",
+    "status": "Status",
+    "routes": "Routes",
+    "km": "Km"
+  },
+  "detail": {
+    "title": "Payroll Details",
+    "routeStats": "Route Statistics",
+    "totalRoutes": "Total Routes",
+    "totalKm": "Total Km",
+    "drivingHours": "Driving Hours",
+    "daysOnRoad": "Days on Road",
+    "earnings": "Earnings",
+    "baseSalary": "Base Salary",
+    "perDiemDomestic": "Per Diem (Domestic)",
+    "perDiemInternational": "Per Diem (International)",
+    "overtimeAmount": "Overtime",
+    "kmBonus": "Km Bonus",
+    "routeBonus": "Route Bonus",
+    "otherBonus": "Other Bonuses",
+    "grossTotal": "GROSS TOTAL",
+    "deductions": "Deductions",
+    "tax": "Tax",
+    "socialContributions": "Social Contributions",
+    "advances": "Advances",
+    "otherDeduction": "Other Deductions",
+    "totalDeductions": "TOTAL DEDUCTIONS",
+    "netSalary": "Net Salary",
+    "notes": "Notes"
+  },
+  "adjustment": {
+    "title": "Adjust Payroll",
+    "otherBonus": "Other Bonus (RSD)",
+    "otherBonusDescription": "Bonus Description",
+    "otherDeduction": "Other Deduction (RSD)",
+    "otherDeductionDescription": "Deduction Description",
+    "tax": "Tax (RSD)",
+    "socialContributions": "Social Contributions (RSD)",
+    "notes": "Notes"
+  },
+  "config": {
+    "title": "Salary Configuration",
+    "newTitle": "New Configuration",
+    "editTitle": "Edit Configuration",
+    "driverConfigs": "Driver Configurations",
+    "notConfigured": "Not configured",
+    "baseSalary": "Base Salary (RSD)",
+    "hourlyRate": "Hourly Rate (RSD)",
+    "overtimeMultiplier": "Overtime Multiplier",
+    "perKmRate": "Per Km Rate (RSD)",
+    "bonusPerRoute": "Bonus Per Route (RSD)",
+    "validFrom": "Valid From",
+    "validTo": "Valid To",
+    "notes": "Notes",
+    "sections": {
+      "baseSalary": "Base Salary",
+      "bonuses": "Bonuses",
+      "validity": "Validity Period"
+    }
+  },
+  "advance": {
+    "title": "Advances",
+    "newTitle": "New Advance",
+    "editTitle": "Edit Advance",
+    "type": "Type",
+    "amount": "Amount (RSD)",
+    "date": "Date",
+    "description": "Description",
+    "settled": "Settled",
+    "unsettled": "Unsettled",
+    "settledInfo": "This advance is already settled and cannot be modified.",
+    "selectDriver": "Select driver",
+    "dateRange": "Period"
+  },
+  "empty": {
+    "payrolls": "No payrolls for the selected month",
+    "payrollsAction": "Generate payrolls for all drivers",
+    "advances": "No advances for the selected period",
+    "configs": "No configurations"
+  },
+  "confirm": {
+    "confirmTitle": "Confirm Payroll",
+    "confirmDescription": "Are you sure you want to confirm this payroll? This action cannot be undone.",
+    "deleteTitle": "Delete",
+    "deleteDescription": "Are you sure you want to delete this? This action cannot be undone."
+  },
+  "selectDriver": "Select driver"
+}

@@ -1,0 +1,107 @@
+{
+  "title": "Naplata",
+  "tabs": {
+    "overview": "Pregled",
+    "overdue": "Dospele fakture",
+    "settings": "Podešavanja"
+  },
+  "dashboard": {
+    "totalReceivables": "Ukupna potraživanja",
+    "totalOverdue": "Dospela potraživanja",
+    "collectedThisMonth": "Naplaćeno ovog meseca",
+    "collectionRate": "Stopa naplate"
+  },
+  "aging": {
+    "title": "Starost potraživanja",
+    "days": "dana",
+    "noData": "Nema podataka o starosti potraživanja",
+    "invoiceCount": "Broj faktura",
+    "totalAmount": "Ukupan iznos"
+  },
+  "debtors": {
+    "partner": "Partner",
+    "totalInvoices": "Ukupno faktura",
+    "overdueInvoices": "Dospele fakture",
+    "totalDebt": "Ukupan dug",
+    "overdueDebt": "Dospeo dug",
+    "avgDaysOverdue": "Prosečno dana kašnjenja",
+    "oldestDue": "Najstarije dospeće",
+    "remindersSent": "Poslate opomene",
+    "empty": "Nema dužnika"
+  },
+  "invoices": {
+    "number": "Broj fakture",
+    "partner": "Partner",
+    "dueDate": "Datum dospeća",
+    "totalAmount": "Ukupan iznos",
+    "amountPaid": "Plaćeno",
+    "amountRemaining": "Preostalo",
+    "actions": "Akcije",
+    "empty": "Nema dospelih faktura"
+  },
+  "payment": {
+    "title": "Evidencija uplate",
+    "forInvoice": "Za fakturu {{number}}",
+    "total": "Ukupan iznos",
+    "paid": "Plaćeno",
+    "remaining": "Preostalo",
+    "willClose": "Ova uplata će zatvoriti fakturu",
+    "amount": "Iznos uplate",
+    "date": "Datum uplate",
+    "method": "Način plaćanja",
+    "reference": "Poziv na broj",
+    "notes": "Napomena",
+    "history": "Istorija uplata",
+    "noPayments": "Nema evidentiranih uplata"
+  },
+  "paymentMethod": {
+    "bankTransfer": "Bankarski prenos",
+    "cash": "Gotovina",
+    "compensation": "Kompenzacija",
+    "factoring": "Faktoring",
+    "other": "Ostalo"
+  },
+  "reminder": {
+    "title": "Slanje opomene",
+    "forInvoice": "Za fakturu {{number}} — {{partner}}",
+    "type": "Tip opomene",
+    "sentVia": "Način slanja",
+    "email": "Email primaoca",
+    "subject": "Predmet",
+    "message": "Poruka",
+    "defaultSubject": "Opomena za fakturu {{invoiceNumber}}",
+    "defaultBody": "Poštovani {{partnerName}},\n\nObaveštavamo Vas da faktura {{invoiceNumber}} u iznosu od {{amountDue}} RSD nije plaćena u predviđenom roku.\n\nMolimo Vas da izvršite uplatu u najkraćem mogućem roku.\n\nS poštovanjem",
+    "history": "Istorija opomena",
+    "noReminders": "Nema poslatih opomena"
+  },
+  "reminderType": {
+    "first": "Prva opomena",
+    "second": "Druga opomena",
+    "third": "Treća opomena",
+    "final": "Finalna opomena",
+    "custom": "Prilagođena"
+  },
+  "sendVia": {
+    "email": "Email",
+    "sms": "SMS",
+    "postal": "Poštom"
+  },
+  "actions": {
+    "recordPayment": "Evidentiraj uplatu",
+    "sendReminder": "Pošalji opomenu"
+  },
+  "rules": {
+    "title": "Pravila automatskog slanja opomena",
+    "add": "Dodaj pravilo",
+    "edit": "Izmeni pravilo",
+    "daysAfterDue": "dana nakon dospeća",
+    "daysAfterDueLabel": "Broj dana nakon dospeća",
+    "enabled": "Aktivno",
+    "disabled": "Neaktivno",
+    "enabledLabel": "Aktivno",
+    "subjectTemplate": "Predmet (šablon)",
+    "bodyTemplate": "Tekst poruke (šablon)",
+    "templateHelp": "Dostupne promenljive: {partner_name}, {invoice_number}, {amount_due}, {due_date}",
+    "empty": "Nema konfiguriranih pravila"
+  }
+}

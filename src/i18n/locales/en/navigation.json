@@ -23,7 +23,9 @@
     "notifications": "Notifications",
     "settings": "Settings",
     "users": "Users",
-    "tachograph": "Tachograph"
+    "tachograph": "Tachograph",
+    "payroll": "Payroll",
+    "collections": "Collections"
   },
   "breadcrumbs": {
     "home": "Home"

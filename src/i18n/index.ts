@@ -16,6 +16,8 @@ import permitsSr from './locales/sr/permits.json'
 import tenantsSr from './locales/sr/tenants.json'
 import usersSr from './locales/sr/users.json'
 import tachographSr from './locales/sr/tachograph.json'
+import payrollSr from './locales/sr/payroll.json'
+import collectionsSr from './locales/sr/collections.json'
 
 // English (fallback)
 import commonEn from './locales/en/common.json'
@@ -32,6 +34,8 @@ import permitsEn from './locales/en/permits.json'
 import tenantsEn from './locales/en/tenants.json'
 import usersEn from './locales/en/users.json'
 import tachographEn from './locales/en/tachograph.json'
+import payrollEn from './locales/en/payroll.json'
+import collectionsEn from './locales/en/collections.json'
 
 export const defaultNS = 'common'
 
@@ -51,6 +55,8 @@ export const resources = {
     tenants: tenantsSr,
     users: usersSr,
     tachograph: tachographSr,
+    payroll: payrollSr,
+    collections: collectionsSr,
   },
   en: {
     common: commonEn,
@@ -67,6 +73,8 @@ export const resources = {
     tenants: tenantsEn,
     users: usersEn,
     tachograph: tachographEn,
+    payroll: payrollEn,
+    collections: collectionsEn,
   },
 } as const
 

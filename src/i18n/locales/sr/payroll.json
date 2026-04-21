@@ -1,0 +1,137 @@
+{
+  "title": "Plate",
+  "tabs": {
+    "monthly": "Mesečni obračun",
+    "config": "Konfiguracija"
+  },
+  "month": {
+    "january": "januar",
+    "february": "februar",
+    "march": "mart",
+    "april": "april",
+    "may": "maj",
+    "june": "jun",
+    "july": "jul",
+    "august": "avgust",
+    "september": "septembar",
+    "october": "oktobar",
+    "november": "novembar",
+    "december": "decembar"
+  },
+  "summary": {
+    "drivers": "Vozači",
+    "gross": "Bruto ukupno",
+    "net": "Neto ukupno",
+    "perDiem": "Dnevnice ukupno",
+    "draft": "Nacrt",
+    "confirmed": "Potvrđen",
+    "paid": "Isplaćen"
+  },
+  "actions": {
+    "generateAll": "Generiši obračun za sve",
+    "generateForDriver": "Generiši za vozača",
+    "recalculate": "Preračunaj",
+    "confirm": "Potvrdi",
+    "markPaid": "Označi kao isplaćen",
+    "adjust": "Prilagodi",
+    "downloadPdf": "Preuzmi PDF",
+    "addConfig": "Dodaj konfiguraciju",
+    "addAdvance": "Dodaj akontaciju",
+    "save": "Sačuvaj",
+    "delete": "Obriši"
+  },
+  "table": {
+    "driver": "Vozač",
+    "base": "Osnovna",
+    "perDiem": "Dnevnice",
+    "overtime": "Prekovremeni",
+    "gross": "Bruto",
+    "deductions": "Odbici",
+    "net": "Neto",
+    "status": "Status",
+    "routes": "Rute",
+    "km": "Km"
+  },
+  "detail": {
+    "title": "Detalji obračuna",
+    "routeStats": "Statistika ruta",
+    "totalRoutes": "Ukupno ruta",
+    "totalKm": "Ukupno km",
+    "drivingHours": "Sati vožnje",
+    "daysOnRoad": "Dana na putu",
+    "earnings": "Zarada",
+    "baseSalary": "Osnovna plata",
+    "perDiemDomestic": "Dnevnice (domaće)",
+    "perDiemInternational": "Dnevnice (inostranstvo)",
+    "overtimeAmount": "Prekovremeni rad",
+    "kmBonus": "Bonus po km",
+    "routeBonus": "Bonus po ruti",
+    "otherBonus": "Ostali bonusi",
+    "grossTotal": "BRUTO UKUPNO",
+    "deductions": "Odbici",
+    "tax": "Porez",
+    "socialContributions": "Socijalni doprinosi",
+    "advances": "Akontacije",
+    "otherDeduction": "Ostali odbici",
+    "totalDeductions": "UKUPNO ODBICI",
+    "netSalary": "Neto plata",
+    "notes": "Napomene"
+  },
+  "adjustment": {
+    "title": "Prilagođavanje obračuna",
+    "otherBonus": "Ostali bonus (RSD)",
+    "otherBonusDescription": "Opis bonusa",
+    "otherDeduction": "Ostali odbitak (RSD)",
+    "otherDeductionDescription": "Opis odbitka",
+    "tax": "Porez (RSD)",
+    "socialContributions": "Socijalni doprinosi (RSD)",
+    "notes": "Napomene"
+  },
+  "config": {
+    "title": "Konfiguracija plate",
+    "newTitle": "Nova konfiguracija",
+    "editTitle": "Izmena konfiguracije",
+    "driverConfigs": "Konfiguracije vozača",
+    "notConfigured": "Nije konfigurisano",
+    "baseSalary": "Osnovna plata (RSD)",
+    "hourlyRate": "Satnica (RSD)",
+    "overtimeMultiplier": "Množilac prekovremenih",
+    "perKmRate": "Stopa po km (RSD)",
+    "bonusPerRoute": "Bonus po ruti (RSD)",
+    "validFrom": "Važi od",
+    "validTo": "Važi do",
+    "notes": "Napomene",
+    "sections": {
+      "baseSalary": "Osnovna plata",
+      "bonuses": "Bonusi",
+      "validity": "Period važenja"
+    }
+  },
+  "advance": {
+    "title": "Akontacije",
+    "newTitle": "Nova akontacija",
+    "editTitle": "Izmena akontacije",
+    "type": "Tip",
+    "amount": "Iznos (RSD)",
+    "date": "Datum",
+    "description": "Opis",
+    "settled": "Izmirena",
+    "unsettled": "Neizmirena",
+    "settledInfo": "Ova akontacija je već izmirena i ne može se menjati.",
+    "selectDriver": "Izaberite vozača",
+    "dateRange": "Period"
+  },
+  "empty": {
+    "payrolls": "Nema obračuna za izabrani mesec",
+    "payrollsAction": "Generišite obračune za sve vozače",
+    "advances": "Nema akontacija za izabrani period",
+    "configs": "Nema konfiguracija"
+  },
+  "confirm": {
+    "confirmTitle": "Potvrda obračuna",
+    "confirmDescription": "Da li ste sigurni da želite da potvrdite ovaj obračun? Ova akcija se ne može poništiti.",
+    "deleteTitle": "Brisanje",
+    "deleteDescription": "Da li ste sigurni da želite da obrišete? Ova akcija se ne može poništiti."
+  },
+  "selectDriver": "Izaberite vozača"
+}

@@ -1,0 +1,107 @@
+{
+  "title": "Collections",
+  "tabs": {
+    "overview": "Overview",
+    "overdue": "Overdue Invoices",
+    "settings": "Settings"
+  },
+  "dashboard": {
+    "totalReceivables": "Total Receivables",
+    "totalOverdue": "Total Overdue",
+    "collectedThisMonth": "Collected This Month",
+    "collectionRate": "Collection Rate"
+  },
+  "aging": {
+    "title": "Aging Analysis",
+    "days": "days",
+    "noData": "No aging data available",
+    "invoiceCount": "Invoice count",
+    "totalAmount": "Total amount"
+  },
+  "debtors": {
+    "partner": "Partner",
+    "totalInvoices": "Total Invoices",
+    "overdueInvoices": "Overdue Invoices",
+    "totalDebt": "Total Debt",
+    "overdueDebt": "Overdue Debt",
+    "avgDaysOverdue": "Avg Days Overdue",
+    "oldestDue": "Oldest Due Date",
+    "remindersSent": "Reminders Sent",
+    "empty": "No debtors found"
+  },
+  "invoices": {
+    "number": "Invoice Number",
+    "partner": "Partner",
+    "dueDate": "Due Date",
+    "totalAmount": "Total Amount",
+    "amountPaid": "Amount Paid",
+    "amountRemaining": "Amount Remaining",
+    "actions": "Actions",
+    "empty": "No overdue invoices"
+  },
+  "payment": {
+    "title": "Record Payment",
+    "forInvoice": "For invoice {{number}}",
+    "total": "Total Amount",
+    "paid": "Amount Paid",
+    "remaining": "Remaining",
+    "willClose": "This payment will close the invoice",
+    "amount": "Payment Amount",
+    "date": "Payment Date",
+    "method": "Payment Method",
+    "reference": "Reference Number",
+    "notes": "Notes",
+    "history": "Payment History",
+    "noPayments": "No payments recorded"
+  },
+  "paymentMethod": {
+    "bankTransfer": "Bank Transfer",
+    "cash": "Cash",
+    "compensation": "Compensation",
+    "factoring": "Factoring",
+    "other": "Other"
+  },
+  "reminder": {
+    "title": "Send Reminder",
+    "forInvoice": "For invoice {{number}} — {{partner}}",
+    "type": "Reminder Type",
+    "sentVia": "Send Via",
+    "email": "Recipient Email",
+    "subject": "Subject",
+    "message": "Message",
+    "defaultSubject": "Payment reminder for invoice {{invoiceNumber}}",
+    "defaultBody": "Dear {{partnerName}},\n\nWe would like to inform you that invoice {{invoiceNumber}} in the amount of {{amountDue}} RSD has not been paid by the due date.\n\nPlease arrange payment at your earliest convenience.\n\nBest regards",
+    "history": "Reminder History",
+    "noReminders": "No reminders sent"
+  },
+  "reminderType": {
+    "first": "First Reminder",
+    "second": "Second Reminder",
+    "third": "Third Reminder",
+    "final": "Final Reminder",
+    "custom": "Custom"
+  },
+  "sendVia": {
+    "email": "Email",
+    "sms": "SMS",
+    "postal": "Postal"
+  },
+  "actions": {
+    "recordPayment": "Record Payment",
+    "sendReminder": "Send Reminder"
+  },
+  "rules": {
+    "title": "Auto-reminder Rules",
+    "add": "Add Rule",
+    "edit": "Edit Rule",
+    "daysAfterDue": "days after due",
+    "daysAfterDueLabel": "Days After Due Date",
+    "enabled": "Enabled",
+    "disabled": "Disabled",
+    "enabledLabel": "Enabled",
+    "subjectTemplate": "Subject Template",
+    "bodyTemplate": "Body Template",
+    "templateHelp": "Available variables: {partner_name}, {invoice_number}, {amount_due}, {due_date}",
+    "empty": "No rules configured"
+  }
+}

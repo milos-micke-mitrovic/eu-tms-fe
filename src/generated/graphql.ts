@@ -42,6 +42,28 @@ export type CategoryAmount = {
   totalAmountRsd: Scalars['BigDecimal']['output']
 }
 
+export type CollectionDashboard = {
+  agingBuckets: Array<AgingBucket>
+  collectedThisMonth: Scalars['Float']['output']
+  collectionRate: Scalars['Float']['output']
+  overdueInvoiceCount: Scalars['Int']['output']
+  remindersThisMonth: Scalars['Int']['output']
+  totalOverdue: Scalars['Float']['output']
+  totalReceivables: Scalars['Float']['output']
+}
+
+export type CollectionReminder = {
+  amountDue: Scalars['Float']['output']
+  daysOverdue: Scalars['Int']['output']
+  id: Scalars['ID']['output']
+  invoiceId: Scalars['ID']['output']
+  invoiceNumber?: Maybe<Scalars['String']['output']>
+  partnerName?: Maybe<Scalars['String']['output']>
+  reminderType: Scalars['String']['output']
+  sentAt: Scalars['DateTime']['output']
+  sentVia: Scalars['String']['output']
+}
+
 export type CollectionStats = {
   avgCollectionDays: Scalars['Int']['output']
   collectionRate: Scalars['BigDecimal']['output']
@@ -97,6 +119,19 @@ export type Driver = {
   updatedAt?: Maybe<Scalars['DateTime']['output']>
   vehicleId?: Maybe<Scalars['ID']['output']>
   vehicleRegNumber?: Maybe<Scalars['String']['output']>
+}
+
+export type DriverAdvance = {
+  advanceDate: Scalars['Date']['output']
+  advanceType: Scalars['String']['output']
+  amountRsd: Scalars['Float']['output']
+  createdAt?: Maybe<Scalars['DateTime']['output']>
+  description?: Maybe<Scalars['String']['output']>
+  driverId: Scalars['ID']['output']
+  driverName?: Maybe<Scalars['String']['output']>
+  id: Scalars['ID']['output']
+  payrollId?: Maybe<Scalars['ID']['output']>
+  settled: Scalars['Boolean']['output']
 }
 
 export type DriverDocument = {
@@ -188,6 +223,8 @@ export type FuelTank = {
 }
 
 export type Invoice = {
+  amountPaid?: Maybe<Scalars['BigDecimal']['output']>
+  amountRemaining?: Maybe<Scalars['BigDecimal']['output']>
   createdAt?: Maybe<Scalars['DateTime']['output']>
   currency: Scalars['String']['output']
   dueDate: Scalars['Date']['output']
@@ -199,7 +236,9 @@ export type Invoice = {
   partner?: Maybe<Partner>
   partnerId: Scalars['ID']['output']
   paymentStatus: Scalars['String']['output']
+  payments: Array<InvoicePayment>
   relatedRouteIds?: Maybe<Array<Maybe<Scalars['ID']['output']>>>
+  reminders: Array<CollectionReminder>
   subtotal: Scalars['BigDecimal']['output']
   total: Scalars['BigDecimal']['output']
   vatAmount: Scalars['BigDecimal']['output']
@@ -221,6 +260,19 @@ export type InvoicePage = {
   size: Scalars['Int']['output']
   totalElements: Scalars['Int']['output']
   totalPages: Scalars['Int']['output']
+}
+
+export type InvoicePayment = {
+  amount: Scalars['Float']['output']
+  createdAt?: Maybe<Scalars['DateTime']['output']>
+  currency: Scalars['String']['output']
+  id: Scalars['ID']['output']
+  invoiceId: Scalars['ID']['output']
+  invoiceNumber?: Maybe<Scalars['String']['output']>
+  notes?: Maybe<Scalars['String']['output']>
+  paymentDate: Scalars['Date']['output']
+  paymentMethod: Scalars['String']['output']
+  referenceNumber?: Maybe<Scalars['String']['output']>
 }
 
 export type MonthlyAmount = {
@@ -271,6 +323,19 @@ export type Partner = {
   zipCode?: Maybe<Scalars['String']['output']>
 }
 
+export type PartnerDebtSummary = {
+  avgDaysOverdue?: Maybe<Scalars['Int']['output']>
+  lastReminderDate?: Maybe<Scalars['Date']['output']>
+  oldestDueDate?: Maybe<Scalars['Date']['output']>
+  overdueDebt: Scalars['Float']['output']
+  overdueInvoices: Scalars['Int']['output']
+  partnerId: Scalars['ID']['output']
+  partnerName: Scalars['String']['output']
+  remindersSent: Scalars['Int']['output']
+  totalDebt: Scalars['Float']['output']
+  totalInvoices: Scalars['Int']['output']
+}
+
 export type PartnerPage = {
   content: Array<Partner>
   number: Scalars['Int']['output']
@@ -286,6 +351,50 @@ export type PartnerProfitability = {
   routeCount: Scalars['Int']['output']
   totalExpenses: Scalars['BigDecimal']['output']
   totalRevenue: Scalars['BigDecimal']['output']
+}
+
+export type Payroll = {
+  advanceDeductionRsd?: Maybe<Scalars['Float']['output']>
+  baseSalaryRsd: Scalars['Float']['output']
+  createdAt?: Maybe<Scalars['DateTime']['output']>
+  daysOnRoad?: Maybe<Scalars['Int']['output']>
+  driverFirstName?: Maybe<Scalars['String']['output']>
+  driverId: Scalars['ID']['output']
+  driverLastName?: Maybe<Scalars['String']['output']>
+  grossTotalRsd: Scalars['Float']['output']
+  id: Scalars['ID']['output']
+  kmBonusRsd?: Maybe<Scalars['Float']['output']>
+  monthYear: Scalars['String']['output']
+  netSalaryRsd: Scalars['Float']['output']
+  notes?: Maybe<Scalars['String']['output']>
+  otherBonusRsd?: Maybe<Scalars['Float']['output']>
+  otherDeductionRsd?: Maybe<Scalars['Float']['output']>
+  overtimeAmountRsd?: Maybe<Scalars['Float']['output']>
+  overtimeHours?: Maybe<Scalars['Float']['output']>
+  perDiemDomesticRsd?: Maybe<Scalars['Float']['output']>
+  perDiemInternationalRsd?: Maybe<Scalars['Float']['output']>
+  perDiemTotalRsd: Scalars['Float']['output']
+  routeBonusRsd?: Maybe<Scalars['Float']['output']>
+  socialContributionsRsd?: Maybe<Scalars['Float']['output']>
+  status: Scalars['String']['output']
+  taxRsd?: Maybe<Scalars['Float']['output']>
+  totalDeductionsRsd: Scalars['Float']['output']
+  totalDrivingHours?: Maybe<Scalars['Float']['output']>
+  totalKm?: Maybe<Scalars['Int']['output']>
+  totalRoutes?: Maybe<Scalars['Int']['output']>
+}
+
+export type PayrollSummary = {
+  driverCount: Scalars['Int']['output']
+  monthYear: Scalars['String']['output']
+  payrollsConfirmed: Scalars['Int']['output']
+  payrollsDraft: Scalars['Int']['output']
+  payrollsPaid: Scalars['Int']['output']
+  totalDeductionsRsd: Scalars['Float']['output']
+  totalGrossRsd: Scalars['Float']['output']
+  totalNetRsd: Scalars['Float']['output']
+  totalPerDiemRsd: Scalars['Float']['output']
+  totalRoutes: Scalars['Int']['output']
 }
 
 export type PerDiemRate = {
@@ -314,9 +423,12 @@ export type ProfitabilityPage = {
 
 export type Query = {
   agingAnalysis: Array<AgingBucket>
+  collectionDashboard: CollectionDashboard
   costPerKm: Array<CostPerKm>
   dashboard: Dashboard
+  debtorsSummary: Array<PartnerDebtSummary>
   driver?: Maybe<Driver>
+  driverAdvances: Array<DriverAdvance>
   driverFuelComparison: Array<DriverFuelComparison>
   driverProductivity: Array<DriverProductivity>
   drivers: DriverPage
@@ -328,9 +440,15 @@ export type Query = {
   fuelTanks: Array<FuelTank>
   invoice?: Maybe<Invoice>
   invoiceCollectionStats: CollectionStats
+  invoicePayments: Array<InvoicePayment>
+  invoiceReminders: Array<CollectionReminder>
   invoices: InvoicePage
   monthlyPnl: Array<MonthlyPnl>
+  partnerReminders: Array<CollectionReminder>
   partners: PartnerPage
+  payrollHistory: Array<Payroll>
+  payrollSummary: PayrollSummary
+  payrollsByMonth: Array<Payroll>
   perDiemRates: Array<PerDiemRate>
   /** Liveness probe — returns 'pong'. */
   ping: Scalars['String']['output']
@@ -360,8 +478,18 @@ export type QueryCostPerKmArgs = {
   to: Scalars['Date']['input']
 }
 
+export type QueryDebtorsSummaryArgs = {
+  limit?: InputMaybe<Scalars['Int']['input']>
+}
+
 export type QueryDriverArgs = {
   id: Scalars['ID']['input']
+}
+
+export type QueryDriverAdvancesArgs = {
+  driverId: Scalars['ID']['input']
+  from: Scalars['Date']['input']
+  to: Scalars['Date']['input']
 }
 
 export type QueryDriverFuelComparisonArgs = {
@@ -418,6 +546,14 @@ export type QueryInvoiceCollectionStatsArgs = {
   to: Scalars['Date']['input']
 }
 
+export type QueryInvoicePaymentsArgs = {
+  invoiceId: Scalars['ID']['input']
+}
+
+export type QueryInvoiceRemindersArgs = {
+  invoiceId: Scalars['ID']['input']
+}
+
 export type QueryInvoicesArgs = {
   dateFrom?: InputMaybe<Scalars['Date']['input']>
   dateTo?: InputMaybe<Scalars['Date']['input']>
@@ -435,6 +571,10 @@ export type QueryMonthlyPnlArgs = {
   to: Scalars['Date']['input']
 }
 
+export type QueryPartnerRemindersArgs = {
+  partnerId: Scalars['ID']['input']
+}
+
 export type QueryPartnersArgs = {
   page?: InputMaybe<Scalars['Int']['input']>
   partnerType?: InputMaybe<Scalars['String']['input']>
@@ -442,6 +582,18 @@ export type QueryPartnersArgs = {
   size?: InputMaybe<Scalars['Int']['input']>
   sortBy?: InputMaybe<Scalars['String']['input']>
   sortDir?: InputMaybe<Scalars['String']['input']>
+}
+
+export type QueryPayrollHistoryArgs = {
+  driverId: Scalars['ID']['input']
+}
+
+export type QueryPayrollSummaryArgs = {
+  monthYear: Scalars['String']['input']
+}
+
+export type QueryPayrollsByMonthArgs = {
+  monthYear: Scalars['String']['input']
 }
 
 export type QueryProfitabilityByPartnerArgs = {
@@ -838,6 +990,101 @@ export type VehicleUtilization = {
   vehicleId: Scalars['ID']['output']
 }
 
+export type GetCollectionDashboardQueryVariables = Exact<{
+  [key: string]: never
+}>
+
+export type GetCollectionDashboardQuery = {
+  collectionDashboard: {
+    totalReceivables: number
+    totalOverdue: number
+    collectedThisMonth: number
+    collectionRate: number
+    overdueInvoiceCount: number
+    remindersThisMonth: number
+    agingBuckets: Array<{
+      bucket: string
+      invoiceCount: number
+      totalAmount: number
+      currency: string
+    }>
+  }
+}
+
+export type GetDebtorsSummaryQueryVariables = Exact<{
+  limit?: InputMaybe<Scalars['Int']['input']>
+}>
+
+export type GetDebtorsSummaryQuery = {
+  debtorsSummary: Array<{
+    partnerId: string
+    partnerName: string
+    totalInvoices: number
+    overdueInvoices: number
+    totalDebt: number
+    overdueDebt: number
+    oldestDueDate?: string | null
+    avgDaysOverdue?: number | null
+    remindersSent: number
+    lastReminderDate?: string | null
+  }>
+}
+
+export type GetInvoicePaymentsQueryVariables = Exact<{
+  invoiceId: Scalars['ID']['input']
+}>
+
+export type GetInvoicePaymentsQuery = {
+  invoicePayments: Array<{
+    id: string
+    invoiceId: string
+    invoiceNumber?: string | null
+    paymentDate: string
+    amount: number
+    currency: string
+    paymentMethod: string
+    referenceNumber?: string | null
+    notes?: string | null
+    createdAt?: string | null
+  }>
+}
+
+export type GetInvoiceRemindersQueryVariables = Exact<{
+  invoiceId: Scalars['ID']['input']
+}>
+
+export type GetInvoiceRemindersQuery = {
+  invoiceReminders: Array<{
+    id: string
+    invoiceId: string
+    invoiceNumber?: string | null
+    partnerName?: string | null
+    reminderType: string
+    sentVia: string
+    daysOverdue: number
+    amountDue: number
+    sentAt: string
+  }>
+}
+
+export type GetPartnerRemindersQueryVariables = Exact<{
+  partnerId: Scalars['ID']['input']
+}>
+
+export type GetPartnerRemindersQuery = {
+  partnerReminders: Array<{
+    id: string
+    invoiceId: string
+    invoiceNumber?: string | null
+    partnerName?: string | null
+    reminderType: string
+    sentVia: string
+    daysOverdue: number
+    amountDue: number
+    sentAt: string
+  }>
+}
+
 export type DashboardQueryVariables = Exact<{ [key: string]: never }>
 
 export type DashboardQuery = {
@@ -1195,6 +1442,95 @@ export type GetPartnersQuery = {
       notes?: string | null
     }>
   }
+}
+
+export type GetPayrollsByMonthQueryVariables = Exact<{
+  monthYear: Scalars['String']['input']
+}>
+
+export type GetPayrollsByMonthQuery = {
+  payrollsByMonth: Array<{
+    id: string
+    driverId: string
+    driverFirstName?: string | null
+    driverLastName?: string | null
+    monthYear: string
+    baseSalaryRsd: number
+    perDiemTotalRsd: number
+    overtimeAmountRsd?: number | null
+    kmBonusRsd?: number | null
+    routeBonusRsd?: number | null
+    otherBonusRsd?: number | null
+    grossTotalRsd: number
+    totalDeductionsRsd: number
+    netSalaryRsd: number
+    status: string
+    totalRoutes?: number | null
+    totalKm?: number | null
+    totalDrivingHours?: number | null
+    daysOnRoad?: number | null
+    notes?: string | null
+    createdAt?: string | null
+  }>
+}
+
+export type GetPayrollSummaryQueryVariables = Exact<{
+  monthYear: Scalars['String']['input']
+}>
+
+export type GetPayrollSummaryQuery = {
+  payrollSummary: {
+    monthYear: string
+    driverCount: number
+    totalGrossRsd: number
+    totalNetRsd: number
+    totalDeductionsRsd: number
+    totalPerDiemRsd: number
+    totalRoutes: number
+    payrollsDraft: number
+    payrollsConfirmed: number
+    payrollsPaid: number
+  }
+}
+
+export type GetPayrollHistoryQueryVariables = Exact<{
+  driverId: Scalars['ID']['input']
+}>
+
+export type GetPayrollHistoryQuery = {
+  payrollHistory: Array<{
+    id: string
+    monthYear: string
+    baseSalaryRsd: number
+    grossTotalRsd: number
+    netSalaryRsd: number
+    status: string
+    totalRoutes?: number | null
+    totalKm?: number | null
+    daysOnRoad?: number | null
+    createdAt?: string | null
+  }>
+}
+
+export type GetDriverAdvancesQueryVariables = Exact<{
+  driverId: Scalars['ID']['input']
+  from: Scalars['Date']['input']
+  to: Scalars['Date']['input']
+}>
+
+export type GetDriverAdvancesQuery = {
+  driverAdvances: Array<{
+    id: string
+    driverId: string
+    driverName?: string | null
+    amountRsd: number
+    advanceDate: string
+    advanceType: string
+    description?: string | null
+    settled: boolean
+    payrollId?: string | null
+    createdAt?: string | null
+  }>
 }
 
 export type FuelConsumptionTrendQueryVariables = Exact<{
