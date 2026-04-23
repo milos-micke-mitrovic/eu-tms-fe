@@ -86,6 +86,11 @@
     "totalExpense": "Total Expense",
     "costPerKmValue": "Cost per km",
     "days": "days",
-    "utilization": "Utilization"
+    "utilization": "Utilization",
+    "invoiceCount": "Invoices",
+    "totalAmount": "Total",
+    "oldestDue": "Oldest",
+    "totalRevenue": "Total Revenue",
+    "driver": "Driver"
   }
 }

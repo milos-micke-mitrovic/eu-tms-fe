@@ -227,6 +227,7 @@ export function PayrollPage() {
               variant="outline"
               size="icon"
               onClick={() => setCurrentMonth((d) => subMonths(d, 1))}
+              aria-label={t('common:aria.previousMonth')}
             >
               <ChevronLeft className="size-4" />
             </Button>
@@ -237,6 +238,7 @@ export function PayrollPage() {
               variant="outline"
               size="icon"
               onClick={() => setCurrentMonth((d) => addMonths(d, 1))}
+              aria-label={t('common:aria.nextMonth')}
             >
               <ChevronRight className="size-4" />
             </Button>

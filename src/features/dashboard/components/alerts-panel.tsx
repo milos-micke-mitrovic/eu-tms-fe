@@ -80,12 +80,10 @@ export function AlertsPanel({
               >
                 <div className="flex items-center gap-2">
                   <span
-                    className="inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium"
-                    style={{
-                      backgroundColor:
-                        PERMIT_TYPE_STYLES[permit.permitType]?.bg,
-                      color: PERMIT_TYPE_STYLES[permit.permitType]?.text,
-                    }}
+                    className={cn(
+                      'inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium',
+                      PERMIT_TYPE_STYLES[permit.permitType]?.className
+                    )}
                   >
                     {permit.permitType}
                   </span>

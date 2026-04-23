@@ -5,6 +5,7 @@ import {
   useQueryClient,
 } from '@tanstack/react-query'
 import { useCallback } from 'react'
+import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 import { httpClient } from '@/shared/api/http-client'
 import { apolloClient } from '@/shared/api/apollo-client'
@@ -93,18 +94,20 @@ const REFETCH_QUERIES = ['GetPayrollsByMonth', 'GetPayrollSummary']
 
 // Salary config
 export function useCreateSalaryConfig() {
+  const { t } = useTranslation('payroll')
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: (data: DriverSalaryConfigRequest) =>
       httpClient.post<DriverSalaryConfig>('/payroll/salary-config', data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['salary-config'] })
-      toast.success('Konfiguracija sačuvana')
+      toast.success(t('toast.configSaved'))
     },
   })
 }
 
 export function useUpdateSalaryConfig() {
+  const { t } = useTranslation('payroll')
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: ({
@@ -117,25 +120,27 @@ export function useUpdateSalaryConfig() {
       httpClient.put<DriverSalaryConfig>(`/payroll/salary-config/${id}`, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['salary-config'] })
-      toast.success('Konfiguracija ažurirana')
+      toast.success(t('toast.configUpdated'))
     },
   })
 }
 
 export function useDeleteSalaryConfig() {
+  const { t } = useTranslation('payroll')
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: (id: number) =>
       httpClient.delete(`/payroll/salary-config/${id}`),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['salary-config'] })
-      toast.success('Konfiguracija obrisana')
+      toast.success(t('toast.configDeleted'))
     },
   })
 }
 
 // Advances
 export function useCreateAdvance() {
+  const { t } = useTranslation('payroll')
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: (data: DriverAdvanceRequest) =>
@@ -143,7 +148,7 @@ export function useCreateAdvance() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['advances'] })
       apolloClient.refetchQueries({ include: ['GetDriverAdvances'] })
-      toast.success('Akontacija sačuvana')
+      toast.success(t('toast.advanceSaved'))
     },
   })
 }
@@ -161,19 +166,21 @@ export function useUpdateAdvance() {
 }
 
 export function useDeleteAdvance() {
+  const { t } = useTranslation('payroll')
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: (id: number) => httpClient.delete(`/payroll/advances/${id}`),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['advances'] })
       apolloClient.refetchQueries({ include: ['GetDriverAdvances'] })
-      toast.success('Akontacija obrisana')
+      toast.success(t('toast.advanceDeleted'))
     },
   })
 }
 
 // Payroll operations
 export function useGeneratePayroll() {
+  const { t } = useTranslation('payroll')
   return useMutation({
     mutationFn: ({ driverId, month }: { driverId: number; month: string }) =>
       httpClient.post<Payroll>(
@@ -181,35 +188,38 @@ export function useGeneratePayroll() {
       ),
     onSuccess: () => {
       apolloClient.refetchQueries({ include: REFETCH_QUERIES })
-      toast.success('Obračun uspešno generisan')
+      toast.success(t('toast.generated'))
     },
   })
 }
 
 export function useGenerateAllPayrolls() {
+  const { t } = useTranslation('payroll')
   return useMutation({
     mutationFn: (month: string) =>
       httpClient.post<Payroll[]>(`/payroll/generate-all?month=${month}`),
     onSuccess: (data) => {
       apolloClient.refetchQueries({ include: REFETCH_QUERIES })
       const count = Array.isArray(data) ? data.length : 0
-      toast.success(`Generisano ${count} obračuna`)
+      toast.success(t('toast.generatedAll', { count }))
     },
   })
 }
 
 export function useRecalculatePayroll() {
+  const { t } = useTranslation('payroll')
   return useMutation({
     mutationFn: (id: number) =>
       httpClient.post<Payroll>(`/payroll/${id}/recalculate`),
     onSuccess: () => {
       apolloClient.refetchQueries({ include: REFETCH_QUERIES })
-      toast.success('Obračun preračunat')
+      toast.success(t('toast.recalculated'))
     },
   })
 }
 
 export function useAdjustPayroll() {
+  const { t } = useTranslation('payroll')
   return useMutation({
     mutationFn: ({
       id,
@@ -220,29 +230,31 @@ export function useAdjustPayroll() {
     }) => httpClient.put<Payroll>(`/payroll/${id}/adjust`, data),
     onSuccess: () => {
       apolloClient.refetchQueries({ include: REFETCH_QUERIES })
-      toast.success('Obračun prilagođen')
+      toast.success(t('toast.adjusted'))
     },
   })
 }
 
 export function useConfirmPayroll() {
+  const { t } = useTranslation('payroll')
   return useMutation({
     mutationFn: (id: number) =>
       httpClient.patch<Payroll>(`/payroll/${id}/confirm`),
     onSuccess: () => {
       apolloClient.refetchQueries({ include: REFETCH_QUERIES })
-      toast.success('Obračun potvrđen')
+      toast.success(t('toast.confirmed'))
     },
   })
 }
 
 export function useMarkPayrollPaid() {
+  const { t } = useTranslation('payroll')
   return useMutation({
     mutationFn: (id: number) =>
       httpClient.patch<Payroll>(`/payroll/${id}/paid`),
     onSuccess: () => {
       apolloClient.refetchQueries({ include: REFETCH_QUERIES })
-      toast.success('Obračun označen kao isplaćen')
+      toast.success(t('toast.markedPaid'))
     },
   })
 }

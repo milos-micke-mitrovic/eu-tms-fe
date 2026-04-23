@@ -1,13 +1,8 @@
 import { useTranslation } from 'react-i18next'
-import { Badge } from '@/shared/ui/badge'
+import { StatusBadge, type StatusConfig } from '@/shared/components'
 import type { RouteStatus } from '../types'
 
-type BadgeConfig = {
-  variant?: 'default' | 'secondary' | 'outline' | 'destructive'
-  color?: 'success' | 'warning' | 'destructive' | 'info' | 'muted'
-}
-
-const statusConfig: Record<RouteStatus, BadgeConfig> = {
+const statusConfig: Record<RouteStatus, StatusConfig> = {
   CREATED: { variant: 'outline' },
   DISPATCHED: { color: 'info' },
   IN_TRANSIT: { color: 'warning' },
@@ -19,27 +14,31 @@ const statusConfig: Record<RouteStatus, BadgeConfig> = {
 
 export function RouteStatusBadge({ status }: { status: RouteStatus }) {
   const { t } = useTranslation('spedition')
-  const config = statusConfig[status] ?? { variant: 'outline' as const }
   return (
-    <Badge variant={config.variant} color={config.color}>
-      {t(`routes.status.${status}`)}
-    </Badge>
+    <StatusBadge
+      status={status}
+      config={statusConfig}
+      label={t(`routes.status.${status}`)}
+    />
   )
 }
 
-const typeConfig: Record<string, BadgeConfig> = {
+const typeConfig: Record<string, StatusConfig> = {
   DOMESTIC: { color: 'info' },
   INTERNATIONAL: { color: 'success' },
 }
 
 export function RouteTypeBadge({ routeType }: { routeType: string }) {
   const { t } = useTranslation('spedition')
-  const config = typeConfig[routeType] ?? { variant: 'outline' as const }
   return (
-    <Badge variant={config.variant} color={config.color}>
-      {routeType === 'INTERNATIONAL'
-        ? t('routes.international')
-        : t('routes.domestic')}
-    </Badge>
+    <StatusBadge
+      status={routeType}
+      config={typeConfig}
+      label={
+        routeType === 'INTERNATIONAL'
+          ? t('routes.international')
+          : t('routes.domestic')
+      }
+    />
   )
 }

@@ -12,8 +12,12 @@ describe('Auth API', () => {
         password: process.env.TEST_ACCOUNTING_PASSWORD || 'demo123',
       }),
     })
-    // May be 200 or 429 if rate limited
-    if (res.status === 429) return // skip — rate limited
+    if (res.status === 429) {
+      console.warn(
+        'Auth login rate limited (429) — retrying would exceed limit'
+      )
+      return
+    }
     expect(res.status).toBe(200)
     const data = await res.json()
     expect(data.accessToken).toBeTruthy()

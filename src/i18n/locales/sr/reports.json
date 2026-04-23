@@ -86,6 +86,11 @@
     "totalExpense": "Ukupan trošak",
     "costPerKmValue": "Trošak po km",
     "days": "dana",
-    "utilization": "Iskorišćenost"
+    "utilization": "Iskorišćenost",
+    "invoiceCount": "Br. faktura",
+    "totalAmount": "Ukupno",
+    "oldestDue": "Najstarija",
+    "totalRevenue": "Ukupan prihod",
+    "driver": "Vozač"
   }
 }

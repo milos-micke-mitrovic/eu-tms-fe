@@ -27,6 +27,9 @@
     "payroll": "Plate",
     "collections": "Naplata"
   },
+  "notifications": {
+    "markAllRead": "Označi sve kao pročitano"
+  },
   "breadcrumbs": {
     "home": "Početna"
   }

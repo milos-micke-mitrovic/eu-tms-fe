@@ -10,5 +10,6 @@
   "dispense": "Dispense",
   "liters": "Liters",
   "pricePerLiter": "Price per Liter",
-  "odometer": "Odometer"
+  "odometer": "Odometer",
+  "vehicle": "Vehicle"
 }

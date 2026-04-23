@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { differenceInDays } from 'date-fns'
-import { FileText, Plus, Pencil } from 'lucide-react'
+import { FileText, Plus, Pencil, Download } from 'lucide-react'
 import {
   Sheet,
   SheetContent,
@@ -13,7 +13,7 @@ import { Badge } from '@/shared/ui/badge'
 import { Button } from '@/shared/ui/button'
 import { Separator } from '@/shared/ui/separator'
 import { BodySmall, Caption } from '@/shared/ui/typography'
-import { formatDate } from '@/shared/utils'
+import { formatDate, downloadDocument } from '@/shared/utils'
 import { useVehicle } from '../api/use-vehicles'
 import { DocumentUploadDialog } from './document-upload-dialog'
 
@@ -88,7 +88,18 @@ function DocumentList({
               </Caption>
             )}
           </div>
-          <DocumentExpiryBadge expirationDate={doc.expirationDate} />
+          <div className="flex items-center gap-2">
+            <Button
+              variant="ghost"
+              size="icon"
+              className="size-8"
+              aria-label={t('common:aria.downloadFile')}
+              onClick={() => downloadDocument('VEHICLE', Number(doc.id))}
+            >
+              <Download className="size-4" />
+            </Button>
+            <DocumentExpiryBadge expirationDate={doc.expirationDate} />
+          </div>
         </div>
       ))}
     </div>

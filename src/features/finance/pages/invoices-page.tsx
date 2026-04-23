@@ -89,8 +89,12 @@ export function InvoicesPage() {
   )
   const confirmDelete = async () => {
     if (deleteTarget) {
-      await deleteMutation.mutateAsync(deleteTarget.id)
-      setDeleteTarget(null)
+      try {
+        await deleteMutation.mutateAsync(deleteTarget.id)
+        setDeleteTarget(null)
+      } catch {
+        // global error handler shows toast
+      }
     }
   }
 
@@ -135,7 +139,7 @@ export function InvoicesPage() {
           <Caption className="text-muted-foreground">
             {t('invoices.statuses.PAID')}
           </Caption>
-          <H4 className="text-green-600">
+          <H4 className="text-green-600 dark:text-green-400">
             {formatCurrency(kpis.totalPaid, 'RSD')}
           </H4>
         </div>
@@ -148,7 +152,11 @@ export function InvoicesPage() {
           <Caption className="text-muted-foreground">
             {t('invoices.statuses.OVERDUE')}
           </Caption>
-          <H4 className={cn(kpis.overdueCount > 0 && 'text-red-600')}>
+          <H4
+            className={cn(
+              kpis.overdueCount > 0 && 'text-red-600 dark:text-red-400'
+            )}
+          >
             {kpis.overdueCount}
           </H4>
         </div>

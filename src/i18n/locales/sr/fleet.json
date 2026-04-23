@@ -102,6 +102,7 @@
     "expiry": "Rok važenja",
     "notes": "Napomena",
     "noDocuments": "Nema dokumenata",
+    "allowedFormats": "PDF, DOC, DOCX, JPG, PNG, XLSX (max 10 MB)",
     "vehicleTypes": {
       "REGISTRATION": "Registracija",
       "INSURANCE": "Osiguranje",

@@ -1,14 +1,12 @@
 import { describe, it, expect } from 'vitest'
 import { rest, graphql } from './helpers'
+import { assertRestSuccess, assertGraphqlSuccess } from './assert-helpers'
 
 describe('Exchange Rates API', () => {
   it('REST — get exchange rates', async () => {
-    const { status, data } = await rest(
-      'GET',
-      '/exchange-rates?date=2026-04-10'
-    )
-    expect(status).toBe(200)
-    expect(Array.isArray(data)).toBe(true)
+    const result = await rest('GET', '/exchange-rates?date=2026-04-10')
+    assertRestSuccess(result, [200], 'get exchange rates')
+    expect(Array.isArray(result.data)).toBe(true)
   })
 
   it('GraphQL — exchange rates', async () => {
@@ -21,33 +19,33 @@ describe('Exchange Rates API', () => {
         }
       }
     `)
+    assertGraphqlSuccess(res, 'exchangeRates')
     expect(Array.isArray(res.data.exchangeRates)).toBe(true)
   })
 
-  it('REST — convert currency', async () => {
-    const { status } = await rest('POST', '/exchange-rates/convert', {
+  it.skip('REST — convert currency (BE BUG: convertedAmount returns null — NBS rates not loaded)', async () => {
+    const result = await rest('POST', '/exchange-rates/convert', {
       amount: 100,
       fromCurrency: 'EUR',
       toCurrency: 'RSD',
     })
-    expect([200, 400, 500]).toContain(status)
-    if (status !== 200) console.warn(`Exchange rate convert returned ${status}`)
+    assertRestSuccess(result, [200], 'convert currency')
   })
 
   it('REST — manual rate entry (ADMIN)', async () => {
-    const { status } = await rest('POST', '/exchange-rates/manual', {
+    const result = await rest('POST', '/exchange-rates/manual', {
       currencyCode: 'CHF',
       rateToRsd: 120.5,
       rateDate: '2026-04-17',
     })
     // 201 = success, 403 = not admin role
-    expect([201, 403]).toContain(status)
+    assertRestSuccess(result, [201, 403], 'manual rate entry')
   })
 
   it('REST — fetch NBS rates (ADMIN)', async () => {
-    const { status } = await rest('POST', '/exchange-rates/fetch')
-    // 200 = success, 403 = not admin, 500 = NBS service down
-    expect([200, 403, 500]).toContain(status)
+    const result = await rest('POST', '/exchange-rates/fetch')
+    // 200 = success, 403 = not admin
+    assertRestSuccess(result, [200, 403], 'fetch NBS rates')
   })
 })
 
@@ -63,23 +61,20 @@ describe('Per Diem API', () => {
         }
       }
     `)
+    assertGraphqlSuccess(res, 'perDiemRates')
     expect(Array.isArray(res.data.perDiemRates)).toBe(true)
   })
 
-  it('REST — calculate per diem', async () => {
-    const { status } = await rest('POST', '/per-diem/calculate', { routeId: 1 })
-    expect([200, 500]).toContain(status)
-    if (status === 500)
-      console.warn('BE BUG: POST /api/per-diem/calculate returns 500')
+  it.skip('REST — calculate per diem (BE BUG: POST /api/per-diem/calculate returns 500)', async () => {
+    const result = await rest('POST', '/per-diem/calculate', { routeId: 1 })
+    assertRestSuccess(result, [200], 'calculate per diem')
   })
 
-  it('REST — calculate and save per diem', async () => {
-    const { status } = await rest('POST', '/per-diem/calculate-and-save', {
+  it.skip('REST — calculate and save per diem (BE BUG: POST /api/per-diem/calculate-and-save returns 500)', async () => {
+    const result = await rest('POST', '/per-diem/calculate-and-save', {
       routeId: 1,
     })
-    expect([200, 500]).toContain(status)
-    if (status === 500)
-      console.warn('BE BUG: POST /api/per-diem/calculate-and-save returns 500')
+    assertRestSuccess(result, [200], 'calculate and save per diem')
   })
 })
 
@@ -100,6 +95,7 @@ describe('Invoices API', () => {
         }
       }
     `)
+    assertGraphqlSuccess(res, 'invoices list')
     expect(res.data.invoices).toBeTruthy()
     expect(res.data.invoices.totalElements).toBeGreaterThanOrEqual(0)
   })
@@ -114,6 +110,7 @@ describe('Invoices API', () => {
         }
       }
     `)
+    assertGraphqlSuccess(res, 'invoices sorted')
     expect(res.data.invoices).toBeTruthy()
   })
 
@@ -127,9 +124,10 @@ describe('Invoices API', () => {
         }
       }
     `)
+    assertGraphqlSuccess(partners, 'partners for invoice create')
     const partnerId = Number(partners.data.partners.content[0].id)
 
-    const { status, data } = await rest('POST', '/invoices', {
+    const createResult = await rest('POST', '/invoices', {
       partnerId,
       invoiceDate: '2026-04-10',
       dueDate: '2026-05-10',
@@ -144,13 +142,13 @@ describe('Invoices API', () => {
         },
       ],
     })
-    expect(status).toBe(201)
-    expect(data.invoiceNumber).toBeTruthy()
-    testInvoiceId = String(data.id)
+    assertRestSuccess(createResult, [201], 'create invoice')
+    expect(createResult.data.invoiceNumber).toBeTruthy()
+    testInvoiceId = String(createResult.data.id)
   })
 
   it('GraphQL — get invoice detail with items', async () => {
-    if (!testInvoiceId) return
+    expect(testInvoiceId).toBeTruthy()
     const res = await graphql(
       `
         query ($id: ID!) {
@@ -179,46 +177,41 @@ describe('Invoices API', () => {
       `,
       { id: testInvoiceId }
     )
+    assertGraphqlSuccess(res, 'invoice detail')
     expect(res.data.invoice).toBeTruthy()
     expect(res.data.invoice.items.length).toBeGreaterThan(0)
     expect(res.data.invoice.total).toBeGreaterThan(0)
   })
 
   it('REST — update invoice status', async () => {
-    if (!testInvoiceId) return
-    const { status } = await rest(
-      'PATCH',
-      `/invoices/${testInvoiceId}/status`,
-      {
-        newStatus: 'PAID',
-      }
-    )
-    expect([200, 400, 403]).toContain(status)
+    expect(testInvoiceId).toBeTruthy()
+    const result = await rest('PATCH', `/invoices/${testInvoiceId}/status`, {
+      newStatus: 'PAID',
+    })
+    assertRestSuccess(result, [200, 400, 403], 'update invoice status')
   })
 
-  it('REST — download invoice PDF', async () => {
-    if (!testInvoiceId) return
-    const { status } = await rest('GET', `/invoices/${testInvoiceId}/pdf`)
-    expect([200, 400]).toContain(status)
-    if (status === 400)
-      console.warn('BE BUG: Invoice PDF generation fails — missing font')
+  it.skip('REST — download invoice PDF (BE BUG: missing font file)', async () => {
+    expect(testInvoiceId).toBeTruthy()
+    const result = await rest('GET', `/invoices/${testInvoiceId}/pdf`)
+    assertRestSuccess(result, [200], 'download invoice PDF')
   })
 
   it('REST — download invoice XML', async () => {
-    if (!testInvoiceId) return
-    const { status } = await rest('GET', `/invoices/${testInvoiceId}/xml`)
-    expect([200, 400, 404]).toContain(status)
+    expect(testInvoiceId).toBeTruthy()
+    const result = await rest('GET', `/invoices/${testInvoiceId}/xml`)
+    assertRestSuccess(result, [200, 404], 'download invoice XML')
   })
 
   it('REST — delete invoice', async () => {
-    if (!testInvoiceId) return
-    const { status } = await rest('DELETE', `/invoices/${testInvoiceId}`)
-    expect([204, 403]).toContain(status)
+    expect(testInvoiceId).toBeTruthy()
+    const result = await rest('DELETE', `/invoices/${testInvoiceId}`)
+    assertRestSuccess(result, [204, 403], 'delete invoice')
   })
 })
 
 describe('Document Upload API', () => {
-  it('POST /vehicles/{id}/documents returns 201 or upload error', async () => {
+  it('POST /vehicles/{id}/documents returns 400 without required fields', async () => {
     const vehicles = await graphql(`
       {
         vehicles(page: 0, size: 1) {
@@ -228,18 +221,13 @@ describe('Document Upload API', () => {
         }
       }
     `)
+    assertGraphqlSuccess(vehicles, 'vehicles for doc upload')
     const vehicleId = vehicles.data.vehicles.content[0]?.id
-    if (!vehicleId) return
+    expect(vehicleId).toBeTruthy()
 
-    // We can't easily test multipart upload from here without a real file,
-    // but we can verify the endpoint exists and check for the known Docker bug
-    const { status } = await rest('POST', `/vehicles/${vehicleId}/documents`)
-    // 400 = missing file (expected), 500 = Docker uploads dir missing (BE bug)
-    expect([400, 201, 500]).toContain(status)
-    if (status === 500)
-      console.warn(
-        'BE BUG: Document upload fails — missing /app/uploads directory in Docker'
-      )
+    const result = await rest('POST', `/vehicles/${vehicleId}/documents`, {})
+    // 400 = missing required fields (tempFileName, documentType, originalFileName)
+    assertRestSuccess(result, [400], 'upload document without required fields')
   })
 })
 
@@ -259,16 +247,17 @@ describe('Vehicle UPDATE (was bug)', () => {
         }
       }
     `)
+    assertGraphqlSuccess(vehicles, 'vehicles for update')
     const v = vehicles.data.vehicles.content[0]
 
-    const { status } = await rest('PUT', `/vehicles/${v.id}`, {
+    const result = await rest('PUT', `/vehicles/${v.id}`, {
       regNumber: v.regNumber,
       make: v.make,
       model: v.model,
       vehicleType: v.vehicleType,
       fuelType: v.fuelType,
     })
-    expect(status).toBe(200)
+    assertRestSuccess(result, [200], 'update vehicle')
   })
 })
 
@@ -285,6 +274,7 @@ describe('Expiring Documents (was bug)', () => {
         }
       }
     `)
+    assertGraphqlSuccess(res, 'expiringDocuments')
     expect(res.data).toBeTruthy()
     expect(Array.isArray(res.data.expiringDocuments)).toBe(true)
   })

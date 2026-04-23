@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import { rest, graphql } from './helpers'
+import { assertRestSuccess, assertGraphqlSuccess } from './assert-helpers'
 
 describe('Vehicles API', () => {
   it('GraphQL — list vehicles with pagination', async () => {
@@ -18,6 +19,7 @@ describe('Vehicles API', () => {
         }
       }
     `)
+    assertGraphqlSuccess(res, 'vehicles list')
     expect(res.data.vehicles.content.length).toBeGreaterThan(0)
     expect(res.data.vehicles.totalElements).toBeGreaterThan(0)
     const v = res.data.vehicles.content[0]
@@ -36,6 +38,7 @@ describe('Vehicles API', () => {
         }
       }
     `)
+    assertGraphqlSuccess(res, 'vehicles sorted')
     const makes = res.data.vehicles.content.map((v: { make: string }) => v.make)
     expect(makes).toEqual([...makes].sort())
   })
@@ -50,6 +53,7 @@ describe('Vehicles API', () => {
         }
       }
     `)
+    assertGraphqlSuccess(listRes, 'vehicles list for detail')
     const id = listRes.data.vehicles.content[0].id
 
     const res = await graphql(
@@ -82,6 +86,7 @@ describe('Vehicles API', () => {
       `,
       { id }
     )
+    assertGraphqlSuccess(res, 'vehicle detail')
     expect(res.data.vehicle).toBeTruthy()
     expect(res.data.vehicle.regNumber).toBeTruthy()
     expect(Array.isArray(res.data.vehicle.documents)).toBe(true)
@@ -89,40 +94,36 @@ describe('Vehicles API', () => {
 
   it('REST — CRUD vehicle', async () => {
     // Create
-    const { status: createStatus, data: created } = await rest(
-      'POST',
-      '/vehicles',
-      {
-        regNumber: `TEST-V-${Date.now()}`,
-        make: 'Test',
-        model: 'T1',
-        vehicleType: 'TRUCK',
-        fuelType: 'DIESEL',
-      }
-    )
-    expect(createStatus).toBe(201)
-    expect(created.id).toBeTruthy()
+    const createResult = await rest('POST', '/vehicles', {
+      regNumber: `TV-${Date.now().toString(36)}`,
+      make: 'Test',
+      model: 'T1',
+      vehicleType: 'TRUCK',
+      fuelType: 'DIESEL',
+    })
+    assertRestSuccess(createResult, [201], 'create vehicle')
+    expect(createResult.data.id).toBeTruthy()
 
     // Update
-    const { status: updateStatus } = await rest(
+    const updateResult = await rest(
       'PUT',
-      `/vehicles/${created.id}`,
+      `/vehicles/${createResult.data.id}`,
       {
-        regNumber: `TEST-V-${Date.now()}-U`,
+        regNumber: `TU-${Date.now().toString(36)}`,
         make: 'Test',
         model: 'T2',
         vehicleType: 'TRUCK',
         fuelType: 'DIESEL',
       }
     )
-    expect([200, 400, 500]).toContain(updateStatus)
+    assertRestSuccess(updateResult, [200], 'update vehicle')
 
     // Delete
-    const { status: deleteStatus } = await rest(
+    const deleteResult = await rest(
       'DELETE',
-      `/vehicles/${created.id}`
+      `/vehicles/${createResult.data.id}`
     )
-    expect(deleteStatus).toBe(204)
+    assertRestSuccess(deleteResult, [204], 'delete vehicle')
   })
 })
 
@@ -141,20 +142,24 @@ describe('Drivers API', () => {
         }
       }
     `)
+    assertGraphqlSuccess(res, 'drivers list')
     expect(res.data.drivers.content.length).toBeGreaterThan(0)
     expect(res.data.drivers.content[0].firstName).toBeTruthy()
   })
 
   it('REST — CRUD driver', async () => {
-    const { status, data } = await rest('POST', '/drivers', {
+    const createResult = await rest('POST', '/drivers', {
       firstName: 'Test',
       lastName: 'Driver',
     })
-    expect(status).toBe(201)
-    expect(data.id).toBeTruthy()
+    assertRestSuccess(createResult, [201], 'create driver')
+    expect(createResult.data.id).toBeTruthy()
 
-    const { status: delStatus } = await rest('DELETE', `/drivers/${data.id}`)
-    expect(delStatus).toBe(204)
+    const deleteResult = await rest(
+      'DELETE',
+      `/drivers/${createResult.data.id}`
+    )
+    assertRestSuccess(deleteResult, [204], 'delete driver')
   })
 })
 
@@ -173,18 +178,22 @@ describe('Trailers API', () => {
         }
       }
     `)
+    assertGraphqlSuccess(res, 'trailers list')
     expect(res.data.trailers.content.length).toBeGreaterThan(0)
   })
 
   it('REST — CRUD trailer', async () => {
-    const { status, data } = await rest('POST', '/trailers', {
-      regNumber: `TEST-TR-${Date.now()}`,
+    const createResult = await rest('POST', '/trailers', {
+      regNumber: `TR-${Date.now().toString(36)}`,
       type: 'CURTAIN',
     })
-    expect([201, 400, 429, 500]).toContain(status)
-    if (status !== 201) return // validation error, rate limited, or server issue
+    assertRestSuccess(createResult, [201], 'create trailer')
+    expect(createResult.data.id).toBeTruthy()
 
-    const { status: delStatus } = await rest('DELETE', `/trailers/${data.id}`)
-    expect(delStatus).toBe(204)
+    const deleteResult = await rest(
+      'DELETE',
+      `/trailers/${createResult.data.id}`
+    )
+    assertRestSuccess(deleteResult, [204], 'delete trailer')
   })
 })

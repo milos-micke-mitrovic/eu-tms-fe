@@ -28,7 +28,8 @@
     "transport": "Transport",
     "trailer": "Prikolica",
     "inRsd": "U dinarima (RSD)",
-    "addFirst": "Dodajte prvu stavku"
+    "addFirst": "Dodajte prvu stavku",
+    "retry": "Pokušaj ponovo"
   },
   "yes": "Da",
   "no": "Ne",
@@ -98,7 +99,11 @@
     "VALIDATION_ERROR": "Podaci nisu ispravni. Proverite unos.",
     "TACHOGRAPH_ENTRY_DUPLICATE": "Unos za ovog vozača na ovaj datum već postoji.",
     "DDD_PARSE_ERROR": "Greška pri čitanju DDD fajla.",
-    "INVALID_FILE_TYPE": "Nepodržan format fajla."
+    "INVALID_FILE_TYPE": "Nepodržan format fajla.",
+    "CONTENT_TYPE_MISMATCH": "Sadržaj fajla ne odgovara ekstenziji fajla.",
+    "VIRUS_DETECTED": "Fajl je označen kao potencijalno opasan.",
+    "MAX_UPLOAD_SIZE_EXCEEDED": "Fajl prelazi maksimalnu dozvoljenu veličinu (10 MB).",
+    "MISSING_REQUEST_PART": "Fajl nije priložen."
   },
   "success": {
     "saved": "Uspešno sačuvano",
@@ -191,6 +196,28 @@
     "title": "Bočni meni",
     "description": "Prikazuje bočni meni.",
     "toggle": "Prikaži/sakrij meni"
+  },
+  "aria": {
+    "expand": "Proširi grafikon",
+    "collapse": "Smanji grafikon",
+    "openMenu": "Otvori meni",
+    "deleteItem": "Obriši stavku",
+    "editItem": "Izmeni stavku",
+    "closePanel": "Zatvori panel",
+    "previousMonth": "Prethodni mesec",
+    "nextMonth": "Sledeći mesec",
+    "previousWeek": "Prethodna nedelja",
+    "nextWeek": "Sledeća nedelja",
+    "toggleTheme": "Promeni temu",
+    "selectLanguage": "Izaberite jezik",
+    "notifications": "Obaveštenja",
+    "downloadFile": "Preuzmi fajl",
+    "removeFile": "Ukloni fajl",
+    "removeDocument": "Ukloni dokument",
+    "sendReminder": "Pošalji podsetnik",
+    "recordPayment": "Evidentiraj uplatu",
+    "deletePayment": "Obriši uplatu",
+    "expandDetails": "Proširi detalje"
   },
   "unsavedChanges": {
     "title": "Nesačuvane promene",

@@ -16,6 +16,7 @@ export function decodeJwt(token: string): JwtPayload | null {
     const payload = atob(base64Payload)
     return JSON.parse(payload)
   } catch {
+    // global error handler shows toast
     return null
   }
 }

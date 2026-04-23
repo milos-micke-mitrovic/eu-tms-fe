@@ -8,7 +8,7 @@ import {
 } from '@/shared/ui/overlay/sheet'
 import { Badge } from '@/shared/ui/badge'
 import { Button } from '@/shared/ui/button'
-import { BodySmall, Caption } from '@/shared/ui/typography'
+import { InfoRow } from '@/shared/components'
 import type { PartnerListItem, PartnerType } from '../types'
 
 type PartnerDetailSheetProps = {
@@ -28,15 +28,6 @@ const typeConfig: Record<
   CLIENT: { color: 'info' },
   SUPPLIER: { color: 'warning' },
   BOTH: { color: 'success' },
-}
-
-function InfoRow({ label, value }: { label: string; value: React.ReactNode }) {
-  return (
-    <div className="flex justify-between py-1.5">
-      <Caption className="text-muted-foreground">{label}</Caption>
-      <BodySmall>{value ?? '—'}</BodySmall>
-    </div>
-  )
 }
 
 export function PartnerDetailSheet({

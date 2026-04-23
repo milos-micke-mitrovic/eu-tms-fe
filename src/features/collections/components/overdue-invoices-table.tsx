@@ -161,7 +161,7 @@ export function OverdueInvoicesTable() {
               variant="ghost"
               size="icon"
               className="size-7"
-              title={t('actions.recordPayment')}
+              aria-label={t('actions.recordPayment')}
               onClick={(e) => {
                 e.stopPropagation()
                 setSelectedInvoice(row.original)
@@ -174,7 +174,7 @@ export function OverdueInvoicesTable() {
               variant="ghost"
               size="icon"
               className="size-7"
-              title={t('actions.sendReminder')}
+              aria-label={t('actions.sendReminder')}
               onClick={(e) => {
                 e.stopPropagation()
                 setSelectedInvoice(row.original)

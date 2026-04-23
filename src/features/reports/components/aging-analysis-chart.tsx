@@ -74,14 +74,14 @@ export function AgingAnalysisChart() {
                 return (
                   <div className="bg-popover rounded-md border p-3 text-sm shadow-md">
                     <p className="mb-1 font-semibold">
-                      {item.bucket} {t('stats.days', { defaultValue: 'dana' })}
+                      {item.bucket} {t('stats.days')}
                     </p>
                     <p>
-                      {t('stats.invoiceCount', { defaultValue: 'Faktura' })}:{' '}
+                      {t('stats.invoiceCount')}:{' '}
                       <span className="font-medium">{item.invoiceCount}</span>
                     </p>
                     <p>
-                      {t('stats.totalAmount', { defaultValue: 'Ukupno' })}:{' '}
+                      {t('stats.totalAmount')}:{' '}
                       <span className="font-medium">
                         {formatCurrency(item.totalAmount, 'RSD')}
                       </span>

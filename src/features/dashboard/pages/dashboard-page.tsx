@@ -29,7 +29,7 @@ export function DashboardPage() {
             className="bg-primary text-primary-foreground hover:bg-primary/90 inline-flex items-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition-colors"
           >
             <RefreshCw className="size-4" />
-            {t('common:actions.retry', { defaultValue: 'Pokušaj ponovo' })}
+            {t('common:actions.retry')}
           </button>
         </div>
       </div>

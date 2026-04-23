@@ -76,8 +76,12 @@ export function PartnersPage() {
   )
   const confirmDelete = async () => {
     if (deleteTarget) {
-      await deleteMutation.mutateAsync(deleteTarget.id)
-      setDeleteTarget(null)
+      try {
+        await deleteMutation.mutateAsync(deleteTarget.id)
+        setDeleteTarget(null)
+      } catch {
+        // global error handler shows toast
+      }
     }
   }
 

@@ -38,9 +38,13 @@ export function CmrSection({ routeId }: CmrSectionProps) {
   const [language, setLanguage] = useState('SR')
 
   const handleGenerate = async () => {
-    await generateMutation.mutateAsync({ routeId, language })
-    queryClient.invalidateQueries({ queryKey: ['cmr', 'byRoute', routeId] })
-    setDialogOpen(false)
+    try {
+      await generateMutation.mutateAsync({ routeId, language })
+      queryClient.invalidateQueries({ queryKey: ['cmr', 'byRoute', routeId] })
+      setDialogOpen(false)
+    } catch {
+      // global error handler shows toast
+    }
   }
 
   if (isLoading) {

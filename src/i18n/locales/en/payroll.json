@@ -133,5 +133,18 @@
     "deleteTitle": "Delete",
     "deleteDescription": "Are you sure you want to delete this? This action cannot be undone."
   },
-  "selectDriver": "Select driver"
+  "selectDriver": "Select driver",
+  "toast": {
+    "configSaved": "Configuration saved",
+    "configUpdated": "Configuration updated",
+    "configDeleted": "Configuration deleted",
+    "advanceSaved": "Advance saved",
+    "advanceDeleted": "Advance deleted",
+    "generated": "Payroll generated successfully",
+    "generatedAll": "Generated {{count}} payrolls",
+    "recalculated": "Payroll recalculated",
+    "adjusted": "Payroll adjusted",
+    "confirmed": "Payroll confirmed",
+    "markedPaid": "Payroll marked as paid"
+  }
 }

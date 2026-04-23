@@ -270,6 +270,7 @@ export function TachographPage() {
                   size="icon"
                   className="size-9"
                   onClick={() => setWeekDate(subWeeks(weekDate, 1))}
+                  aria-label={t('common:aria.previousWeek')}
                 >
                   <ChevronLeft className="size-4" />
                 </Button>
@@ -290,6 +291,7 @@ export function TachographPage() {
                   size="icon"
                   className="size-9"
                   onClick={() => setWeekDate(addWeeks(weekDate, 1))}
+                  aria-label={t('common:aria.nextWeek')}
                 >
                   <ChevronRight className="size-4" />
                 </Button>

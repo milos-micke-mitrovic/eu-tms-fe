@@ -113,8 +113,12 @@ export function PermitsPage() {
 
   const confirmDelete = async () => {
     if (deleteTarget) {
-      await deleteMutation.mutateAsync(deleteTarget.id)
-      setDeleteTarget(null)
+      try {
+        await deleteMutation.mutateAsync(deleteTarget.id)
+        setDeleteTarget(null)
+      } catch {
+        // global error handler shows toast
+      }
     }
   }
 
@@ -124,14 +128,22 @@ export function PermitsPage() {
 
   const handleRelease = useCallback(
     async (permit: Permit) => {
-      await releaseMutation.mutateAsync(permit.id)
+      try {
+        await releaseMutation.mutateAsync(permit.id)
+      } catch {
+        // global error handler shows toast
+      }
     },
     [releaseMutation]
   )
 
   const handleMarkUsed = useCallback(
     async (permit: Permit) => {
-      await markUsedMutation.mutateAsync(permit.id)
+      try {
+        await markUsedMutation.mutateAsync(permit.id)
+      } catch {
+        // global error handler shows toast
+      }
     },
     [markUsedMutation]
   )
@@ -165,7 +177,7 @@ export function PermitsPage() {
       {/* Summary cards */}
       <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
         <div className="flex items-center gap-3 rounded-lg border p-4">
-          <div className="flex size-10 items-center justify-center rounded-full bg-emerald-500/10 text-emerald-600">
+          <div className="flex size-10 items-center justify-center rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400">
             <CheckCircle2 className="size-5" />
           </div>
           <div>
@@ -176,7 +188,7 @@ export function PermitsPage() {
           </div>
         </div>
         <div className="flex items-center gap-3 rounded-lg border p-4">
-          <div className="flex size-10 items-center justify-center rounded-full bg-blue-500/10 text-blue-600">
+          <div className="flex size-10 items-center justify-center rounded-full bg-blue-500/10 text-blue-600 dark:text-blue-400">
             <ShieldCheck className="size-5" />
           </div>
           <div>
@@ -187,7 +199,7 @@ export function PermitsPage() {
           </div>
         </div>
         <div className="flex items-center gap-3 rounded-lg border p-4">
-          <div className="flex size-10 items-center justify-center rounded-full bg-amber-500/10 text-amber-600">
+          <div className="flex size-10 items-center justify-center rounded-full bg-amber-500/10 text-amber-600 dark:text-amber-400">
             <Clock className="size-5" />
           </div>
           <div>
@@ -198,7 +210,7 @@ export function PermitsPage() {
           </div>
         </div>
         <div className="flex items-center gap-3 rounded-lg border p-4">
-          <div className="flex size-10 items-center justify-center rounded-full bg-red-500/10 text-red-600">
+          <div className="flex size-10 items-center justify-center rounded-full bg-red-500/10 text-red-600 dark:text-red-400">
             <AlertTriangle className="size-5" />
           </div>
           <div>

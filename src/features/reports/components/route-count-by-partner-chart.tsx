@@ -90,14 +90,11 @@ export function RouteCountByPartnerChart({
                   <div className="bg-popover rounded-md border p-3 text-sm shadow-md">
                     <p className="mb-1 font-semibold">{item.partnerName}</p>
                     <p>
-                      {t('stats.routeCount', { defaultValue: 'Br. tura' })}:{' '}
+                      {t('stats.routeCount')}:{' '}
                       <span className="font-medium">{item.routeCount}</span>
                     </p>
                     <p>
-                      {t('stats.totalRevenue', {
-                        defaultValue: 'Ukupan prihod',
-                      })}
-                      :{' '}
+                      {t('stats.totalRevenue')}:{' '}
                       <span className="font-medium">
                         {formatCurrency(item.totalRevenue, 'RSD')}
                       </span>
@@ -110,7 +107,7 @@ export function RouteCountByPartnerChart({
             <Bar
               yAxisId="left"
               dataKey="routeCount"
-              name={t('stats.routeCount', { defaultValue: 'Br. tura' })}
+              name={t('stats.routeCount')}
               fill="#3B82F6"
               radius={[4, 4, 0, 0]}
               maxBarSize={40}
@@ -119,7 +116,7 @@ export function RouteCountByPartnerChart({
               yAxisId="right"
               type="monotone"
               dataKey="totalRevenue"
-              name={t('stats.totalRevenue', { defaultValue: 'Ukupan prihod' })}
+              name={t('stats.totalRevenue')}
               stroke="#10B981"
               strokeWidth={2}
               dot={{ r: 4 }}

@@ -4,6 +4,7 @@ import {
   useMutation,
   useQueryClient,
 } from '@tanstack/react-query'
+import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 import { httpClient } from '@/shared/api/http-client'
 import { apolloClient } from '@/shared/api/apollo-client'
@@ -80,39 +81,43 @@ const REFETCH_QUERIES = [
 ]
 
 export function useRecordPayment() {
+  const { t } = useTranslation('collections')
   return useMutation({
     mutationFn: (data: InvoicePaymentRequest) =>
       httpClient.post<InvoicePayment>('/collections/payments', data),
     onSuccess: () => {
       apolloClient.refetchQueries({ include: REFETCH_QUERIES })
-      toast.success('Uplata zabeležena')
+      toast.success(t('toast.paymentRecorded'))
     },
   })
 }
 
 export function useUpdatePayment() {
+  const { t } = useTranslation('collections')
   return useMutation({
     mutationFn: ({ id, data }: { id: number; data: InvoicePaymentRequest }) =>
       httpClient.put<InvoicePayment>(`/collections/payments/${id}`, data),
     onSuccess: () => {
       apolloClient.refetchQueries({ include: REFETCH_QUERIES })
-      toast.success('Uplata ažurirana')
+      toast.success(t('toast.paymentUpdated'))
     },
   })
 }
 
 export function useDeletePayment() {
+  const { t } = useTranslation('collections')
   return useMutation({
     mutationFn: (id: number) =>
       httpClient.delete(`/collections/payments/${id}`),
     onSuccess: () => {
       apolloClient.refetchQueries({ include: REFETCH_QUERIES })
-      toast.success('Uplata obrisana')
+      toast.success(t('toast.paymentDeleted'))
     },
   })
 }
 
 export function useSendReminder() {
+  const { t } = useTranslation('collections')
   return useMutation({
     mutationFn: (data: SendReminderRequest) =>
       httpClient.post('/collections/reminders', data),
@@ -125,42 +130,45 @@ export function useSendReminder() {
           'GetPartnerReminders',
         ],
       })
-      toast.success('Opomena poslata')
+      toast.success(t('toast.reminderSent'))
     },
   })
 }
 
 export function useCreateRule() {
+  const { t } = useTranslation('collections')
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: (data: CollectionRuleRequest) =>
       httpClient.post<CollectionRule>('/collections/rules', data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['collection-rules'] })
-      toast.success('Pravilo kreirano')
+      toast.success(t('toast.ruleCreated'))
     },
   })
 }
 
 export function useUpdateRule() {
+  const { t } = useTranslation('collections')
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: ({ id, data }: { id: number; data: CollectionRuleRequest }) =>
       httpClient.put<CollectionRule>(`/collections/rules/${id}`, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['collection-rules'] })
-      toast.success('Pravilo ažurirano')
+      toast.success(t('toast.ruleUpdated'))
     },
   })
 }
 
 export function useDeleteRule() {
+  const { t } = useTranslation('collections')
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: (id: number) => httpClient.delete(`/collections/rules/${id}`),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['collection-rules'] })
-      toast.success('Pravilo obrisano')
+      toast.success(t('toast.ruleDeleted'))
     },
   })
 }

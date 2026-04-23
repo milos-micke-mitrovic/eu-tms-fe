@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import { rest } from './helpers'
+import { assertRestSuccess } from './assert-helpers'
 
 const API = process.env.TEST_API_URL || 'http://localhost:8080/api'
 let saToken: string | null = null
@@ -50,20 +51,20 @@ async function saRest(method: string, path: string, body?: unknown) {
 
 describe('Tenants API (SUPER_ADMIN)', () => {
   it('GET /tenants — list tenants', async () => {
-    const { status, data } = await saRest('GET', '/tenants')
-    expect(status).toBe(200)
-    expect(Array.isArray(data)).toBe(true)
-    expect(data.length).toBeGreaterThan(0)
-    expect(data[0]).toHaveProperty('id')
-    expect(data[0]).toHaveProperty('subdomain')
-    expect(data[0]).toHaveProperty('name')
-    expect(data[0]).toHaveProperty('active')
+    const result = await saRest('GET', '/tenants')
+    assertRestSuccess(result!, [200], 'list tenants')
+    expect(Array.isArray(result!.data)).toBe(true)
+    expect(result!.data.length).toBeGreaterThan(0)
+    expect(result!.data[0]).toHaveProperty('id')
+    expect(result!.data[0]).toHaveProperty('subdomain')
+    expect(result!.data[0]).toHaveProperty('name')
+    expect(result!.data[0]).toHaveProperty('active')
   })
 
   it('GET /tenants/active — active only', async () => {
-    const { status, data } = await saRest('GET', '/tenants/active')
-    expect(status).toBe(200)
-    for (const t of data) {
+    const result = await saRest('GET', '/tenants/active')
+    assertRestSuccess(result!, [200], 'list active tenants')
+    for (const t of result!.data) {
       expect(t.active).toBe(true)
     }
   })
@@ -72,87 +73,77 @@ describe('Tenants API (SUPER_ADMIN)', () => {
     const slug = `t${Date.now()}${Math.random().toString(36).slice(2, 5)}`
 
     // Create tenant
-    const { status: createStatus, data: created } = await saRest(
-      'POST',
-      '/tenants',
-      { subdomain: slug, name: `Test Firma ${slug}`, active: true }
-    )
-    expect(createStatus).toBe(201)
-    expect(created.id).toBeTruthy()
+    const createResult = await saRest('POST', '/tenants', {
+      subdomain: slug,
+      name: `Test Firma ${slug}`,
+      active: true,
+    })
+    assertRestSuccess(createResult!, [201], 'create tenant')
+    expect(createResult!.data.id).toBeTruthy()
 
-    const tenantId = created.id
+    const tenantId = createResult!.data.id
 
     // Create company
-    const { status: companyStatus, data: company } = await saRest(
+    const companyResult = await saRest(
       'POST',
       `/tenants/${tenantId}/companies`,
-      { name: `Firma ${slug}`, pib: '100000008' }
+      {
+        name: `Firma ${slug}`,
+        pib: '100000008',
+      }
     )
-    expect(companyStatus).toBe(201)
-    expect(company).toHaveProperty('id')
-    expect(company.name).toBe(`Firma ${slug}`)
+    assertRestSuccess(companyResult!, [201], 'create company')
+    expect(companyResult!.data).toHaveProperty('id')
+    expect(companyResult!.data.name).toBe(`Firma ${slug}`)
 
     // List companies
-    const { status: listCompaniesStatus, data: companies } = await saRest(
+    const listCompaniesResult = await saRest(
       'GET',
       `/tenants/${tenantId}/companies`
     )
-    expect(listCompaniesStatus).toBe(200)
-    expect(Array.isArray(companies)).toBe(true)
-    expect(companies.length).toBeGreaterThanOrEqual(1)
+    assertRestSuccess(listCompaniesResult!, [200], 'list companies')
+    expect(Array.isArray(listCompaniesResult!.data)).toBe(true)
+    expect(listCompaniesResult!.data.length).toBeGreaterThanOrEqual(1)
 
     // Create user
-    const { status: userStatus, data: user } = await saRest(
-      'POST',
-      `/tenants/${tenantId}/users`,
-      {
-        firstName: 'Test',
-        lastName: 'Admin',
-        email: `admin-${slug}@test.rs`,
-        password: 'testpass123',
-        role: 'ADMIN',
-        companyId: company.id,
-      }
-    )
-    expect(userStatus).toBe(201)
-    expect(user).toHaveProperty('id')
-    expect(user.email).toBe(`admin-${slug}@test.rs`)
-    expect(user.role).toBe('ADMIN')
+    const userResult = await saRest('POST', `/tenants/${tenantId}/users`, {
+      firstName: 'Test',
+      lastName: 'Admin',
+      email: `admin-${slug}@test.rs`,
+      password: 'testpass123',
+      role: 'ADMIN',
+      companyId: companyResult!.data.id,
+    })
+    assertRestSuccess(userResult!, [201], 'create user')
+    expect(userResult!.data).toHaveProperty('id')
+    expect(userResult!.data.email).toBe(`admin-${slug}@test.rs`)
+    expect(userResult!.data.role).toBe('ADMIN')
 
     // List users
-    const { status: listUsersStatus, data: users } = await saRest(
-      'GET',
-      `/tenants/${tenantId}/users`
-    )
-    expect(listUsersStatus).toBe(200)
-    expect(Array.isArray(users)).toBe(true)
-    expect(users.length).toBeGreaterThanOrEqual(1)
+    const listUsersResult = await saRest('GET', `/tenants/${tenantId}/users`)
+    assertRestSuccess(listUsersResult!, [200], 'list users')
+    expect(Array.isArray(listUsersResult!.data)).toBe(true)
+    expect(listUsersResult!.data.length).toBeGreaterThanOrEqual(1)
 
     // List admins
-    const { status: adminsStatus, data: admins } = await saRest(
-      'GET',
-      `/tenants/${tenantId}/admins`
-    )
-    expect(adminsStatus).toBe(200)
-    expect(Array.isArray(admins)).toBe(true)
+    const adminsResult = await saRest('GET', `/tenants/${tenantId}/admins`)
+    assertRestSuccess(adminsResult!, [200], 'list admins')
+    expect(Array.isArray(adminsResult!.data)).toBe(true)
 
     // Toggle status
-    const { status: toggleStatus } = await saRest(
+    const toggleResult = await saRest(
       'PATCH',
       `/tenants/${tenantId}/toggle-status`
     )
-    expect(toggleStatus).toBe(204)
+    assertRestSuccess(toggleResult!, [204], 'toggle tenant status')
 
     // Delete
-    const { status: deleteStatus } = await saRest(
-      'DELETE',
-      `/tenants/${tenantId}`
-    )
-    expect(deleteStatus).toBe(204)
+    const deleteResult = await saRest('DELETE', `/tenants/${tenantId}`)
+    assertRestSuccess(deleteResult!, [204], 'delete tenant')
   })
 
   it('regular admin cannot access /tenants', async () => {
-    const { status } = await rest('GET', '/tenants')
-    expect(status).toBe(403)
+    const result = await rest('GET', '/tenants')
+    assertRestSuccess(result, [403], 'regular admin tenants access')
   })
 })

@@ -16,6 +16,7 @@ export function TenantLayout() {
     try {
       await logoutMutation.mutateAsync()
     } catch {
+      // global error handler shows toast
       // Logout even if BE call fails
     }
     logout()

@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { differenceInDays } from 'date-fns'
-import { FileText, Plus, Pencil } from 'lucide-react'
+import { FileText, Plus, Pencil, Download } from 'lucide-react'
 import {
   Sheet,
   SheetContent,
@@ -13,18 +13,13 @@ import { Badge } from '@/shared/ui/badge'
 import { Button } from '@/shared/ui/button'
 import { Separator } from '@/shared/ui/separator'
 import { BodySmall, Caption } from '@/shared/ui/typography'
-import { formatDate } from '@/shared/utils'
+import { InfoRow, StatusBadge, type StatusConfig } from '@/shared/components'
+import { formatDate, downloadDocument } from '@/shared/utils'
 import { useDriver } from '../api/use-drivers'
 import type { DriverStatus } from '../types'
 import { DocumentUploadDialog } from './document-upload-dialog'
 
-const statusConfig: Record<
-  DriverStatus,
-  {
-    variant?: 'default' | 'secondary' | 'outline'
-    color?: 'success' | 'warning' | 'muted'
-  }
-> = {
+const statusConfig: Record<DriverStatus, StatusConfig> = {
   ACTIVE: { color: 'success' },
   ON_LEAVE: { color: 'warning' },
   INACTIVE: { variant: 'outline' },
@@ -41,15 +36,6 @@ type DriverDetailSheetProps = {
   open: boolean
   onClose: () => void
   onEdit?: () => void
-}
-
-function InfoRow({ label, value }: { label: string; value: React.ReactNode }) {
-  return (
-    <div className="flex justify-between py-1.5">
-      <Caption className="text-muted-foreground">{label}</Caption>
-      <BodySmall>{value ?? '—'}</BodySmall>
-    </div>
-  )
 }
 
 function DocumentExpiryBadge({
@@ -101,7 +87,18 @@ function DocumentList({
               </Caption>
             )}
           </div>
-          <DocumentExpiryBadge expirationDate={doc.expirationDate} />
+          <div className="flex items-center gap-2">
+            <Button
+              variant="ghost"
+              size="icon"
+              className="size-8"
+              aria-label={t('common:aria.downloadFile')}
+              onClick={() => downloadDocument('DRIVER', Number(doc.id))}
+            >
+              <Download className="size-4" />
+            </Button>
+            <DocumentExpiryBadge expirationDate={doc.expirationDate} />
+          </div>
         </div>
       ))}
     </div>
@@ -203,14 +200,11 @@ export function DriverDetailSheet({
                 <InfoRow
                   label={t('drivers.status')}
                   value={
-                    <Badge
-                      variant={
-                        statusConfig[driver.status as DriverStatus]?.variant
-                      }
-                      color={statusConfig[driver.status as DriverStatus]?.color}
-                    >
-                      {t(`drivers.statuses.${driver.status}`)}
-                    </Badge>
+                    <StatusBadge
+                      status={driver.status}
+                      config={statusConfig}
+                      label={t(`drivers.statuses.${driver.status}`)}
+                    />
                   }
                 />
                 <InfoRow

@@ -129,23 +129,27 @@ export function TravelOrderSection({
 
     const advances = calcAdvances(route.expenses ?? [])
 
-    await createMutation.mutateAsync({
-      routeId: Number(routeId),
-      driverId: Number(route.driverId),
-      vehicleId: Number(route.vehicleId),
-      departureDatetime: route.departureDate
-        ? `${route.departureDate}T08:00:00Z`
-        : undefined,
-      returnDatetime: route.returnDate
-        ? `${route.returnDate}T18:00:00Z`
-        : undefined,
-      purpose: 'Transport robe',
-      notes: route.notes ?? undefined,
-      ...advances,
-    })
-    queryClient.invalidateQueries({
-      queryKey: ['travelOrders', 'byRoute', routeId],
-    })
+    try {
+      await createMutation.mutateAsync({
+        routeId: Number(routeId),
+        driverId: Number(route.driverId),
+        vehicleId: Number(route.vehicleId),
+        departureDatetime: route.departureDate
+          ? `${route.departureDate}T08:00:00Z`
+          : undefined,
+        returnDatetime: route.returnDate
+          ? `${route.returnDate}T18:00:00Z`
+          : undefined,
+        purpose: 'Transport robe',
+        notes: route.notes ?? undefined,
+        ...advances,
+      })
+      queryClient.invalidateQueries({
+        queryKey: ['travelOrders', 'byRoute', routeId],
+      })
+    } catch {
+      // global error handler shows toast
+    }
   }
 
   if (isLoading) {
@@ -179,7 +183,7 @@ export function TravelOrderSection({
         </Button>
         {!canCreate && (
           <Caption className="text-destructive">
-            {t('routes.driver')} i {t('routes.vehicle')} su obavezni
+            {t('travelOrder.driverAndVehicleRequired')}
           </Caption>
         )}
       </div>
@@ -198,30 +202,34 @@ export function TravelOrderSection({
 
   const saveEdit = async (order: TravelOrder) => {
     if (!editState) return
-    await updateMutation.mutateAsync({
-      id: order.id,
-      data: {
-        routeId: order.routeId,
-        driverId: order.driverId,
-        vehicleId: order.vehicleId,
-        departureDatetime: editState.departureDatetime
-          ? `${editState.departureDatetime}T08:00:00Z`
-          : undefined,
-        returnDatetime: editState.returnDatetime
-          ? `${editState.returnDatetime}T18:00:00Z`
-          : undefined,
-        purpose: order.purpose,
-        notes: editState.notes || undefined,
-        fuelAdvance: parseFloat(editState.fuelAdvance) || 0,
-        perDiemAdvance: parseFloat(editState.perDiemAdvance) || 0,
-        tollAdvance: parseFloat(editState.tollAdvance) || 0,
-        otherAdvance: parseFloat(editState.otherAdvance) || 0,
-      },
-    })
-    queryClient.invalidateQueries({
-      queryKey: ['travelOrders', 'byRoute', routeId],
-    })
-    cancelEdit()
+    try {
+      await updateMutation.mutateAsync({
+        id: order.id,
+        data: {
+          routeId: order.routeId,
+          driverId: order.driverId,
+          vehicleId: order.vehicleId,
+          departureDatetime: editState.departureDatetime
+            ? `${editState.departureDatetime}T08:00:00Z`
+            : undefined,
+          returnDatetime: editState.returnDatetime
+            ? `${editState.returnDatetime}T18:00:00Z`
+            : undefined,
+          purpose: order.purpose,
+          notes: editState.notes || undefined,
+          fuelAdvance: parseFloat(editState.fuelAdvance) || 0,
+          perDiemAdvance: parseFloat(editState.perDiemAdvance) || 0,
+          tollAdvance: parseFloat(editState.tollAdvance) || 0,
+          otherAdvance: parseFloat(editState.otherAdvance) || 0,
+        },
+      })
+      queryClient.invalidateQueries({
+        queryKey: ['travelOrders', 'byRoute', routeId],
+      })
+      cancelEdit()
+    } catch {
+      // global error handler shows toast
+    }
   }
 
   return (
@@ -269,6 +277,7 @@ export function TravelOrderSection({
                       size="icon"
                       className="size-8"
                       onClick={() => startEdit(order)}
+                      aria-label={t('common:aria.editItem')}
                     >
                       <Pencil className="size-4" />
                     </Button>
@@ -287,6 +296,7 @@ export function TravelOrderSection({
                       size="icon"
                       className="text-destructive size-8"
                       onClick={() => setDeleteTarget(order.id)}
+                      aria-label={t('common:aria.deleteItem')}
                     >
                       <Trash2 className="size-4" />
                     </Button>
@@ -364,9 +374,7 @@ export function TravelOrderSection({
                 <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
                   <div>
                     <Caption className="text-muted-foreground">
-                      {t('expenses.categories.FUEL', {
-                        defaultValue: 'Gorivo',
-                      })}
+                      {t('expenses.categories.FUEL')}
                     </Caption>
                     <Input
                       type="number"
@@ -381,9 +389,7 @@ export function TravelOrderSection({
                   </div>
                   <div>
                     <Caption className="text-muted-foreground">
-                      {t('expenses.categories.PER_DIEM', {
-                        defaultValue: 'Dnevnice',
-                      })}
+                      {t('expenses.categories.PER_DIEM')}
                     </Caption>
                     <Input
                       type="number"
@@ -398,9 +404,7 @@ export function TravelOrderSection({
                   </div>
                   <div>
                     <Caption className="text-muted-foreground">
-                      {t('expenses.categories.TOLL_DOMESTIC', {
-                        defaultValue: 'Putarine',
-                      })}
+                      {t('expenses.categories.TOLL_DOMESTIC')}
                     </Caption>
                     <Input
                       type="number"
@@ -415,9 +419,7 @@ export function TravelOrderSection({
                   </div>
                   <div>
                     <Caption className="text-muted-foreground">
-                      {t('travelOrder.otherAdvance', {
-                        defaultValue: 'Ostalo',
-                      })}
+                      {t('travelOrder.otherAdvance')}
                     </Caption>
                     <Input
                       type="number"
@@ -452,9 +454,7 @@ export function TravelOrderSection({
                   <div className="grid grid-cols-2 gap-2 text-sm sm:grid-cols-4">
                     <div>
                       <Caption className="text-muted-foreground">
-                        {t('expenses.categories.FUEL', {
-                          defaultValue: 'Gorivo',
-                        })}
+                        {t('expenses.categories.FUEL')}
                       </Caption>
                       <BodySmall className="font-medium">
                         {formatCurrency(order.fuelAdvance, 'RSD')}
@@ -462,9 +462,7 @@ export function TravelOrderSection({
                     </div>
                     <div>
                       <Caption className="text-muted-foreground">
-                        {t('expenses.categories.PER_DIEM', {
-                          defaultValue: 'Dnevnice',
-                        })}
+                        {t('expenses.categories.PER_DIEM')}
                       </Caption>
                       <BodySmall className="font-medium">
                         {formatCurrency(order.perDiemAdvance, 'RSD')}
@@ -472,9 +470,7 @@ export function TravelOrderSection({
                     </div>
                     <div>
                       <Caption className="text-muted-foreground">
-                        {t('expenses.categories.TOLL_DOMESTIC', {
-                          defaultValue: 'Putarine',
-                        })}
+                        {t('expenses.categories.TOLL_DOMESTIC')}
                       </Caption>
                       <BodySmall className="font-medium">
                         {formatCurrency(order.tollAdvance, 'RSD')}
@@ -482,9 +478,7 @@ export function TravelOrderSection({
                     </div>
                     <div>
                       <Caption className="text-muted-foreground">
-                        {t('travelOrder.otherAdvance', {
-                          defaultValue: 'Ostalo',
-                        })}
+                        {t('travelOrder.otherAdvance')}
                       </Caption>
                       <BodySmall className="font-medium">
                         {formatCurrency(order.otherAdvance, 'RSD')}
@@ -511,11 +505,15 @@ export function TravelOrderSection({
         onOpenChange={(open) => !open && setDeleteTarget(null)}
         onConfirm={async () => {
           if (deleteTarget) {
-            await deleteMutation.mutateAsync(deleteTarget)
-            queryClient.invalidateQueries({
-              queryKey: ['travelOrders', 'byRoute', routeId],
-            })
-            setDeleteTarget(null)
+            try {
+              await deleteMutation.mutateAsync(deleteTarget)
+              queryClient.invalidateQueries({
+                queryKey: ['travelOrders', 'byRoute', routeId],
+              })
+              setDeleteTarget(null)
+            } catch {
+              // global error handler shows toast
+            }
           }
         }}
         title={t('common:deleteConfirm.title')}

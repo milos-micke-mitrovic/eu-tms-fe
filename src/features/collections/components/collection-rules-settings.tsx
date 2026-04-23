@@ -188,6 +188,7 @@ export function CollectionRulesSettings() {
                     size="icon"
                     className="size-7"
                     onClick={() => openEdit(rule)}
+                    aria-label={t('common:aria.editItem')}
                   >
                     <Pencil className="size-3.5" />
                   </Button>
@@ -197,6 +198,7 @@ export function CollectionRulesSettings() {
                     className="text-destructive size-7"
                     onClick={() => deleteRule.mutate(rule.id)}
                     disabled={deleteRule.isPending}
+                    aria-label={t('common:aria.deleteItem')}
                   >
                     <Trash2 className="size-3.5" />
                   </Button>

@@ -1,11 +1,6 @@
 import { useTranslation } from 'react-i18next'
-import { Badge } from '@/shared/ui/badge'
+import { StatusBadge, type StatusConfig } from '@/shared/components'
 import type { InvoiceStatus } from '../types'
-
-type StatusConfig = {
-  variant?: 'default' | 'secondary' | 'destructive' | 'outline'
-  color?: 'success' | 'warning' | 'destructive' | 'info' | 'muted' | 'default'
-}
 
 const STATUS_CONFIG: Record<InvoiceStatus, StatusConfig> = {
   UNPAID: { color: 'info' },
@@ -17,10 +12,11 @@ const STATUS_CONFIG: Record<InvoiceStatus, StatusConfig> = {
 
 export function InvoiceStatusBadge({ status }: { status: InvoiceStatus }) {
   const { t } = useTranslation('finance')
-  const config = STATUS_CONFIG[status] ?? { variant: 'outline' as const }
   return (
-    <Badge variant={config.variant} color={config.color}>
-      {t(`invoices.statuses.${status}`)}
-    </Badge>
+    <StatusBadge
+      status={status}
+      config={STATUS_CONFIG}
+      label={t(`invoices.statuses.${status}`)}
+    />
   )
 }

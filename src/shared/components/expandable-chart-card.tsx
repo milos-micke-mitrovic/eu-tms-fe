@@ -7,6 +7,7 @@ import {
   type ReactNode,
 } from 'react'
 import { createPortal } from 'react-dom'
+import { useTranslation } from 'react-i18next'
 import { Maximize2, Minimize2 } from 'lucide-react'
 import { Button } from '@/shared/ui/button'
 
@@ -63,10 +64,16 @@ export function ExpandableChartCard({
   }, [])
 
   const expanded = portalTarget !== null
+  const { t } = useTranslation('common')
 
   return (
     <>
-      <div ref={cardRef} className="rounded-lg border p-4">
+      <div
+        ref={cardRef}
+        className="rounded-lg border p-4"
+        role="figure"
+        aria-label={title}
+      >
         <div className="mb-4 flex items-center justify-between">
           <h3 className="text-sm font-semibold">{title}</h3>
           <Button
@@ -74,6 +81,7 @@ export function ExpandableChartCard({
             size="icon"
             className="size-7"
             onClick={expand}
+            aria-label={t('aria.expand')}
           >
             <Maximize2 className="size-4" />
           </Button>
@@ -88,7 +96,12 @@ export function ExpandableChartCard({
           <div className="bg-background absolute inset-0 z-10 flex flex-col p-6">
             <div className="mb-4 flex shrink-0 items-center justify-between">
               <h2 className="text-lg font-semibold">{title}</h2>
-              <Button variant="outline" size="icon" onClick={collapse}>
+              <Button
+                variant="outline"
+                size="icon"
+                onClick={collapse}
+                aria-label={t('aria.collapse')}
+              >
                 <Minimize2 className="size-4" />
               </Button>
             </div>

@@ -18,6 +18,7 @@ import {
 import type { Notification } from '../types'
 
 function NotificationItem({ notification }: { notification: Notification }) {
+  const { t } = useTranslation('navigation')
   const markAsRead = useMarkAsRead()
   const deleteNotification = useDeleteNotification()
 
@@ -51,6 +52,7 @@ function NotificationItem({ notification }: { notification: Notification }) {
       <button
         onClick={handleDelete}
         className="text-muted-foreground hover:text-destructive absolute top-2 right-2 rounded-sm p-1 opacity-0 transition-opacity group-hover:opacity-100"
+        aria-label={t('common:actions.delete')}
       >
         <X className="size-3.5" />
       </button>
@@ -69,7 +71,12 @@ export function NotificationBell() {
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <Button variant="ghost" size="icon" className="relative">
+        <Button
+          variant="ghost"
+          size="icon"
+          className="relative"
+          aria-label={t('sidebar.notifications')}
+        >
           <Bell className="size-5" />
           {unreadCount > 0 && (
             <Badge
@@ -95,9 +102,7 @@ export function NotificationBell() {
               disabled={markAllAsRead.isPending}
             >
               <CheckCheck className="mr-1 size-3.5" />
-              {t('notifications.markAllRead', {
-                defaultValue: 'Označi sve kao pročitano',
-              })}
+              {t('notifications.markAllRead')}
             </Button>
           )}
         </div>

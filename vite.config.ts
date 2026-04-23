@@ -35,6 +35,7 @@ export default defineConfig(({ mode }) => {
             'vendor-graphql': ['@apollo/client', 'graphql'],
             'vendor-charts': ['recharts'],
             'vendor-form': ['react-hook-form', 'zod', '@hookform/resolvers'],
+            'vendor-date': ['date-fns'],
             'vendor-map': ['leaflet', 'react-leaflet'],
           },
         },

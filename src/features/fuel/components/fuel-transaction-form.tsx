@@ -169,11 +169,7 @@ export function FuelTransactionForm({
                 name="vehicleId"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>
-                      {t('common:fleet.vehicles.title', {
-                        defaultValue: 'Vozilo',
-                      })}
-                    </FormLabel>
+                    <FormLabel>{t('vehicle')}</FormLabel>
                     <Select
                       options={vehicleOptions}
                       value={field.value ? String(field.value) : undefined}

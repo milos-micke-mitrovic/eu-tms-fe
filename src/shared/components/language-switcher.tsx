@@ -15,7 +15,7 @@ const languages = [
 ] as const
 
 export function LanguageSwitcher() {
-  const { i18n } = useTranslation()
+  const { t, i18n } = useTranslation('common')
   const currentLang = i18n.language
 
   const handleChange = (code: string) => {
@@ -26,7 +26,11 @@ export function LanguageSwitcher() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="icon">
+        <Button
+          variant="ghost"
+          size="icon"
+          aria-label={t('aria.selectLanguage')}
+        >
           <Languages className="size-5" />
         </Button>
       </DropdownMenuTrigger>

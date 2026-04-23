@@ -1,8 +1,9 @@
-import { useState } from 'react'
-import { useForm } from 'react-hook-form'
+import { useEffect } from 'react'
+import { useForm, useWatch } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useTranslation } from 'react-i18next'
-import { Upload } from 'lucide-react'
+import { Upload, CheckCircle, Loader2 } from 'lucide-react'
+import { toast } from 'sonner'
 import {
   Dialog,
   DialogContent,
@@ -22,6 +23,9 @@ import {
   FormMessage,
 } from '@/shared/ui/form'
 import { Caption } from '@/shared/ui/typography'
+import { useFileUpload } from '@/shared/hooks'
+import { getApiErrorMessage } from '@/shared/utils'
+import { HttpError } from '@/shared/api/http-client'
 import { useUploadDocument } from '../api/use-document-upload'
 import type { VehicleDocumentType, DriverDocumentType } from '../types'
 import { documentUploadSchema, type DocumentUploadFormData } from '../schemas'
@@ -58,7 +62,14 @@ export function DocumentUploadDialog({
 }: DocumentUploadDialogProps) {
   const { t } = useTranslation('fleet')
   const uploadMutation = useUploadDocument()
-  const [file, setFile] = useState<File | null>(null)
+  const {
+    uploadFile,
+    isUploading,
+    tempResult,
+    error: uploadError,
+    cleanup,
+    reset,
+  } = useFileUpload()
 
   const docTypes =
     entityType === 'vehicles' ? VEHICLE_DOC_TYPES : DRIVER_DOC_TYPES
@@ -78,44 +89,127 @@ export function DocumentUploadDialog({
     defaultValues: { documentType: '', expirationDate: '', notes: '' },
   })
 
-  const onSubmit = async (data: DocumentUploadFormData) => {
+  const documentType = useWatch({ control: form.control, name: 'documentType' })
+
+  // Cleanup temp file if dialog closes without submit
+  useEffect(() => {
+    if (!open && tempResult) {
+      cleanup()
+    }
+  }, [open, tempResult, cleanup])
+
+  const handleFileChange = async (file: File | null) => {
     if (!file) return
+    try {
+      await uploadFile(file)
+    } catch (err: unknown) {
+      // Map specific error codes to user-friendly messages
+      if (err instanceof HttpError && err.data) {
+        const errorData = err.data as { errorCode?: string }
+        const errorCode = errorData.errorCode
+        if (errorCode) {
+          const translatedMessage = t(`common:apiErrors.${errorCode}`, {
+            defaultValue: '',
+          })
+          if (translatedMessage) {
+            toast.error(translatedMessage)
+            return
+          }
+        }
+      }
+      toast.error(getApiErrorMessage(err, t('common:errors.uploadFailed')))
+    }
+  }
+
+  const handleClose = () => {
+    if (tempResult) {
+      cleanup()
+    } else {
+      reset()
+    }
+    form.reset()
+    onClose()
+  }
+
+  const onSubmit = async (data: DocumentUploadFormData) => {
+    if (!tempResult) return
     await uploadMutation.mutateAsync({
       entityType,
       entityId,
-      file,
-      metadata: {
+      payload: {
         documentType: data.documentType,
+        tempFileName: tempResult.tempFileName,
+        originalFileName: tempResult.originalFileName,
         expirationDate: data.expirationDate || undefined,
         notes: data.notes || undefined,
       },
     })
     form.reset()
-    setFile(null)
+    reset()
     onClose()
   }
 
   return (
-    <Dialog open={open} onOpenChange={(isOpen) => !isOpen && onClose()}>
-      <DialogContent className="sm:max-w-md">
+    <Dialog open={open} onOpenChange={(isOpen) => !isOpen && handleClose()}>
+      <DialogContent className="overflow-hidden sm:max-w-md">
         <DialogHeader>
           <DialogTitle>{t('documents.upload')}</DialogTitle>
         </DialogHeader>
         <Form form={form} onSubmit={onSubmit} className="space-y-4">
-          {/* File input */}
+          {/* File input — Phase 1: upload to temp */}
           <div>
-            <Caption className="mb-1 font-medium">Fajl</Caption>
-            <label className="border-input hover:bg-accent flex cursor-pointer items-center gap-3 rounded-md border border-dashed p-4 transition-colors">
-              <Upload className="text-muted-foreground size-5" />
-              <Caption className="text-muted-foreground">
-                {file ? file.name : t('common:fileUpload.clickToUpload_one')}
-              </Caption>
-              <input
-                type="file"
-                className="hidden"
-                onChange={(e) => setFile(e.target.files?.[0] ?? null)}
-              />
-            </label>
+            {tempResult ? (
+              <div className="flex items-center gap-3 rounded-md border border-green-300 bg-green-50 p-4 dark:border-green-700 dark:bg-green-900/30">
+                <CheckCircle className="size-5 shrink-0 text-green-800 dark:text-green-300" />
+                <div className="w-0 flex-1">
+                  <p className="truncate text-xs font-medium">
+                    {tempResult.originalFileName}
+                  </p>
+                  <Caption className="text-muted-foreground">
+                    {(tempResult.fileSize / 1024).toFixed(0)} KB
+                  </Caption>
+                </div>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  className="shrink-0"
+                  onClick={() => cleanup()}
+                >
+                  {t('common:fileUpload.clickToReplace')}
+                </Button>
+              </div>
+            ) : (
+              <label className="hover:border-primary border-foreground/20 bg-muted/50 hover:bg-muted flex cursor-pointer flex-col items-center gap-2 rounded-md border-2 border-dashed p-6 transition-colors">
+                {isUploading ? (
+                  <Loader2 className="text-muted-foreground size-8 animate-spin" />
+                ) : (
+                  <Upload className="text-foreground/70 size-8" />
+                )}
+                <Caption className="text-foreground/70 font-medium">
+                  {isUploading
+                    ? t('common:fileUpload.uploading')
+                    : t('common:fileUpload.clickToUpload_one')}
+                </Caption>
+                <Caption className="text-muted-foreground text-xs">
+                  {t('documents.allowedFormats', {
+                    defaultValue: 'PDF, DOC, DOCX, JPG, PNG, XLSX (max 10 MB)',
+                  })}
+                </Caption>
+                <input
+                  type="file"
+                  className="hidden"
+                  accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.xlsx,.xls"
+                  disabled={isUploading}
+                  onChange={(e) =>
+                    handleFileChange(e.target.files?.[0] ?? null)
+                  }
+                />
+              </label>
+            )}
+            {uploadError && (
+              <Caption className="text-destructive mt-1">{uploadError}</Caption>
+            )}
           </div>
 
           <FormField
@@ -123,7 +217,7 @@ export function DocumentUploadDialog({
             name="documentType"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>{t('documents.type')}</FormLabel>
+                <FormLabel required>{t('documents.type')}</FormLabel>
                 <Select
                   options={docTypeOptions}
                   value={field.value}
@@ -166,10 +260,15 @@ export function DocumentUploadDialog({
           />
 
           <div className="flex justify-end gap-2 pt-2">
-            <Button type="button" variant="outline" onClick={onClose}>
+            <Button type="button" variant="outline" onClick={handleClose}>
               {t('common:actions.cancel')}
             </Button>
-            <Button type="submit" disabled={uploadMutation.isPending || !file}>
+            <Button
+              type="submit"
+              disabled={
+                uploadMutation.isPending || !tempResult || !documentType
+              }
+            >
               {uploadMutation.isPending
                 ? t('common:app.loading')
                 : t('documents.upload')}

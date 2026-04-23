@@ -116,6 +116,19 @@ function SidebarProvider({
     return () => window.removeEventListener('keydown', handleKeyDown)
   }, [toggleSidebar])
 
+  // Auto-collapse on tablet screens (768-1024px)
+  React.useEffect(() => {
+    const mql = window.matchMedia('(min-width: 768px) and (max-width: 1024px)')
+    const handleChange = (e: MediaQueryListEvent | MediaQueryList) => {
+      if (e.matches && open) {
+        setOpen(false)
+      }
+    }
+    handleChange(mql)
+    mql.addEventListener('change', handleChange)
+    return () => mql.removeEventListener('change', handleChange)
+  }, [])
+
   // We add a state so that we can do data-state="expanded" or "collapsed".
   // This makes it easier to style the sidebar with Tailwind classes.
   const state = open ? 'expanded' : 'collapsed'

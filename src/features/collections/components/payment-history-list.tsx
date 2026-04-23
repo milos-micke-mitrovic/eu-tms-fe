@@ -33,6 +33,7 @@ export function PaymentHistoryList({ invoiceId, onClose }: Props) {
           size="icon"
           className="size-7"
           onClick={onClose}
+          aria-label={t('common:aria.closePanel')}
         >
           <X className="size-3.5" />
         </Button>
@@ -84,6 +85,7 @@ export function PaymentHistoryList({ invoiceId, onClose }: Props) {
                     className="text-destructive size-7"
                     onClick={() => deletePayment.mutate(Number(p.id))}
                     disabled={deletePayment.isPending}
+                    aria-label={t('common:aria.deletePayment')}
                   >
                     <Trash2 className="size-3.5" />
                   </Button>

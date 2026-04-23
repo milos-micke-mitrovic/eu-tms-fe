@@ -53,6 +53,8 @@ type DataTableProps<TData, TValue> = {
   highlightName?: string | null
   getRowId?: (row: TData) => string | number
   getRowName?: (row: TData) => string
+  /** Accessible label for the table */
+  'aria-label'?: string
 }
 
 export function DataTable<TData, TValue>({
@@ -81,6 +83,7 @@ export function DataTable<TData, TValue>({
   highlightName,
   getRowId,
   getRowName,
+  'aria-label': ariaLabel,
 }: DataTableProps<TData, TValue>) {
   const { t } = useTranslation('common')
   const resolvedEmptyText = emptyText ?? t('table.noResults')
@@ -171,7 +174,7 @@ export function DataTable<TData, TValue>({
   return (
     <div className="flex max-h-full min-h-0 flex-col gap-4">
       <div className="relative min-h-0 overflow-auto rounded-md border">
-        <Table>
+        <Table aria-label={ariaLabel}>
           <TableHeader className="bg-background sticky top-0 z-10">
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>

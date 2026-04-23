@@ -1,15 +1,18 @@
 import { useState, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Plus, Trash2, Download, Loader2, FileText, Upload, X } from 'lucide-react'
+import {
+  Plus,
+  Trash2,
+  Download,
+  Loader2,
+  FileText,
+  Upload,
+  X,
+} from 'lucide-react'
 import type { FieldArrayWithId, FieldValues, Control } from 'react-hook-form'
 import { toast } from 'sonner'
 import { Button, Select, DatePicker, Caption } from '@/shared/ui'
-import {
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/shared/ui/form'
+import { FormField, FormItem, FormLabel, FormMessage } from '@/shared/ui/form'
 import { FormSection } from './form-section'
 import { downloadDocument, type DocumentType } from '@/shared/api/documents'
 
@@ -77,7 +80,10 @@ export function DocumentsSection({
     onAdd()
     // Scroll to the add button after a short delay to allow DOM update
     setTimeout(() => {
-      bottomRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' })
+      bottomRef.current?.scrollIntoView({
+        behavior: 'smooth',
+        block: 'nearest',
+      })
     }, 100)
   }
 
@@ -108,7 +114,7 @@ export function DocumentsSection({
                 name={`documents.${index}.type`}
                 rules={{ required: t('validation.required') }}
                 render={({ field: typeField }) => (
-                  <FormItem className="md:flex-1 md:min-w-[180px]">
+                  <FormItem className="md:min-w-[180px] md:flex-1">
                     <FormLabel required>{t('documents.type')}</FormLabel>
                     <Select
                       options={documentTypeOptions}
@@ -125,7 +131,7 @@ export function DocumentsSection({
                 control={control}
                 name={`documents.${index}.expirationDate`}
                 render={({ field: expField }) => (
-                  <FormItem className="md:flex-1 md:min-w-[180px]">
+                  <FormItem className="md:min-w-[180px] md:flex-1">
                     <FormLabel>{t('documents.expirationDate')}</FormLabel>
                     <DatePicker
                       value={expField.value as string}
@@ -136,13 +142,16 @@ export function DocumentsSection({
                   </FormItem>
                 )}
               />
-              <div className="flex items-end gap-2 w-full order-last">
+              <div className="order-last flex w-full items-end gap-2">
                 <FormItem className="flex-1">
                   <FormLabel>{t('documents.file')}</FormLabel>
                   {doc?.originalFileName ? (
-                    <div className="flex h-9 items-center gap-2 rounded-md border bg-muted/50 px-3">
-                      <FileText className="h-4 w-4 shrink-0 text-muted-foreground" />
-                      <Caption className="flex-1 truncate" title={doc.originalFileName}>
+                    <div className="bg-muted/50 flex h-9 items-center gap-2 rounded-md border px-3">
+                      <FileText className="text-muted-foreground h-4 w-4 shrink-0" />
+                      <Caption
+                        className="flex-1 truncate"
+                        title={doc.originalFileName}
+                      >
                         {shortenFileName(doc.originalFileName)}
                       </Caption>
                       {doc.id && entityType && (
@@ -153,7 +162,7 @@ export function DocumentsSection({
                           className="h-6 w-6 shrink-0"
                           onClick={() => handleDownload(doc.id!)}
                           disabled={downloadingId === doc.id}
-                          title={t('documents.download')}
+                          aria-label={t('documents.download')}
                         >
                           {downloadingId === doc.id ? (
                             <Loader2 className="h-3.5 w-3.5 animate-spin" />
@@ -168,13 +177,13 @@ export function DocumentsSection({
                         size="icon"
                         className="h-6 w-6 shrink-0"
                         onClick={() => onFileClear(index)}
-                        title={t('documents.removeFile')}
+                        aria-label={t('documents.removeFile')}
                       >
-                        <X className="h-3.5 w-3.5 text-muted-foreground hover:text-destructive" />
+                        <X className="text-muted-foreground hover:text-destructive h-3.5 w-3.5" />
                       </Button>
                     </div>
                   ) : (
-                    <label className="flex h-9 cursor-pointer items-center justify-center gap-2 rounded-md border border-dashed bg-background px-3 text-sm text-muted-foreground transition-colors hover:border-primary hover:text-primary">
+                    <label className="bg-background text-muted-foreground hover:border-primary hover:text-primary flex h-9 cursor-pointer items-center justify-center gap-2 rounded-md border border-dashed px-3 text-sm transition-colors">
                       <Upload className="h-4 w-4" />
                       <span>{t('documents.uploadPdf')}</span>
                       <input
@@ -190,7 +199,9 @@ export function DocumentsSection({
                         }}
                         disabled={isUploading}
                       />
-                      {isUploading && <Loader2 className="h-4 w-4 animate-spin" />}
+                      {isUploading && (
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                      )}
                     </label>
                   )}
                 </FormItem>
@@ -200,9 +211,9 @@ export function DocumentsSection({
                   size="icon"
                   className="mb-0.5 h-9 w-9 shrink-0"
                   onClick={() => onRemove(index)}
-                  title={t('documents.removeRow')}
+                  aria-label={t('documents.removeRow')}
                 >
-                  <Trash2 className="h-4 w-4 text-destructive" />
+                  <Trash2 className="text-destructive h-4 w-4" />
                 </Button>
               </div>
             </div>

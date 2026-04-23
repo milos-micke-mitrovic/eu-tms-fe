@@ -34,25 +34,25 @@ export function TopRoutesTable({ from, to }: TopRoutesTableProps) {
             <thead>
               <tr className="border-b">
                 <th className="text-muted-foreground px-3 py-2 text-left font-medium">
-                  {t('stats.routeNumber', { defaultValue: 'Nalog' })}
+                  {t('stats.routeNumber')}
                 </th>
                 <th className="text-muted-foreground px-3 py-2 text-left font-medium">
-                  {t('stats.client', { defaultValue: 'Klijent' })}
+                  {t('stats.client')}
                 </th>
                 <th className="text-muted-foreground px-3 py-2 text-left font-medium">
-                  {t('stats.vehicle', { defaultValue: 'Vozilo' })}
+                  {t('stats.vehicle')}
                 </th>
                 <th className="text-muted-foreground px-3 py-2 text-right font-medium">
-                  {t('stats.revenue', { defaultValue: 'Prihod' })}
+                  {t('stats.revenue')}
                 </th>
                 <th className="text-muted-foreground px-3 py-2 text-right font-medium">
-                  {t('stats.expenses', { defaultValue: 'Troškovi' })}
+                  {t('stats.expenses')}
                 </th>
                 <th className="text-muted-foreground px-3 py-2 text-right font-medium">
-                  {t('stats.profit', { defaultValue: 'Zarada' })}
+                  {t('stats.profit')}
                 </th>
                 <th className="text-muted-foreground px-3 py-2 text-left font-medium">
-                  {t('stats.margin', { defaultValue: 'Marža %' })}
+                  {t('stats.margin')}
                 </th>
               </tr>
             </thead>

@@ -10,7 +10,7 @@ import { Select } from '@/shared/ui/select'
 import { Button } from '@/shared/ui/button'
 import { Badge } from '@/shared/ui/badge'
 import { BodySmall, Caption, H4 } from '@/shared/ui/typography'
-import { TableSkeleton, SectionDivider } from '@/shared/components'
+import { TableSkeleton, SectionDivider, InfoRow } from '@/shared/components'
 import { formatDate, formatCurrency } from '@/shared/utils'
 import { downloadFile } from '@/shared/utils/download-file'
 import { useInvoice } from '../api/use-invoices'
@@ -31,15 +31,6 @@ const VALID_TRANSITIONS: Record<InvoiceStatus, InvoiceStatus[]> = {
   PAID: ['CANCELLED'],
   OVERDUE: ['PARTIAL', 'PAID', 'CANCELLED'],
   CANCELLED: [],
-}
-
-function InfoRow({ label, value }: { label: string; value: React.ReactNode }) {
-  return (
-    <div>
-      <Caption className="text-muted-foreground">{label}</Caption>
-      <BodySmall>{value ?? '—'}</BodySmall>
-    </div>
-  )
 }
 
 export function InvoiceDetailSheet({
@@ -206,9 +197,7 @@ export function InvoiceDetailSheet({
               )}
 
               {/* Downloads */}
-              <SectionDivider
-                title={t('invoices.downloads', { defaultValue: 'Preuzimanje' })}
-              />
+              <SectionDivider title={t('invoices.downloads')} />
               <div className="flex flex-wrap gap-2">
                 <Button
                   variant="outline"

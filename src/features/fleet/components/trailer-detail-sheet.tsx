@@ -6,9 +6,9 @@ import {
   SheetHeader,
   SheetTitle,
 } from '@/shared/ui/overlay/sheet'
-import { Badge } from '@/shared/ui/badge'
 import { Button } from '@/shared/ui/button'
 import { BodySmall, Caption } from '@/shared/ui/typography'
+import { StatusBadge, type StatusConfig } from '@/shared/components'
 import type { TrailerListItem, TrailerStatus } from '../types'
 
 type TrailerDetailSheetProps = {
@@ -18,13 +18,7 @@ type TrailerDetailSheetProps = {
   onEdit?: () => void
 }
 
-const statusConfig: Record<
-  TrailerStatus,
-  {
-    variant?: 'default' | 'secondary' | 'outline'
-    color?: 'success' | 'warning' | 'muted'
-  }
-> = {
+const statusConfig: Record<TrailerStatus, StatusConfig> = {
   ACTIVE: { color: 'success' },
   IN_SERVICE: { color: 'warning' },
   INACTIVE: { variant: 'outline' },
@@ -96,14 +90,11 @@ export function TrailerDetailSheet({
             <InfoRow
               label={t('trailers.status')}
               value={
-                <Badge
-                  variant={
-                    statusConfig[trailer.status as TrailerStatus]?.variant
-                  }
-                  color={statusConfig[trailer.status as TrailerStatus]?.color}
-                >
-                  {t(`trailers.statuses.${trailer.status}`)}
-                </Badge>
+                <StatusBadge
+                  status={trailer.status}
+                  config={statusConfig}
+                  label={t(`trailers.statuses.${trailer.status}`)}
+                />
               }
             />
           </div>

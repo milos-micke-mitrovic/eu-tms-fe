@@ -8,7 +8,7 @@ import { useTranslation } from 'react-i18next'
 import { MoreHorizontal, Pencil, Trash2 } from 'lucide-react'
 import { DataTable } from '@/shared/ui/data-table'
 import { DataTableColumnHeader } from '@/shared/ui/data-table/data-table-column-header'
-import { Badge } from '@/shared/ui/badge'
+import { StatusBadge, type StatusConfig } from '@/shared/components'
 import { Button } from '@/shared/ui/button'
 import {
   DropdownMenu,
@@ -42,13 +42,7 @@ type DriverTableProps = {
   getRowName?: (row: any) => string
 }
 
-const statusConfig: Record<
-  DriverStatus,
-  {
-    variant?: 'default' | 'secondary' | 'outline'
-    color?: 'success' | 'warning' | 'muted'
-  }
-> = {
+const statusConfig: Record<DriverStatus, StatusConfig> = {
   ACTIVE: { color: 'success' },
   ON_LEAVE: { color: 'warning' },
   INACTIVE: { variant: 'outline' },
@@ -125,12 +119,11 @@ export function DriverTable({
           />
         ),
         cell: ({ row }) => (
-          <Badge
-            variant={statusConfig[row.original.status as DriverStatus]?.variant}
-            color={statusConfig[row.original.status as DriverStatus]?.color}
-          >
-            {t(`drivers.statuses.${row.original.status}`)}
-          </Badge>
+          <StatusBadge
+            status={row.original.status}
+            config={statusConfig}
+            label={t(`drivers.statuses.${row.original.status}`)}
+          />
         ),
       },
       {
@@ -144,7 +137,12 @@ export function DriverTable({
           <div onClick={(e) => e.stopPropagation()}>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="icon" className="size-8">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="size-8"
+                  aria-label={t('common:aria.openMenu')}
+                >
                   <MoreHorizontal className="size-4" />
                 </Button>
               </DropdownMenuTrigger>

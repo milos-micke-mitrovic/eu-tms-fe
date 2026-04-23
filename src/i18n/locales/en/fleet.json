@@ -102,6 +102,7 @@
     "expiry": "Expiry Date",
     "notes": "Notes",
     "noDocuments": "No documents",
+    "allowedFormats": "PDF, DOC, DOCX, JPG, PNG, XLSX (max 10 MB)",
     "vehicleTypes": {
       "REGISTRATION": "Registration",
       "INSURANCE": "Insurance",

@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import { graphql } from './helpers'
+import { assertRestSuccess, assertGraphqlSuccess } from './assert-helpers'
 
 const API = process.env.TEST_API_URL || 'http://localhost:8080/api'
 let accountingToken: string | null = null
@@ -52,7 +53,7 @@ describe('Collections API (ACCOUNTING role)', () => {
   let testPaymentId: number | null = null
   let testInvoiceId: number | null = null
 
-  // ── Setup: get an invoice to work with ──
+  // -- Setup: get an invoice to work with --
   it('setup — get first invoice', async () => {
     const res = await graphql(`
       {
@@ -64,14 +65,14 @@ describe('Collections API (ACCOUNTING role)', () => {
         }
       }
     `)
+    assertGraphqlSuccess(res, 'invoices for collections setup')
     const invoice = res.data?.invoices?.content?.[0]
-    if (invoice) {
-      testInvoiceId = Number(invoice.id)
-    }
+    expect(invoice).toBeTruthy()
+    testInvoiceId = Number(invoice.id)
     expect(testInvoiceId).toBeGreaterThan(0)
   })
 
-  // ── GraphQL reads ──
+  // -- GraphQL reads --
   it('GraphQL — collectionDashboard', async () => {
     const res = await graphql(`
       {
@@ -91,6 +92,7 @@ describe('Collections API (ACCOUNTING role)', () => {
         }
       }
     `)
+    assertGraphqlSuccess(res, 'collectionDashboard')
     expect(res.data?.collectionDashboard).toBeTruthy()
     expect(res.data.collectionDashboard).toHaveProperty('totalReceivables')
     expect(res.data.collectionDashboard).toHaveProperty('agingBuckets')
@@ -114,6 +116,7 @@ describe('Collections API (ACCOUNTING role)', () => {
         }
       }
     `)
+    assertGraphqlSuccess(res, 'debtorsSummary')
     expect(res.data?.debtorsSummary).toBeTruthy()
     expect(Array.isArray(res.data.debtorsSummary)).toBe(true)
     if (res.data.debtorsSummary.length > 0) {
@@ -124,43 +127,43 @@ describe('Collections API (ACCOUNTING role)', () => {
     }
   })
 
-  // ── REST: Payments CRUD ──
+  // -- REST: Payments CRUD --
   it('REST — record payment', async () => {
-    if (!testInvoiceId) return
-    const { status, data } = await collectionsRest(
-      'POST',
-      '/collections/payments',
-      {
-        invoiceId: testInvoiceId,
-        amount: 100,
-        paymentDate: '2026-04-01',
-        paymentMethod: 'BANK_TRANSFER',
-        currency: 'RSD',
-        referenceNumber: 'TEST-REF-001',
-        notes: 'Test payment',
-      }
-    )
-    expect([200, 201]).toContain(status)
-    if (data?.id) testPaymentId = data.id
-    expect(data).toHaveProperty('invoiceId')
-    expect(data).toHaveProperty('amount')
+    expect(testInvoiceId).toBeGreaterThan(0)
+    const result = await collectionsRest('POST', '/collections/payments', {
+      invoiceId: testInvoiceId,
+      amount: 100,
+      paymentDate: '2026-04-01',
+      paymentMethod: 'BANK_TRANSFER',
+      currency: 'RSD',
+      referenceNumber: 'TEST-REF-001',
+      notes: 'Test payment',
+    })
+    assertRestSuccess(result!, [200, 201], 'record payment')
+    if (result!.data?.id) testPaymentId = result!.data.id
+    expect(result!.data).toHaveProperty('invoiceId')
+    expect(result!.data).toHaveProperty('amount')
   })
 
   it('GraphQL — invoicePayments', async () => {
-    if (!testInvoiceId) return
+    expect(testInvoiceId).toBeGreaterThan(0)
     const res = await graphql(`{
       invoicePayments(invoiceId: "${testInvoiceId}") {
         id invoiceId invoiceNumber paymentDate amount
         currency paymentMethod referenceNumber notes
       }
     }`)
+    assertGraphqlSuccess(res, 'invoicePayments')
     expect(res.data?.invoicePayments).toBeTruthy()
     expect(Array.isArray(res.data.invoicePayments)).toBe(true)
   })
 
   it('REST — update payment', async () => {
-    if (!testPaymentId || !testInvoiceId) return
-    const { status, data } = await collectionsRest(
+    if (!testPaymentId || !testInvoiceId) {
+      console.warn('Skipping update payment: no payment was created')
+      return
+    }
+    const result = await collectionsRest(
       'PUT',
       `/collections/payments/${testPaymentId}`,
       {
@@ -171,33 +174,35 @@ describe('Collections API (ACCOUNTING role)', () => {
         currency: 'RSD',
       }
     )
-    expect(status).toBe(200)
-    expect(data?.amount).toBe(200)
+    assertRestSuccess(result!, [200], 'update payment')
+    expect(result!.data?.amount).toBe(200)
   })
 
-  // ── REST: Reminders ──
-  it('REST — send reminder (BE bug: returns 500)', async () => {
-    if (!testInvoiceId) return
-    const { status } = await collectionsRest('POST', '/collections/reminders', {
-      invoiceId: testInvoiceId,
-      reminderType: 'FIRST',
-      sentVia: 'EMAIL',
-      recipientEmail: 'test@example.com',
-      subject: 'Test opomena',
-      messageBody: 'Test reminder body',
-    })
-    // BE returns 500 for reminders — known bug
-    expect([200, 201, 500]).toContain(status)
+  // -- REST: Reminders --
+  it('REST — send reminder', async () => {
+    expect(testInvoiceId).toBeGreaterThan(0)
+    const result = await collectionsRest(
+      'POST',
+      '/collections/reminders/send',
+      {
+        invoiceId: testInvoiceId,
+        recipientEmail: 'test@example.com',
+        subject: 'Test opomena',
+        message: 'Test reminder body',
+      }
+    )
+    assertRestSuccess(result!, [200, 201], 'send reminder')
   })
 
   it('GraphQL — invoiceReminders', async () => {
-    if (!testInvoiceId) return
+    expect(testInvoiceId).toBeGreaterThan(0)
     const res = await graphql(`{
       invoiceReminders(invoiceId: "${testInvoiceId}") {
         id invoiceId invoiceNumber reminderType sentVia
         daysOverdue amountDue sentAt
       }
     }`)
+    assertGraphqlSuccess(res, 'invoiceReminders')
     expect(res.data?.invoiceReminders).toBeTruthy()
     expect(Array.isArray(res.data.invoiceReminders)).toBe(true)
   })
@@ -211,8 +216,12 @@ describe('Collections API (ACCOUNTING role)', () => {
         }
       }
     `)
+    assertGraphqlSuccess(debtorsRes, 'debtorsSummary for partnerReminders')
     const partnerId = debtorsRes.data?.debtorsSummary?.[0]?.partnerId
-    if (!partnerId) return
+    if (!partnerId) {
+      console.warn('Skipping partnerReminders: no debtors found')
+      return
+    }
 
     const res = await graphql(`{
       partnerReminders(partnerId: "${partnerId}") {
@@ -220,19 +229,20 @@ describe('Collections API (ACCOUNTING role)', () => {
         sentVia daysOverdue amountDue sentAt
       }
     }`)
+    assertGraphqlSuccess(res, 'partnerReminders')
     expect(res.data?.partnerReminders).toBeTruthy()
     expect(Array.isArray(res.data.partnerReminders)).toBe(true)
   })
 
-  // ── REST: Collection Rules ──
+  // -- REST: Collection Rules --
   it('REST — list collection rules', async () => {
-    const { status, data } = await collectionsRest('GET', '/collections/rules')
-    expect(status).toBe(200)
-    expect(Array.isArray(data)).toBe(true)
+    const result = await collectionsRest('GET', '/collections/rules')
+    assertRestSuccess(result!, [200], 'list collection rules')
+    expect(Array.isArray(result!.data)).toBe(true)
   })
 
   it('REST — create rule (403 for ACCOUNTING, needs ADMIN)', async () => {
-    const { status } = await collectionsRest('POST', '/collections/rules', {
+    const result = await collectionsRest('POST', '/collections/rules', {
       daysAfterDue: 30,
       reminderType: 'FIRST',
       sendVia: 'EMAIL',
@@ -242,16 +252,19 @@ describe('Collections API (ACCOUNTING role)', () => {
         'Postovani {partner_name}, faktura {invoice_number}...',
     })
     // ACCOUNTING role likely gets 403, only ADMIN can manage rules
-    expect([200, 201, 403]).toContain(status)
+    assertRestSuccess(result!, [200, 201, 403], 'create collection rule')
   })
 
-  // ── Cleanup ──
+  // -- Cleanup --
   it('cleanup — delete test payment', async () => {
-    if (!testPaymentId) return
-    const { status } = await collectionsRest(
+    if (!testPaymentId) {
+      console.warn('Skipping payment cleanup: no payment was created')
+      return
+    }
+    const result = await collectionsRest(
       'DELETE',
       `/collections/payments/${testPaymentId}`
     )
-    expect([200, 204]).toContain(status)
+    assertRestSuccess(result!, [200, 204], 'delete payment')
   })
 })

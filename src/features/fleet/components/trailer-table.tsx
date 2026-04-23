@@ -8,7 +8,7 @@ import { useTranslation } from 'react-i18next'
 import { MoreHorizontal, Pencil, Trash2 } from 'lucide-react'
 import { DataTable } from '@/shared/ui/data-table'
 import { DataTableColumnHeader } from '@/shared/ui/data-table/data-table-column-header'
-import { Badge } from '@/shared/ui/badge'
+import { StatusBadge, type StatusConfig } from '@/shared/components'
 import { Button } from '@/shared/ui/button'
 import {
   DropdownMenu,
@@ -42,13 +42,7 @@ type TrailerTableProps = {
   onClearFilters?: () => void
 }
 
-const statusConfig: Record<
-  TrailerStatus,
-  {
-    variant?: 'default' | 'secondary' | 'outline'
-    color?: 'success' | 'warning' | 'muted'
-  }
-> = {
+const statusConfig: Record<TrailerStatus, StatusConfig> = {
   ACTIVE: { color: 'success' },
   IN_SERVICE: { color: 'warning' },
   INACTIVE: { variant: 'outline' },
@@ -120,14 +114,11 @@ export function TrailerTable({
           <DataTableColumnHeader column={column} title={t('trailers.status')} />
         ),
         cell: ({ row }) => (
-          <Badge
-            variant={
-              statusConfig[row.original.status as TrailerStatus]?.variant
-            }
-            color={statusConfig[row.original.status as TrailerStatus]?.color}
-          >
-            {t(`trailers.statuses.${row.original.status}`)}
-          </Badge>
+          <StatusBadge
+            status={row.original.status}
+            config={statusConfig}
+            label={t(`trailers.statuses.${row.original.status}`)}
+          />
         ),
       },
       {
@@ -136,7 +127,12 @@ export function TrailerTable({
           <div onClick={(e) => e.stopPropagation()}>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="icon" className="size-8">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="size-8"
+                  aria-label={t('common:aria.openMenu')}
+                >
                   <MoreHorizontal className="size-4" />
                 </Button>
               </DropdownMenuTrigger>

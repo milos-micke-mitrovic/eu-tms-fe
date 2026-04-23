@@ -75,17 +75,25 @@ export function RouteDetailSheet({
 
   const confirmDeleteExpense = async () => {
     if (deleteExpenseTarget) {
-      await deleteExpenseMutation.mutateAsync(deleteExpenseTarget.id)
-      setDeleteExpenseTarget(null)
+      try {
+        await deleteExpenseMutation.mutateAsync(deleteExpenseTarget.id)
+        setDeleteExpenseTarget(null)
+      } catch {
+        // global error handler shows toast
+      }
     }
   }
 
   const confirmPerDiem = async () => {
     if (route) {
-      await perDiemMutation.mutateAsync({
-        routeId: Number(route.id),
-      })
-      setPerDiemConfirmOpen(false)
+      try {
+        await perDiemMutation.mutateAsync({
+          routeId: Number(route.id),
+        })
+        setPerDiemConfirmOpen(false)
+      } catch {
+        // global error handler shows toast
+      }
     }
   }
 
@@ -283,11 +291,11 @@ export function RouteDetailSheet({
                                 hasExpenses &&
                                   route.profit != null &&
                                   route.profit > 0
-                                  ? 'text-green-600'
+                                  ? 'text-green-600 dark:text-green-400'
                                   : hasExpenses &&
                                       route.profit != null &&
                                       route.profit < 0
-                                    ? 'text-red-600'
+                                    ? 'text-red-600 dark:text-red-400'
                                     : ''
                               )}
                             >
@@ -373,7 +381,7 @@ export function RouteDetailSheet({
                                   'dd.MM.yyyy HH:mm'
                                 )}
                                 {stop.actualArrival && (
-                                  <span className="ml-2 text-green-600">
+                                  <span className="ml-2 text-green-600 dark:text-green-400">
                                     Actual:{' '}
                                     {formatDate(
                                       stop.actualArrival,
@@ -445,11 +453,11 @@ export function RouteDetailSheet({
                             className={cn(
                               'font-medium',
                               hasExp && route.profit != null && route.profit > 0
-                                ? 'text-green-600'
+                                ? 'text-green-700 dark:text-green-400'
                                 : hasExp &&
                                     route.profit != null &&
                                     route.profit < 0
-                                  ? 'text-red-600'
+                                  ? 'text-red-600 dark:text-red-400'
                                   : ''
                             )}
                           >
@@ -526,6 +534,7 @@ export function RouteDetailSheet({
                                 setEditingExpense(exp)
                                 setExpenseFormOpen(true)
                               }}
+                              aria-label={t('common:aria.editItem')}
                             >
                               <Pencil className="size-3.5" />
                             </Button>
@@ -534,6 +543,7 @@ export function RouteDetailSheet({
                               size="icon"
                               className="text-destructive size-7"
                               onClick={() => setDeleteExpenseTarget(exp)}
+                              aria-label={t('common:aria.deleteItem')}
                             >
                               <Trash2 className="size-3.5" />
                             </Button>

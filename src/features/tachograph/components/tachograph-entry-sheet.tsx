@@ -455,7 +455,11 @@ export function TachographEntrySheet({
               />
               <div className="flex items-center justify-between text-sm">
                 <span
-                  className={isValid24 ? 'text-green-600' : 'text-destructive'}
+                  className={
+                    isValid24
+                      ? 'text-green-600 dark:text-green-400'
+                      : 'text-destructive'
+                  }
                 >
                   {t('entry.total')}: {totalHM.h}h {totalHM.m}min / 24h 00min
                 </span>

@@ -13,6 +13,7 @@ export function useDownloadReport() {
       await downloadFile(path, filename)
       toast.success(t('downloaded'))
     } catch {
+      // global error handler shows toast
       toast.error(t('common:errors.generic'))
     } finally {
       setLoading(null)

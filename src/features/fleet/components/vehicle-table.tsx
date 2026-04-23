@@ -8,7 +8,7 @@ import { useTranslation } from 'react-i18next'
 import { MoreHorizontal, Pencil, Trash2 } from 'lucide-react'
 import { DataTable } from '@/shared/ui/data-table'
 import { DataTableColumnHeader } from '@/shared/ui/data-table/data-table-column-header'
-import { Badge } from '@/shared/ui/badge'
+import { StatusBadge, type StatusConfig } from '@/shared/components'
 import { Button } from '@/shared/ui/button'
 import {
   DropdownMenu,
@@ -42,13 +42,7 @@ type VehicleTableProps = {
   getRowName?: (row: any) => string
 }
 
-const statusConfig: Record<
-  VehicleStatus,
-  {
-    variant?: 'default' | 'secondary' | 'outline'
-    color?: 'success' | 'warning' | 'muted'
-  }
-> = {
+const statusConfig: Record<VehicleStatus, StatusConfig> = {
   ACTIVE: { color: 'success' },
   IN_SERVICE: { color: 'warning' },
   INACTIVE: { variant: 'outline' },
@@ -124,14 +118,11 @@ export function VehicleTable({
           <DataTableColumnHeader column={column} title={t('vehicles.status')} />
         ),
         cell: ({ row }) => (
-          <Badge
-            variant={
-              statusConfig[row.original.status as VehicleStatus]?.variant
-            }
-            color={statusConfig[row.original.status as VehicleStatus]?.color}
-          >
-            {t(`vehicles.statuses.${row.original.status}`)}
-          </Badge>
+          <StatusBadge
+            status={row.original.status}
+            config={statusConfig}
+            label={t(`vehicles.statuses.${row.original.status}`)}
+          />
         ),
       },
       {
@@ -148,7 +139,12 @@ export function VehicleTable({
           <div onClick={(e) => e.stopPropagation()}>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="icon" className="size-8">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="size-8"
+                  aria-label={t('common:aria.openMenu')}
+                >
                   <MoreHorizontal className="size-4" />
                 </Button>
               </DropdownMenuTrigger>

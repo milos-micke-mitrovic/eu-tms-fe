@@ -44,7 +44,8 @@
     "confirm": {
       "delete": "Da li ste sigurni da želite da obrišete ovu fakturu?",
       "cancel": "Da li ste sigurni da želite da stornirate ovu fakturu?"
-    }
+    },
+    "downloads": "Preuzimanje"
   },
   "exchangeRates": {
     "title": "Kursna lista NBS",
@@ -52,6 +53,12 @@
     "currencyCode": "Valuta",
     "rateToRsd": "Kurs",
     "rateDate": "Datum kursa",
+    "admin": {
+      "title": "Administracija",
+      "nbsFetched": "Kursevi preuzeti sa NBS",
+      "fetchNbs": "Preuzmi sa NBS",
+      "manualEntry": "Ručni unos kursa"
+    },
     "converter": {
       "title": "Konvertor valuta",
       "amount": "Iznos",

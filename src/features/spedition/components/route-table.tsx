@@ -167,9 +167,9 @@ export function RouteTable({
               className={cn(
                 'font-medium',
                 profit != null && profit > 0
-                  ? 'text-green-600'
+                  ? 'text-green-600 dark:text-green-400'
                   : profit != null && profit < 0
-                    ? 'text-red-600'
+                    ? 'text-red-600 dark:text-red-400'
                     : ''
               )}
             >
@@ -184,7 +184,12 @@ export function RouteTable({
           <div onClick={(e) => e.stopPropagation()}>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="icon" className="size-8">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="size-8"
+                  aria-label={t('common:aria.openMenu')}
+                >
                   <MoreHorizontal className="size-4" />
                 </Button>
               </DropdownMenuTrigger>

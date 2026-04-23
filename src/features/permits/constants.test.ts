@@ -66,18 +66,12 @@ describe('Permits constants', () => {
       expect(PERMIT_TYPE_STYLES).toHaveProperty('ECMT')
     })
 
-    it('each type has bg and text color', () => {
+    it('each type has className with light and dark mode classes', () => {
       for (const [, style] of Object.entries(PERMIT_TYPE_STYLES)) {
-        expect(style.bg).toMatch(/^#[0-9a-f]{6}$/i)
-        expect(style.text).toMatch(/^#[0-9a-f]{6}$/i)
-      }
-    })
-
-    it('bg colors are light (hex value > #c)', () => {
-      for (const [, style] of Object.entries(PERMIT_TYPE_STYLES)) {
-        // First hex pair > 0xC0 means light color
-        const r = parseInt(style.bg.slice(1, 3), 16)
-        expect(r).toBeGreaterThan(0xc0)
+        expect(style.className).toBeTruthy()
+        expect(style.className).toContain('bg-')
+        expect(style.className).toContain('text-')
+        expect(style.className).toContain('dark:')
       }
     })
   })

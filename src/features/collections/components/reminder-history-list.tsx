@@ -31,6 +31,7 @@ export function ReminderHistoryList({ partnerId, onClose }: Props) {
           size="icon"
           className="size-7"
           onClick={onClose}
+          aria-label={t('common:aria.closePanel')}
         >
           <X className="size-3.5" />
         </Button>

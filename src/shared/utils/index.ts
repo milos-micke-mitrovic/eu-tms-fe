@@ -15,3 +15,4 @@ export {
 } from './validation'
 export { formatCurrency, formatCurrencyCompact } from './format-currency'
 export { downloadFile } from './download-file'
+export { downloadDocument } from './download-document'

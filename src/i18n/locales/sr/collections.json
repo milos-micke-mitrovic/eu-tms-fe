@@ -103,5 +103,14 @@
     "bodyTemplate": "Tekst poruke (šablon)",
     "templateHelp": "Dostupne promenljive: {partner_name}, {invoice_number}, {amount_due}, {due_date}",
     "empty": "Nema konfiguriranih pravila"
+  },
+  "toast": {
+    "paymentRecorded": "Uplata zabeležena",
+    "paymentUpdated": "Uplata ažurirana",
+    "paymentDeleted": "Uplata obrisana",
+    "reminderSent": "Opomena poslata",
+    "ruleCreated": "Pravilo kreirano",
+    "ruleUpdated": "Pravilo ažurirano",
+    "ruleDeleted": "Pravilo obrisano"
   }
 }

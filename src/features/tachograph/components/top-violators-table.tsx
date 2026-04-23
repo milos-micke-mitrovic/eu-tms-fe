@@ -21,7 +21,7 @@ export function TopViolatorsTable({ from, to }: TopViolatorsTableProps) {
         <Skeleton className="h-40 w-full" />
       ) : violators.length === 0 ? (
         <div className="flex h-40 items-center justify-center">
-          <BodySmall className="text-green-600">
+          <BodySmall className="text-green-600 dark:text-green-400">
             {t('dashboard.noViolations')}
           </BodySmall>
         </div>

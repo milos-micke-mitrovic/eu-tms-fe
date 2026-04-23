@@ -1,5 +1,6 @@
 import { useMutation } from '@tanstack/react-query'
 import { httpClient } from './http-client'
+import { AUTH_STORAGE_KEY } from '@/shared/utils'
 
 // Types
 export type DocumentType = 'company' | 'driver' | 'vehicle' | 'trailer' | 'user'
@@ -8,6 +9,7 @@ export type TempUploadResponse = {
   tempFileName: string
   originalFileName: string
   fileSize: number
+  contentType: string
 }
 
 // Query keys
@@ -20,23 +22,10 @@ export const documentKeys = {
 async function uploadTempFile(file: File): Promise<TempUploadResponse> {
   const formData = new FormData()
   formData.append('file', file)
-
-  const response = await fetch(
-    `${import.meta.env.VITE_API_URL || '/api'}/documents/upload/temp`,
-    {
-      method: 'POST',
-      body: formData,
-      headers: {
-        Authorization: `Bearer ${getToken()}`,
-      },
-    }
+  return httpClient.postFormData<TempUploadResponse>(
+    '/documents/upload/temp',
+    formData
   )
-
-  if (!response.ok) {
-    throw new Error(`Upload failed: ${response.statusText}`)
-  }
-
-  return response.json()
 }
 
 async function deleteTempFile(tempFileName: string): Promise<void> {
@@ -53,7 +42,7 @@ function getDownloadUrl(
 // Helper to get token
 function getToken(): string | null {
   try {
-    const stored = localStorage.getItem('auth')
+    const stored = localStorage.getItem(AUTH_STORAGE_KEY)
     if (stored) {
       const parsed = JSON.parse(stored)
       return parsed.token || null

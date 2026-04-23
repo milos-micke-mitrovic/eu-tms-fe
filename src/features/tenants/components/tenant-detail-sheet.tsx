@@ -9,7 +9,7 @@ import {
 import { Button } from '@/shared/ui/button'
 import { Badge } from '@/shared/ui/badge'
 import { BodySmall, Caption } from '@/shared/ui/typography'
-import { SectionDivider } from '@/shared/components'
+import { SectionDivider, InfoRow } from '@/shared/components'
 import { formatDate } from '@/shared/utils'
 import { useTenantCompanies, useTenantUsers } from '../api/use-tenants'
 import type { Tenant } from '../types'
@@ -19,15 +19,6 @@ type TenantDetailSheetProps = {
   open: boolean
   onClose: () => void
   onEdit: () => void
-}
-
-function InfoRow({ label, value }: { label: string; value: React.ReactNode }) {
-  return (
-    <div>
-      <Caption className="text-muted-foreground">{label}</Caption>
-      <BodySmall>{value ?? '—'}</BodySmall>
-    </div>
-  )
 }
 
 export function TenantDetailSheet({

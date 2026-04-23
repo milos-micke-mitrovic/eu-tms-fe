@@ -8,8 +8,8 @@ import {
 } from '@/shared/ui/overlay/sheet'
 import { Badge } from '@/shared/ui/badge'
 import { Button } from '@/shared/ui/button'
-import { BodySmall, Caption } from '@/shared/ui/typography'
-import { formatDate } from '@/shared/utils'
+import { InfoRow } from '@/shared/components'
+import { cn, formatDate } from '@/shared/utils'
 import { PERMIT_TYPE_STYLES } from '../constants'
 import type { Permit } from '../types'
 
@@ -18,15 +18,6 @@ type PermitDetailSheetProps = {
   open: boolean
   onClose: () => void
   onEdit?: () => void
-}
-
-function InfoRow({ label, value }: { label: string; value?: string | null }) {
-  return (
-    <div>
-      <Caption className="text-muted-foreground">{label}</Caption>
-      <BodySmall>{value || '—'}</BodySmall>
-    </div>
-  )
 }
 
 const STATUS_VARIANT: Record<
@@ -68,11 +59,10 @@ export function PermitDetailSheet({
         <div className="space-y-4 overflow-y-auto p-4">
           <div className="flex items-center gap-2">
             <span
-              className="inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium"
-              style={{
-                backgroundColor: PERMIT_TYPE_STYLES[permit.permitType]?.bg,
-                color: PERMIT_TYPE_STYLES[permit.permitType]?.text,
-              }}
+              className={cn(
+                'inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium',
+                PERMIT_TYPE_STYLES[permit.permitType]?.className
+              )}
             >
               {t(`types.${permit.permitType}`)}
             </span>

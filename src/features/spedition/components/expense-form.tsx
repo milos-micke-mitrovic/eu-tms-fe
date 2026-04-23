@@ -146,6 +146,7 @@ export function ExpenseForm({
           setManualOverride(true)
         }
       } catch {
+        // global error handler shows toast
         setFetchedRate(null)
         setManualOverride(true)
       } finally {

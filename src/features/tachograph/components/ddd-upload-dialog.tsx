@@ -293,7 +293,7 @@ export function DddUploadDialog({
               const incomplete = preview.totalDays - complete
               return (
                 <div className="flex gap-4 text-sm">
-                  <span className="text-green-600">
+                  <span className="text-green-600 dark:text-green-400">
                     {complete} {t('ddd.daysToImport')}
                   </span>
                   <span className="text-muted-foreground">
@@ -389,7 +389,9 @@ export function DddUploadDialog({
                 <Caption className="text-muted-foreground">
                   {t('ddd.imported')}
                 </Caption>
-                <H4 className="text-green-600">{importResult.daysImported}</H4>
+                <H4 className="text-green-600 dark:text-green-400">
+                  {importResult.daysImported}
+                </H4>
               </div>
               <div className="rounded-lg border p-3 text-center">
                 <Caption className="text-muted-foreground">

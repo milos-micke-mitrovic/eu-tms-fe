@@ -20,7 +20,7 @@ import {
   DropdownMenuTrigger,
 } from '@/shared/ui/overlay/dropdown-menu'
 import { BodySmall } from '@/shared/ui/typography'
-import { formatDate } from '@/shared/utils'
+import { cn, formatDate } from '@/shared/utils'
 import { PERMIT_STATUS_COLORS, PERMIT_TYPE_STYLES } from '../constants'
 import type { Permit } from '../types'
 import type { ReactNode } from 'react'
@@ -94,11 +94,10 @@ export function PermitTable({
           const type = row.original.permitType
           return (
             <span
-              className="inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium"
-              style={{
-                backgroundColor: PERMIT_TYPE_STYLES[type]?.bg,
-                color: PERMIT_TYPE_STYLES[type]?.text,
-              }}
+              className={cn(
+                'inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium',
+                PERMIT_TYPE_STYLES[type]?.className
+              )}
             >
               {t(`types.${type}`)}
             </span>
@@ -147,7 +146,7 @@ export function PermitTable({
                 expired
                   ? 'text-destructive font-medium'
                   : expiring
-                    ? 'font-medium text-amber-600'
+                    ? 'font-medium text-amber-600 dark:text-amber-400'
                     : ''
               }
             >
@@ -188,7 +187,12 @@ export function PermitTable({
             <div onClick={(e) => e.stopPropagation()}>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" size="icon" className="size-8">
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="size-8"
+                    aria-label={t('common:aria.openMenu')}
+                  >
                     <MoreHorizontal className="size-4" />
                   </Button>
                 </DropdownMenuTrigger>

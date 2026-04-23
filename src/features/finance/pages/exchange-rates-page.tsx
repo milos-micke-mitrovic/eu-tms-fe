@@ -169,43 +169,33 @@ export function ExchangeRatesPage() {
       {/* Admin: Manual rate entry + NBS fetch */}
       {isAdmin && (
         <>
-          <SectionDivider
-            title={t('exchangeRates.admin.title', {
-              defaultValue: 'Administracija',
-            })}
-          />
+          <SectionDivider title={t('exchangeRates.admin.title')} />
 
           <div className="flex flex-wrap gap-4">
             {/* Fetch from NBS */}
             <Button
               variant="outline"
               onClick={async () => {
-                await fetchNbsMutation.mutateAsync()
-                apolloClient.refetchQueries({ include: ['GetExchangeRates'] })
-                toast.success(
-                  t('exchangeRates.admin.nbsFetched', {
-                    defaultValue: 'Kursevi preuzeti sa NBS',
-                  })
-                )
+                try {
+                  await fetchNbsMutation.mutateAsync()
+                  apolloClient.refetchQueries({ include: ['GetExchangeRates'] })
+                  toast.success(t('exchangeRates.admin.nbsFetched'))
+                } catch {
+                  // global error handler shows toast
+                }
               }}
               disabled={fetchNbsMutation.isPending}
             >
               <RefreshCw className="mr-2 size-4" />
               {fetchNbsMutation.isPending
                 ? t('common:app.loading')
-                : t('exchangeRates.admin.fetchNbs', {
-                    defaultValue: 'Preuzmi sa NBS',
-                  })}
+                : t('exchangeRates.admin.fetchNbs')}
             </Button>
           </div>
 
           {/* Manual rate entry */}
           <div className="space-y-4 rounded-lg border p-6">
-            <H4>
-              {t('exchangeRates.admin.manualEntry', {
-                defaultValue: 'Ručni unos kursa',
-              })}
-            </H4>
+            <H4>{t('exchangeRates.admin.manualEntry')}</H4>
             <div className="flex flex-wrap items-end gap-4">
               <div className="space-y-1">
                 <Caption className="text-muted-foreground">
@@ -249,14 +239,20 @@ export function ExchangeRatesPage() {
                 onClick={async () => {
                   const parsed = parseFloat(manualRate)
                   if (isNaN(parsed) || parsed <= 0) return
-                  await manualRateMutation.mutateAsync({
-                    currencyCode: manualCurrency,
-                    rateToRsd: parsed,
-                    rateDate: manualDate,
-                  })
-                  apolloClient.refetchQueries({ include: ['GetExchangeRates'] })
-                  toast.success(t('common:success.saved'))
-                  setManualRate('')
+                  try {
+                    await manualRateMutation.mutateAsync({
+                      currencyCode: manualCurrency,
+                      rateToRsd: parsed,
+                      rateDate: manualDate,
+                    })
+                    apolloClient.refetchQueries({
+                      include: ['GetExchangeRates'],
+                    })
+                    toast.success(t('common:success.saved'))
+                    setManualRate('')
+                  } catch {
+                    // global error handler shows toast
+                  }
                 }}
                 disabled={manualRateMutation.isPending || !manualRate}
               >

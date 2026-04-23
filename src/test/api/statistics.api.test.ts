@@ -1,5 +1,10 @@
 import { describe, it, expect } from 'vitest'
 import { graphql, rest } from './helpers'
+import {
+  assertRestSuccess,
+  assertGraphqlSuccess,
+  assertGraphqlData,
+} from './assert-helpers'
 
 describe('Statistics API', () => {
   const from = '2026-01-01'
@@ -27,8 +32,8 @@ describe('Statistics API', () => {
       `,
       { from, to }
     )
-    if (!res.data?.profitabilityByRoute) return
-    const result = res.data.profitabilityByRoute
+    assertGraphqlSuccess(res, 'profitabilityByRoute')
+    const result = assertGraphqlData(res, 'profitabilityByRoute')
     expect(Array.isArray(result.content)).toBe(true)
     expect(typeof result.totalElements).toBe('number')
 
@@ -58,8 +63,8 @@ describe('Statistics API', () => {
       `,
       { from, to }
     )
-    if (!res.data?.profitabilityByVehicle) return
-    const vehicles = res.data.profitabilityByVehicle
+    assertGraphqlSuccess(res, 'profitabilityByVehicle')
+    const vehicles = assertGraphqlData(res, 'profitabilityByVehicle')
     expect(Array.isArray(vehicles)).toBe(true)
 
     if (vehicles.length > 0) {
@@ -86,8 +91,8 @@ describe('Statistics API', () => {
       `,
       { from, to }
     )
-    if (!res.data?.profitabilityByPartner) return
-    const partners = res.data.profitabilityByPartner
+    assertGraphqlSuccess(res, 'profitabilityByPartner')
+    const partners = assertGraphqlData(res, 'profitabilityByPartner')
     expect(Array.isArray(partners)).toBe(true)
 
     if (partners.length > 0) {
@@ -114,8 +119,8 @@ describe('Statistics API', () => {
       `,
       { from, to }
     )
-    if (!res.data?.invoiceCollectionStats) return
-    const stats = res.data.invoiceCollectionStats
+    assertGraphqlSuccess(res, 'invoiceCollectionStats')
+    const stats = assertGraphqlData(res, 'invoiceCollectionStats')
     expect(typeof stats.totalInvoiced).toBe('number')
     expect(typeof stats.totalCollected).toBe('number')
     expect(typeof stats.collectionRate).toBe('number')
@@ -125,34 +130,34 @@ describe('Statistics API', () => {
 
 describe('Reports API', () => {
   it('REST — expense report PDF download', async () => {
-    const { status } = await rest(
+    const result = await rest(
       'GET',
       '/reports/expenses?format=pdf&from=2026-01-01&to=2026-04-11'
     )
-    expect([200, 204]).toContain(status)
+    assertRestSuccess(result, [200, 204], 'expense report PDF')
   })
 
   it('REST — expense report Excel download', async () => {
-    const { status } = await rest(
+    const result = await rest(
       'GET',
       '/reports/expenses?format=xlsx&from=2026-01-01&to=2026-04-11'
     )
-    expect([200, 204]).toContain(status)
+    assertRestSuccess(result, [200, 204], 'expense report Excel')
   })
 
   it('REST — profitability report', async () => {
-    const { status } = await rest(
+    const result = await rest(
       'GET',
       '/reports/profitability?format=pdf&from=2026-01-01&to=2026-04-11&groupBy=route'
     )
-    expect([200, 204]).toContain(status)
+    assertRestSuccess(result, [200, 204], 'profitability report')
   })
 
   it('REST — fleet costs report', async () => {
-    const { status } = await rest(
+    const result = await rest(
       'GET',
       '/reports/fleet-costs?format=xlsx&from=2026-01-01&to=2026-04-11'
     )
-    expect([200, 204]).toContain(status)
+    assertRestSuccess(result, [200, 204], 'fleet costs report')
   })
 })

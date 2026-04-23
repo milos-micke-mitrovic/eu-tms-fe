@@ -25,12 +25,19 @@ export const COUNTRY_CODES = [
   { code: 'BY', name: 'Belorusija' },
 ] as const
 
-export const PERMIT_TYPE_STYLES: Record<string, { bg: string; text: string }> =
-  {
-    CEMT: { bg: '#dbeafe', text: '#2563eb' },
-    BILATERAL: { bg: '#fef3c7', text: '#d97706' },
-    ECMT: { bg: '#d1fae5', text: '#059669' },
-  }
+export const PERMIT_TYPE_STYLES: Record<string, { className: string }> = {
+  CEMT: {
+    className: 'bg-blue-100 text-blue-600 dark:bg-blue-950 dark:text-blue-400',
+  },
+  BILATERAL: {
+    className:
+      'bg-amber-100 text-amber-600 dark:bg-amber-950 dark:text-amber-400',
+  },
+  ECMT: {
+    className:
+      'bg-emerald-100 text-emerald-600 dark:bg-emerald-950 dark:text-emerald-400',
+  },
+}
 
 export const PERMIT_STATUS_COLORS: Record<
   string,

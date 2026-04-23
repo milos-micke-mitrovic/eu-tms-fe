@@ -156,16 +156,28 @@ export function PayrollDetailSheet({
   const advTo = `${year}-${month}-${String(lastDay).padStart(2, '0')}`
 
   const handleConfirm = async () => {
-    await confirmMutation.mutateAsync(Number(payroll.id))
-    setConfirmOpen(false)
+    try {
+      await confirmMutation.mutateAsync(Number(payroll.id))
+      setConfirmOpen(false)
+    } catch {
+      // global error handler shows toast
+    }
   }
 
   const handleMarkPaid = async () => {
-    await markPaidMutation.mutateAsync(Number(payroll.id))
+    try {
+      await markPaidMutation.mutateAsync(Number(payroll.id))
+    } catch {
+      // global error handler shows toast
+    }
   }
 
   const handleRecalculate = async () => {
-    await recalculateMutation.mutateAsync(Number(payroll.id))
+    try {
+      await recalculateMutation.mutateAsync(Number(payroll.id))
+    } catch {
+      // global error handler shows toast
+    }
   }
 
   const handleDownload = async () => {
@@ -186,19 +198,24 @@ export function PayrollDetailSheet({
   }
 
   const onAdjustSubmit = async (data: PayrollAdjustmentFormData) => {
-    await adjustMutation.mutateAsync({
-      id: Number(payroll.id),
-      data: {
-        otherBonusRsd: data.otherBonusRsd ?? undefined,
-        otherBonusDescription: data.otherBonusDescription ?? undefined,
-        otherDeductionRsd: data.otherDeductionRsd ?? undefined,
-        otherDeductionDescription: data.otherDeductionDescription ?? undefined,
-        taxRsd: data.taxRsd ?? undefined,
-        socialContributionsRsd: data.socialContributionsRsd ?? undefined,
-        notes: data.notes ?? undefined,
-      },
-    })
-    setAdjustOpen(false)
+    try {
+      await adjustMutation.mutateAsync({
+        id: Number(payroll.id),
+        data: {
+          otherBonusRsd: data.otherBonusRsd ?? undefined,
+          otherBonusDescription: data.otherBonusDescription ?? undefined,
+          otherDeductionRsd: data.otherDeductionRsd ?? undefined,
+          otherDeductionDescription:
+            data.otherDeductionDescription ?? undefined,
+          taxRsd: data.taxRsd ?? undefined,
+          socialContributionsRsd: data.socialContributionsRsd ?? undefined,
+          notes: data.notes ?? undefined,
+        },
+      })
+      setAdjustOpen(false)
+    } catch {
+      // global error handler shows toast
+    }
   }
 
   return (

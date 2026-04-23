@@ -90,6 +90,7 @@ export function DebtorsTable() {
                     selectedPartnerId === p.partnerId ? null : p.partnerId
                   )
                 }}
+                aria-label={t('reminder.history')}
               >
                 <Bell className="size-3.5" />
               </Button>

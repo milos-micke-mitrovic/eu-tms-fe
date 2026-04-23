@@ -29,21 +29,19 @@ export function TopDebtorsTable() {
             <thead>
               <tr className="border-b">
                 <th className="text-muted-foreground px-3 py-2 text-left font-medium">
-                  {t('stats.client', { defaultValue: 'Klijent' })}
+                  {t('stats.client')}
                 </th>
                 <th className="text-muted-foreground px-3 py-2 text-right font-medium">
-                  {t('stats.totalDebt', { defaultValue: 'Ukupan dug' })}
+                  {t('stats.totalDebt')}
                 </th>
                 <th className="text-muted-foreground px-3 py-2 text-right font-medium">
-                  {t('stats.invoiceCount', { defaultValue: 'Br. faktura' })}
+                  {t('stats.invoiceCount')}
                 </th>
                 <th className="text-muted-foreground px-3 py-2 text-left font-medium">
-                  {t('stats.oldestDue', { defaultValue: 'Najstarija' })}
+                  {t('stats.oldestDue')}
                 </th>
                 <th className="text-muted-foreground px-3 py-2 text-right font-medium">
-                  {t('stats.avgOverdue', {
-                    defaultValue: 'Prosečno kašnjenje',
-                  })}
+                  {t('stats.avgOverdue')}
                 </th>
               </tr>
             </thead>
@@ -69,8 +67,7 @@ export function TopDebtorsTable() {
                         'text-destructive font-medium'
                     )}
                   >
-                    {debtor.avgDaysOverdue}{' '}
-                    {t('stats.days', { defaultValue: 'dana' })}
+                    {debtor.avgDaysOverdue} {t('stats.days')}
                   </td>
                 </tr>
               ))}

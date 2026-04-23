@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import { rest, graphql } from './helpers'
+import { assertRestSuccess, assertGraphqlSuccess } from './assert-helpers'
 
 // Use unique dates to avoid duplicate conflicts
 const testDate1 = '2026-06-15'
@@ -23,6 +24,7 @@ describe('Tachograph API', () => {
         }
       }
     `)
+    assertGraphqlSuccess(res, 'tachographDriverStatuses')
     expect(res.data.tachographDriverStatuses).toBeDefined()
     expect(Array.isArray(res.data.tachographDriverStatuses)).toBe(true)
   })
@@ -37,10 +39,11 @@ describe('Tachograph API', () => {
         }
       }
     `)
+    assertGraphqlSuccess(driversRes, 'drivers for tachograph')
     testDriverId = Number(driversRes.data.drivers.content[0]?.id)
-    if (!testDriverId) return
+    expect(testDriverId).toBeGreaterThan(0)
 
-    const { status, data } = await rest('POST', '/tachograph/entries', {
+    const result = await rest('POST', '/tachograph/entries', {
       driverId: testDriverId,
       entryDate: testDate1,
       drivingMinutes: 540,
@@ -48,15 +51,21 @@ describe('Tachograph API', () => {
       otherWorkMinutes: 180,
       availabilityMinutes: 60,
     })
-    expect([200, 201, 409]).toContain(status)
-    if (status === 409) return // duplicate — already exists
-    expect(data).toHaveProperty('id')
-    testEntryId = data.id
+    if (result.status === 409) {
+      console.warn(
+        'Tachograph entry already exists for this date (409 duplicate) — continuing'
+      )
+      return
+    }
+    assertRestSuccess(result, [200, 201], 'create tachograph entry')
+    expect(result.data).toHaveProperty('id')
+    testEntryId = result.data.id
   })
 
   it('REST — create entry with excessive driving', async () => {
-    if (!testDriverId) return
-    const { status, data } = await rest('POST', '/tachograph/entries', {
+    if (!testDriverId)
+      throw new Error('testDriverId not set — previous test failed')
+    const result = await rest('POST', '/tachograph/entries', {
       driverId: testDriverId,
       entryDate: testDate2,
       drivingMinutes: 620,
@@ -64,14 +73,25 @@ describe('Tachograph API', () => {
       otherWorkMinutes: 200,
       availabilityMinutes: 120,
     })
-    expect([200, 201, 409]).toContain(status)
-    if (data?.violations) {
-      expect(Array.isArray(data.violations)).toBe(true)
+    if (result.status === 409) {
+      console.warn(
+        'Tachograph entry already exists for this date (409 duplicate) — continuing'
+      )
+      return
+    }
+    assertRestSuccess(
+      result,
+      [200, 201],
+      'create tachograph entry with violations'
+    )
+    if (result.data?.violations) {
+      expect(Array.isArray(result.data.violations)).toBe(true)
     }
   })
 
   it('GraphQL — tachographEntries for driver', async () => {
-    if (!testDriverId) return
+    if (!testDriverId)
+      throw new Error('testDriverId not set — previous test failed')
     const res = await graphql(
       `
         query ($driverId: ID!) {
@@ -95,11 +115,13 @@ describe('Tachograph API', () => {
       `,
       { driverId: String(testDriverId) }
     )
+    assertGraphqlSuccess(res, 'tachographEntries')
     expect(Array.isArray(res.data.tachographEntries)).toBe(true)
   })
 
   it('GraphQL — tachographWeeklySummary', async () => {
-    if (!testDriverId) return
+    if (!testDriverId)
+      throw new Error('testDriverId not set — previous test failed')
     const res = await graphql(
       `
         query ($driverId: ID!) {
@@ -123,11 +145,13 @@ describe('Tachograph API', () => {
       `,
       { driverId: String(testDriverId) }
     )
+    assertGraphqlSuccess(res, 'tachographWeeklySummary')
     expect(res.data.tachographWeeklySummary).toBeDefined()
   })
 
   it('GraphQL — tachographViolations', async () => {
-    if (!testDriverId) return
+    if (!testDriverId)
+      throw new Error('testDriverId not set — previous test failed')
     const res = await graphql(
       `
         query ($driverId: ID!) {
@@ -145,12 +169,18 @@ describe('Tachograph API', () => {
       `,
       { driverId: String(testDriverId) }
     )
+    assertGraphqlSuccess(res, 'tachographViolations')
     expect(Array.isArray(res.data.tachographViolations)).toBe(true)
   })
 
   it('REST — update tachograph entry', async () => {
-    if (!testEntryId || !testDriverId) return
-    const { status } = await rest('PUT', `/tachograph/entries/${testEntryId}`, {
+    if (!testEntryId || !testDriverId) {
+      console.warn(
+        'Skipping update: no test entry was created (duplicate existed)'
+      )
+      return
+    }
+    const result = await rest('PUT', `/tachograph/entries/${testEntryId}`, {
       driverId: testDriverId,
       entryDate: testDate1,
       drivingMinutes: 480,
@@ -158,20 +188,26 @@ describe('Tachograph API', () => {
       otherWorkMinutes: 120,
       availabilityMinutes: 120,
     })
-    expect([200, 400]).toContain(status)
+    assertRestSuccess(result, [200, 400], 'update tachograph entry')
   })
 
   it('REST — confirm tachograph entry', async () => {
-    if (!testEntryId) return
-    const { status } = await rest(
+    if (!testEntryId) {
+      console.warn(
+        'Skipping confirm: no test entry was created (duplicate existed)'
+      )
+      return
+    }
+    const result = await rest(
       'PATCH',
       `/tachograph/entries/${testEntryId}/confirm`
     )
-    expect([200, 400]).toContain(status)
+    assertRestSuccess(result, [200, 400], 'confirm tachograph entry')
   })
 
   it('REST — delete tachograph test entries', async () => {
-    if (!testDriverId) return
+    if (!testDriverId)
+      throw new Error('testDriverId not set — previous test failed')
     const res = await graphql(
       `
         query ($driverId: ID!) {
@@ -186,9 +222,10 @@ describe('Tachograph API', () => {
       `,
       { driverId: String(testDriverId) }
     )
+    assertGraphqlSuccess(res, 'tachographEntries for cleanup')
     for (const entry of res.data.tachographEntries ?? []) {
-      const { status } = await rest('DELETE', `/tachograph/entries/${entry.id}`)
-      expect([200, 204]).toContain(status)
+      const result = await rest('DELETE', `/tachograph/entries/${entry.id}`)
+      assertRestSuccess(result, [200, 204], 'delete tachograph entry')
     }
   })
 })
@@ -209,6 +246,7 @@ describe('Tachograph Dashboard API (Sprint 7)', () => {
         }
       }
     `)
+    assertGraphqlSuccess(res, 'tachographMonthlySummary')
     expect(res.data.tachographMonthlySummary).toBeDefined()
     expect(Array.isArray(res.data.tachographMonthlySummary)).toBe(true)
   })
@@ -224,15 +262,12 @@ describe('Tachograph Dashboard API (Sprint 7)', () => {
         }
       }
     `)
-    // May return null data if BE has errors — check both cases
+    assertGraphqlSuccess(res, 'tachographCompliance')
     if (res.data?.tachographCompliance) {
       expect(res.data.tachographCompliance).toHaveProperty('compliancePercent')
       expect(res.data.tachographCompliance.totalEntries).toBeGreaterThanOrEqual(
         0
       )
-    } else {
-      // BE error — query exists but returns error
-      expect(res.errors || res.data).toBeTruthy()
     }
   })
 
@@ -248,6 +283,7 @@ describe('Tachograph Dashboard API (Sprint 7)', () => {
         }
       }
     `)
+    assertGraphqlSuccess(res, 'tachographTopViolators')
     expect(res.data.tachographTopViolators).toBeDefined()
     expect(Array.isArray(res.data.tachographTopViolators)).toBe(true)
   })
@@ -262,14 +298,15 @@ describe('Tachograph Dashboard API (Sprint 7)', () => {
         }
       }
     `)
+    assertGraphqlSuccess(driversRes, 'drivers for tachograph report')
     const driverId = driversRes.data.drivers.content[0]?.id
-    if (!driverId) return
+    expect(driverId).toBeTruthy()
 
-    const { status } = await rest(
+    const result = await rest(
       'GET',
       `/tachograph/report/pdf?driverId=${driverId}&from=2026-04-01&to=2026-04-30`
     )
-    // 200 = PDF returned, 400 = no data or bad params, 500 = PDF gen error
-    expect([200, 400, 500]).toContain(status)
+    // 200 = PDF returned, 400 = no data or bad params
+    assertRestSuccess(result, [200, 400], 'tachograph PDF report')
   })
 })

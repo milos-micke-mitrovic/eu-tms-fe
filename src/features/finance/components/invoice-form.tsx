@@ -406,6 +406,7 @@ export function InvoiceForm({ open, onClose, invoice }: InvoiceFormProps) {
                               size="icon"
                               className="text-destructive mt-1 size-7"
                               onClick={() => remove(index)}
+                              aria-label={t('common:aria.deleteItem')}
                             >
                               <X className="size-4" />
                             </Button>

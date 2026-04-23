@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import { graphql } from './helpers'
+import { assertGraphqlSuccess, assertGraphqlData } from './assert-helpers'
 
 describe('Dashboard API', () => {
   it('GraphQL — full dashboard query returns all sections', async () => {
@@ -73,16 +74,7 @@ describe('Dashboard API', () => {
         }
       }
     `)
-    if (res.errors?.length) {
-      // Show the actual BE error so we know exactly what failed
-      const errMsg = res.errors
-        .map(
-          (e: { message: string; path?: string[] }) =>
-            `${e.path?.join('.') ?? 'root'}: ${e.message}`
-        )
-        .join('; ')
-      throw new Error(`BE ERROR: ${errMsg}`)
-    }
+    assertGraphqlSuccess(res, 'dashboard')
     expect(res.data?.dashboard).toBeTruthy()
     const d = res.data.dashboard
 
@@ -122,8 +114,8 @@ describe('Dashboard API', () => {
         }
       }
     `)
-    if (!res.data?.dashboard) return // skip if rate limited
-    const categories = res.data.dashboard.expensesByCategory
+    const dashboard = assertGraphqlData(res, 'dashboard', 'expensesByCategory')
+    const categories = dashboard.expensesByCategory
     if (categories.length > 0) {
       expect(categories[0]).toHaveProperty('category')
       expect(categories[0]).toHaveProperty('totalAmountRsd')
@@ -147,8 +139,8 @@ describe('Dashboard API', () => {
         }
       }
     `)
-    if (!res.data?.dashboard) return // skip if rate limited
-    const routes = res.data.dashboard.recentRoutes
+    const dashboard = assertGraphqlData(res, 'dashboard', 'recentRoutes')
+    const routes = dashboard.recentRoutes
     if (routes.length > 0) {
       const r = routes[0]
       expect(r).toHaveProperty('id')

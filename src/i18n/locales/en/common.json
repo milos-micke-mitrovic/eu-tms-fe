@@ -28,7 +28,8 @@
     "transport": "Transport",
     "trailer": "Trailer",
     "inRsd": "In RSD",
-    "addFirst": "Add the first item"
+    "addFirst": "Add the first item",
+    "retry": "Retry"
   },
   "yes": "Yes",
   "no": "No",
@@ -98,7 +99,11 @@
     "VALIDATION_ERROR": "Validation failed. Please check your input.",
     "TACHOGRAPH_ENTRY_DUPLICATE": "Entry already exists for this driver on this date.",
     "DDD_PARSE_ERROR": "Error reading DDD file.",
-    "INVALID_FILE_TYPE": "Unsupported file format."
+    "INVALID_FILE_TYPE": "Unsupported file format.",
+    "CONTENT_TYPE_MISMATCH": "File contents don't match the file extension.",
+    "VIRUS_DETECTED": "File flagged as potentially dangerous.",
+    "MAX_UPLOAD_SIZE_EXCEEDED": "File exceeds maximum allowed size (10 MB).",
+    "MISSING_REQUEST_PART": "No file attached."
   },
   "success": {
     "saved": "Changes saved successfully",
@@ -191,6 +196,28 @@
     "title": "Sidebar",
     "description": "Displays the mobile sidebar.",
     "toggle": "Toggle Sidebar"
+  },
+  "aria": {
+    "expand": "Expand chart",
+    "collapse": "Collapse chart",
+    "openMenu": "Open menu",
+    "deleteItem": "Delete item",
+    "editItem": "Edit item",
+    "closePanel": "Close panel",
+    "previousMonth": "Previous month",
+    "nextMonth": "Next month",
+    "previousWeek": "Previous week",
+    "nextWeek": "Next week",
+    "toggleTheme": "Toggle theme",
+    "selectLanguage": "Select language",
+    "notifications": "Notifications",
+    "downloadFile": "Download file",
+    "removeFile": "Remove file",
+    "removeDocument": "Remove document",
+    "sendReminder": "Send reminder",
+    "recordPayment": "Record payment",
+    "deletePayment": "Delete payment",
+    "expandDetails": "Expand details"
   },
   "deleteConfirm": {
     "title": "Confirm Deletion",

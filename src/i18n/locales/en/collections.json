@@ -103,5 +103,14 @@
     "bodyTemplate": "Body Template",
     "templateHelp": "Available variables: {partner_name}, {invoice_number}, {amount_due}, {due_date}",
     "empty": "No rules configured"
+  },
+  "toast": {
+    "paymentRecorded": "Payment recorded",
+    "paymentUpdated": "Payment updated",
+    "paymentDeleted": "Payment deleted",
+    "reminderSent": "Reminder sent",
+    "ruleCreated": "Rule created",
+    "ruleUpdated": "Rule updated",
+    "ruleDeleted": "Rule deleted"
   }
 }

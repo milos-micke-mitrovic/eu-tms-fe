@@ -133,5 +133,18 @@
     "deleteTitle": "Brisanje",
     "deleteDescription": "Da li ste sigurni da želite da obrišete? Ova akcija se ne može poništiti."
   },
-  "selectDriver": "Izaberite vozača"
+  "selectDriver": "Izaberite vozača",
+  "toast": {
+    "configSaved": "Konfiguracija sačuvana",
+    "configUpdated": "Konfiguracija ažurirana",
+    "configDeleted": "Konfiguracija obrisana",
+    "advanceSaved": "Akontacija sačuvana",
+    "advanceDeleted": "Akontacija obrisana",
+    "generated": "Obračun uspešno generisan",
+    "generatedAll": "Generisano {{count}} obračuna",
+    "recalculated": "Obračun preračunat",
+    "adjusted": "Obračun prilagođen",
+    "confirmed": "Obračun potvrđen",
+    "markedPaid": "Obračun označen kao isplaćen"
+  }
 }
