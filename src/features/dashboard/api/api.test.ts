@@ -71,7 +71,7 @@ describe('GraphQL queries - Dashboard', () => {
     expect(query).toContain('internalNumber')
     expect(query).toContain('status')
     expect(query).toContain('partnerName')
-    expect(query).toContain('departureDate')
+    expect(query).toContain('departureTime')
     expect(query).toContain('price')
     expect(query).toContain('currency')
   })

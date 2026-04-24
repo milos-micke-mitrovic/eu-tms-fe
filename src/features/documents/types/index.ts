@@ -21,8 +21,8 @@ export type TravelOrder = {
   driverName: string
   vehicleId: number
   vehicleRegNumber: string
-  departureDatetime: string | null
-  returnDatetime: string | null
+  departureTime: string | null
+  arrivalTime: string | null
   destination: string | null
   purpose: string
   status: TravelOrderStatus
@@ -42,8 +42,8 @@ export type TravelOrderRequest = {
   routeId: number
   driverId: number
   vehicleId: number
-  departureDatetime?: string | null
-  returnDatetime?: string | null
+  departureTime?: string | null
+  arrivalTime?: string | null
   destination?: string
   purpose?: string
   notes?: string

@@ -4,7 +4,7 @@
 
 Frontend dashboard for European TMS (Transport Management System) targeting Serbian spedition companies. Desktop-first (min 1024px), responsive.
 
-Backend: Spring Boot at `../eu-tms-be/` (separate repo, same parent dir), runs on port 8080.
+Backend: Spring Boot at `../../Truck-eu/` (separate repo), runs on port 8080.
 
 ## Tech Stack
 
@@ -32,10 +32,10 @@ npx graphql-codegen # Regenerate types from BE schema → src/generated/graphql.
 
 ## Backend Access
 
-- BE repo: `../eu-tms-be/` — can `git pull` to get latest changes
-- Start BE: `cd ../eu-tms-be && docker compose up -d --build`
+- BE repo: `../../Truck-eu/` — can `git pull` to get latest changes
+- Start BE: `cd ../../Truck-eu && docker compose up -d --build`
 - BE has rate limiting: auth 10/min, write 60/min, read 300/min — test helpers retry on 429
-- GraphQL schema: `../eu-tms-be/src/main/resources/graphql/schema.graphqls`
+- GraphQL schema: `../../Truck-eu/src/main/resources/graphql/schema.graphqls`
 - After pulling BE, always run `npx graphql-codegen` to update FE generated types
 - When FE catches BE bugs (wrong field names, 500s, missing endpoints), flag to user for BE colleague
 

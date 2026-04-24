@@ -13,7 +13,7 @@ import { Button } from '@/shared/ui/button'
 import { BodySmall, Caption, H4 } from '@/shared/ui/typography'
 import { ConfirmDialog } from '@/shared/ui/overlay/confirm-dialog'
 import { Select } from '@/shared/ui/select'
-import { formatDate, formatCurrency, cn } from '@/shared/utils'
+import { formatDate, formatDateTime, formatCurrency, cn } from '@/shared/utils'
 import { TableSkeleton } from '@/shared/components'
 import { useRouteDetail } from '../api/use-route-detail'
 import { useUpdateRouteStatus } from '../api/use-route-mutations'
@@ -196,15 +196,17 @@ export function RouteDetailSheet({
                       <InfoRow
                         label={t('routes.departure')}
                         value={
-                          route.departureDate
-                            ? formatDate(route.departureDate)
+                          route.departureTime
+                            ? formatDateTime(route.departureTime)
                             : null
                         }
                       />
                       <InfoRow
-                        label={t('routes.return')}
+                        label={t('routes.arrival')}
                         value={
-                          route.returnDate ? formatDate(route.returnDate) : null
+                          route.arrivalTime
+                            ? formatDateTime(route.arrivalTime)
+                            : null
                         }
                       />
                       <InfoRow

@@ -65,7 +65,7 @@ describe('Travel Orders API', () => {
       routeId: Number(route.id),
       driverId: Number(route.driverId),
       vehicleId: Number(route.vehicleId),
-      departureDate: '2026-04-10',
+      departureTime: '2026-04-10T08:00:00Z',
       purpose: 'Transport robe',
     })
     assertRestSuccess(result, [201, 400], 'create travel order')
@@ -124,8 +124,8 @@ describe('Travel Orders API', () => {
       routeId: Number(route.id),
       driverId: Number(route.driverId),
       vehicleId: Number(route.vehicleId),
-      departureDatetime: '2026-05-01T08:00:00Z',
-      returnDatetime: '2026-05-15T18:00:00Z',
+      departureTime: '2026-05-01T08:00:00Z',
+      arrivalTime: '2026-05-15T18:00:00Z',
       purpose: 'Transport robe',
       fuelAdvance: 500,
       perDiemAdvance: 300,

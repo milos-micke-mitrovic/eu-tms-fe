@@ -54,7 +54,7 @@ describe('Dashboard API', () => {
             internalNumber
             status
             partnerName
-            departureDate
+            departureTime
             price
             currency
           }
@@ -132,7 +132,7 @@ describe('Dashboard API', () => {
             internalNumber
             status
             partnerName
-            departureDate
+            departureTime
             price
             currency
           }

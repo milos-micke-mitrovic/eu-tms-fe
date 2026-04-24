@@ -5,12 +5,12 @@ import { FileText, Plus, Trash2, Pencil } from 'lucide-react'
 import { Button } from '@/shared/ui/button'
 import { Badge } from '@/shared/ui/badge'
 import { Input } from '@/shared/ui/input'
-import { DatePicker } from '@/shared/ui/date-time/date-picker'
+import { DateTimePicker } from '@/shared/ui/date-time/date-time-picker'
 import { Spinner } from '@/shared/ui/spinner'
 import { ConfirmDialog } from '@/shared/ui/overlay/confirm-dialog'
 import { SectionDivider } from '@/shared/components'
 import { BodySmall, Caption } from '@/shared/ui/typography'
-import { formatDate, formatCurrency } from '@/shared/utils'
+import { formatDateTime, formatCurrency } from '@/shared/utils'
 import {
   useTravelOrdersByRoute,
   useCreateTravelOrder,
@@ -24,8 +24,8 @@ type RouteInfo = {
   vehicleId?: string | null
   driver?: { firstName: string; lastName: string } | null
   vehicle?: { regNumber: string } | null
-  departureDate?: string | null
-  returnDate?: string | null
+  departureTime?: string | null
+  arrivalTime?: string | null
   notes?: string | null
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   expenses?: any[] | null
@@ -87,8 +87,8 @@ type EditState = {
   perDiemAdvance: string
   tollAdvance: string
   otherAdvance: string
-  departureDatetime: string
-  returnDatetime: string
+  departureTime: string
+  arrivalTime: string
   notes: string
 }
 
@@ -98,12 +98,8 @@ function orderToEditState(order: TravelOrder): EditState {
     perDiemAdvance: String(order.perDiemAdvance ?? 0),
     tollAdvance: String(order.tollAdvance ?? 0),
     otherAdvance: String(order.otherAdvance ?? 0),
-    departureDatetime: order.departureDatetime
-      ? order.departureDatetime.split('T')[0]
-      : '',
-    returnDatetime: order.returnDatetime
-      ? order.returnDatetime.split('T')[0]
-      : '',
+    departureTime: order.departureTime ?? '',
+    arrivalTime: order.arrivalTime ?? '',
     notes: order.notes ?? '',
   }
 }
@@ -134,12 +130,8 @@ export function TravelOrderSection({
         routeId: Number(routeId),
         driverId: Number(route.driverId),
         vehicleId: Number(route.vehicleId),
-        departureDatetime: route.departureDate
-          ? `${route.departureDate}T08:00:00Z`
-          : undefined,
-        returnDatetime: route.returnDate
-          ? `${route.returnDate}T18:00:00Z`
-          : undefined,
+        departureTime: route.departureTime ?? undefined,
+        arrivalTime: route.arrivalTime ?? undefined,
         purpose: 'Transport robe',
         notes: route.notes ?? undefined,
         ...advances,
@@ -209,11 +201,11 @@ export function TravelOrderSection({
           routeId: order.routeId,
           driverId: order.driverId,
           vehicleId: order.vehicleId,
-          departureDatetime: editState.departureDatetime
-            ? `${editState.departureDatetime}T08:00:00Z`
+          departureTime: editState.departureTime
+            ? new Date(editState.departureTime).toISOString()
             : undefined,
-          returnDatetime: editState.returnDatetime
-            ? `${editState.returnDatetime}T18:00:00Z`
+          arrivalTime: editState.arrivalTime
+            ? new Date(editState.arrivalTime).toISOString()
             : undefined,
           purpose: order.purpose,
           notes: editState.notes || undefined,
@@ -324,43 +316,43 @@ export function TravelOrderSection({
                   {t('routes.departure')}
                 </Caption>
                 {isEditing ? (
-                  <DatePicker
-                    value={editState.departureDatetime || undefined}
+                  <DateTimePicker
+                    value={editState.departureTime || undefined}
                     onChange={(d) =>
                       setEditState({
                         ...editState,
-                        departureDatetime: typeof d === 'string' ? d : '',
+                        departureTime: typeof d === 'string' ? d : '',
                       })
                     }
                     returnFormat="iso"
                   />
                 ) : (
                   <BodySmall>
-                    {order.departureDatetime
-                      ? formatDate(order.departureDatetime)
+                    {order.departureTime
+                      ? formatDateTime(order.departureTime)
                       : '—'}
                   </BodySmall>
                 )}
               </div>
               <div>
                 <Caption className="text-muted-foreground">
-                  {t('routes.return')}
+                  {t('routes.arrival')}
                 </Caption>
                 {isEditing ? (
-                  <DatePicker
-                    value={editState.returnDatetime || undefined}
+                  <DateTimePicker
+                    value={editState.arrivalTime || undefined}
                     onChange={(d) =>
                       setEditState({
                         ...editState,
-                        returnDatetime: typeof d === 'string' ? d : '',
+                        arrivalTime: typeof d === 'string' ? d : '',
                       })
                     }
                     returnFormat="iso"
                   />
                 ) : (
                   <BodySmall>
-                    {order.returnDatetime
-                      ? formatDate(order.returnDatetime)
+                    {order.arrivalTime
+                      ? formatDateTime(order.arrivalTime)
                       : '—'}
                   </BodySmall>
                 )}

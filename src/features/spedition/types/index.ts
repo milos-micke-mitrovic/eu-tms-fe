@@ -64,8 +64,8 @@ export type RouteRequest = {
   vehicleId: number | null
   driverId?: number | null
   trailerId?: number | null
-  departureDate?: string | null
-  returnDate?: string | null
+  departureTime?: string | null
+  arrivalTime?: string | null
   cargoDescription?: string
   cargoWeightKg?: number | null
   cargoVolumeM3?: number | null

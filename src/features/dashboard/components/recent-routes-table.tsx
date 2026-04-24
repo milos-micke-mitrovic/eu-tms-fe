@@ -94,7 +94,7 @@ export function RecentRoutesTable({ data }: RecentRoutesTableProps) {
                   </td>
                   <td className="py-2 pr-4">{route.partnerName}</td>
                   <td className="py-2 pr-4">
-                    {formatDate(route.departureDate)}
+                    {formatDate(route.departureTime)}
                   </td>
                   <td className="py-2 text-right">
                     {formatCurrency(route.price, route.currency)}

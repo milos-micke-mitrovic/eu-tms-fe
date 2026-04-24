@@ -10,7 +10,7 @@
     "vehicle": "Vehicle",
     "driver": "Driver",
     "departure": "Departure",
-    "return": "Return",
+    "arrival": "Arrival",
     "cargo": "Cargo",
     "weight": "Weight (kg)",
     "volume": "Volume (m³)",

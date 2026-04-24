@@ -42,8 +42,8 @@ export const GET_ROUTES = gql`
           firstName
           lastName
         }
-        departureDate
-        returnDate
+        departureTime
+        arrivalTime
         price
         currency
         totalExpenseRsd

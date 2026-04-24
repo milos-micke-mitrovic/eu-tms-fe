@@ -93,9 +93,9 @@ describe('REST response shapes', () => {
     expect(order).toHaveProperty('vehicleId')
     expect(order).toHaveProperty('vehicleRegNumber')
     expect(order).toHaveProperty('status')
-    // These are the correct field names (not departureDate/returnDate!)
-    expect(order).toHaveProperty('departureDatetime')
-    expect(order).toHaveProperty('returnDatetime')
+    // These are the correct field names after the instant rename
+    expect(order).toHaveProperty('departureTime')
+    expect(order).toHaveProperty('arrivalTime')
     expect(order).toHaveProperty('purpose')
     expect(order).toHaveProperty('fuelAdvance')
     expect(order).toHaveProperty('perDiemAdvance')

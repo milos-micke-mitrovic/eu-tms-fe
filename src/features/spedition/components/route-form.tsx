@@ -14,7 +14,7 @@ import { Input } from '@/shared/ui/input'
 import { Textarea } from '@/shared/ui/textarea'
 import { Select } from '@/shared/ui/select'
 import { AutocompleteInput } from '@/shared/ui/select/autocomplete-input'
-import { DatePicker } from '@/shared/ui/date-time/date-picker'
+import { DateTimePicker } from '@/shared/ui/date-time/date-time-picker'
 import { Plus, Trash2 } from 'lucide-react'
 import { SectionDivider } from '@/shared/components'
 import {
@@ -48,8 +48,8 @@ const defaultValues: RouteFormData = {
   vehicleId: null,
   driverId: null,
   trailerId: null,
-  departureDate: '',
-  returnDate: '',
+  departureTime: '',
+  arrivalTime: '',
   cargoDescription: '',
   cargoWeightKg: null,
   cargoVolumeM3: null,
@@ -137,8 +137,8 @@ export function RouteForm({ open, onClose, route }: RouteFormProps) {
             ? Number(src.driver.id)
             : null,
         trailerId: src.trailerId ? Number(src.trailerId) : null,
-        departureDate: src.departureDate ?? '',
-        returnDate: src.returnDate ?? '',
+        departureTime: src.departureTime ?? '',
+        arrivalTime: src.arrivalTime ?? '',
         cargoDescription: src.cargoDescription ?? '',
         cargoWeightKg: src.cargoWeightKg ?? null,
         cargoVolumeM3: src.cargoVolumeM3 ?? null,
@@ -185,8 +185,12 @@ export function RouteForm({ open, onClose, route }: RouteFormProps) {
       vehicleId: data.vehicleId ?? null,
       driverId: data.driverId ?? null,
       trailerId: data.trailerId ?? null,
-      departureDate: data.departureDate || undefined,
-      returnDate: data.returnDate || undefined,
+      departureTime: data.departureTime
+        ? new Date(data.departureTime).toISOString()
+        : undefined,
+      arrivalTime: data.arrivalTime
+        ? new Date(data.arrivalTime).toISOString()
+        : undefined,
       cargoDescription: data.cargoDescription,
       cargoWeightKg: data.cargoWeightKg ?? undefined,
       cargoVolumeM3: data.cargoVolumeM3 ?? undefined,
@@ -426,13 +430,15 @@ export function RouteForm({ open, onClose, route }: RouteFormProps) {
                 <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                   <FormField
                     control={form.control}
-                    name="departureDate"
+                    name="departureTime"
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>{t('routes.departure')}</FormLabel>
-                        <DatePicker
+                        <DateTimePicker
                           value={field.value ?? undefined}
-                          onChange={(d) => field.onChange(d ?? '')}
+                          onChange={(d) =>
+                            field.onChange(typeof d === 'string' ? d : '')
+                          }
                           returnFormat="iso"
                           clearable
                         />
@@ -442,13 +448,15 @@ export function RouteForm({ open, onClose, route }: RouteFormProps) {
                   />
                   <FormField
                     control={form.control}
-                    name="returnDate"
+                    name="arrivalTime"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>{t('routes.return')}</FormLabel>
-                        <DatePicker
+                        <FormLabel>{t('routes.arrival')}</FormLabel>
+                        <DateTimePicker
                           value={field.value ?? undefined}
-                          onChange={(d) => field.onChange(d ?? '')}
+                          onChange={(d) =>
+                            field.onChange(typeof d === 'string' ? d : '')
+                          }
                           returnFormat="iso"
                           clearable
                         />

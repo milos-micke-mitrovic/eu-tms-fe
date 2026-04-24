@@ -10,7 +10,7 @@
     "vehicle": "Vozilo",
     "driver": "Vozač",
     "departure": "Polazak",
-    "return": "Povratak",
+    "arrival": "Dolazak",
     "cargo": "Roba",
     "weight": "Težina (kg)",
     "volume": "Zapremina (m³)",

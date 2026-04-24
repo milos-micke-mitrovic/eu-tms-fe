@@ -623,9 +623,8 @@ export type QueryRouteCountByPartnerArgs = {
 }
 
 export type QueryRoutesArgs = {
-  dateFrom?: InputMaybe<Scalars['Date']['input']>
-  dateTo?: InputMaybe<Scalars['Date']['input']>
   driverId?: InputMaybe<Scalars['ID']['input']>
+  fromTime?: InputMaybe<Scalars['DateTime']['input']>
   page?: InputMaybe<Scalars['Int']['input']>
   partnerId?: InputMaybe<Scalars['ID']['input']>
   routeType?: InputMaybe<Scalars['String']['input']>
@@ -634,6 +633,7 @@ export type QueryRoutesArgs = {
   sortBy?: InputMaybe<Scalars['String']['input']>
   sortDir?: InputMaybe<Scalars['String']['input']>
   status?: InputMaybe<Scalars['String']['input']>
+  toTime?: InputMaybe<Scalars['DateTime']['input']>
   vehicleId?: InputMaybe<Scalars['ID']['input']>
 }
 
@@ -707,12 +707,13 @@ export type QueryVehiclesArgs = {
 }
 
 export type Route = {
+  arrivalTime?: Maybe<Scalars['DateTime']['output']>
   cargoDescription?: Maybe<Scalars['String']['output']>
   cargoVolumeM3?: Maybe<Scalars['BigDecimal']['output']>
   cargoWeightKg?: Maybe<Scalars['BigDecimal']['output']>
   createdAt?: Maybe<Scalars['DateTime']['output']>
   currency?: Maybe<Scalars['String']['output']>
-  departureDate?: Maybe<Scalars['Date']['output']>
+  departureTime?: Maybe<Scalars['DateTime']['output']>
   distanceKm?: Maybe<Scalars['Int']['output']>
   driver?: Maybe<Driver>
   driverId?: Maybe<Scalars['ID']['output']>
@@ -724,7 +725,6 @@ export type Route = {
   partnerId?: Maybe<Scalars['ID']['output']>
   price?: Maybe<Scalars['BigDecimal']['output']>
   profit?: Maybe<Scalars['BigDecimal']['output']>
-  returnDate?: Maybe<Scalars['Date']['output']>
   routeType: Scalars['String']['output']
   status: Scalars['String']['output']
   stops: Array<RouteStop>
@@ -791,7 +791,7 @@ export type RouteStop = {
 
 export type RouteSummary = {
   currency?: Maybe<Scalars['String']['output']>
-  departureDate?: Maybe<Scalars['Date']['output']>
+  departureTime?: Maybe<Scalars['DateTime']['output']>
   id: Scalars['ID']['output']
   internalNumber: Scalars['String']['output']
   partnerName?: Maybe<Scalars['String']['output']>
@@ -1130,7 +1130,7 @@ export type DashboardQuery = {
       internalNumber: string
       status: string
       partnerName?: string | null
-      departureDate?: string | null
+      departureTime?: string | null
       price?: number | null
       currency?: string | null
     }>
@@ -1793,8 +1793,8 @@ export type GetRouteQuery = {
     vehicleId?: string | null
     driverId?: string | null
     trailerId?: string | null
-    departureDate?: string | null
-    returnDate?: string | null
+    departureTime?: string | null
+    arrivalTime?: string | null
     cargoDescription?: string | null
     cargoWeightKg?: number | null
     cargoVolumeM3?: number | null
@@ -1872,8 +1872,8 @@ export type GetRoutesQuery = {
       internalNumber: string
       routeType: string
       status: string
-      departureDate?: string | null
-      returnDate?: string | null
+      departureTime?: string | null
+      arrivalTime?: string | null
       price?: number | null
       currency?: string | null
       totalExpenseRsd?: number | null

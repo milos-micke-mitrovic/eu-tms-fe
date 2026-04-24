@@ -116,7 +116,7 @@ export function RouteTable({
         },
       },
       {
-        accessorKey: 'departureDate',
+        accessorKey: 'departureTime',
         header: ({ column }) => (
           <DataTableColumnHeader
             column={column}
@@ -124,8 +124,8 @@ export function RouteTable({
           />
         ),
         cell: ({ row }) =>
-          row.original.departureDate
-            ? formatDate(row.original.departureDate)
+          row.original.departureTime
+            ? formatDate(row.original.departureTime)
             : '—',
       },
       {

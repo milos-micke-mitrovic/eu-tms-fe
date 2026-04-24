@@ -1,0 +1,27 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm --version)",
+      "Bash(npm install *)",
+      "Bash(pnpm install *)",
+      "Bash(pnpm approve-builds *)",
+      "Bash(pnpm rebuild *)",
+      "Bash(pnpm exec *)",
+      "Read(//d/Projects/**)",
+      "Bash(grep -oE '\"[A-Z]{2,3}\"')",
+      "Bash(grep -oE '\"[A-Z_]{2,}\"')",
+      "Bash(./mvnw -q compile)"
+    ],
+    "additionalDirectories": [
+      "D:\\Projects\\Truck-eu\\src\\main\\java\\com\\eutms\\spedition\\entity",
+      "D:\\Projects\\Truck-eu\\src\\main\\java\\com\\eutms\\spedition\\mapper",
+      "D:\\Projects\\Truck-eu\\src\\main\\java\\com\\eutms\\spedition\\service\\impl",
+      "D:\\Projects\\Truck-eu\\src\\main\\java\\com\\eutms\\shared\\init",
+      "D:\\Projects\\Truck-eu\\src\\main\\java\\com\\eutms\\payroll\\service\\impl",
+      "D:\\Projects\\Truck-eu\\src\\main\\java\\com\\eutms\\document\\entity",
+      "D:\\Projects\\Truck-eu\\src\\main\\java\\com\\eutms\\document\\service\\impl",
+      "D:\\Projects\\Truck-eu\\src\\main\\java\\com\\eutms\\permit\\entity",
+      "D:\\Projects\\Truck-eu\\src\\main\\java\\com\\eutms\\permit\\mapper"
+    ]
+  }
+}

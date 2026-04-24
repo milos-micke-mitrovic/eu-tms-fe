@@ -51,7 +51,7 @@ export const GET_DASHBOARD = gql`
         internalNumber
         status
         partnerName
-        departureDate
+        departureTime
         price
         currency
       }
@@ -120,7 +120,7 @@ export type DashboardData = {
     internalNumber: string
     status: string
     partnerName: string
-    departureDate: string
+    departureTime: string
     price: number
     currency: string
   }[]

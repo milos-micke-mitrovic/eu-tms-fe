@@ -31,8 +31,8 @@ export const GET_ROUTE = gql`
         phone
       }
       trailerId
-      departureDate
-      returnDate
+      departureTime
+      arrivalTime
       cargoDescription
       cargoWeightKg
       cargoVolumeM3

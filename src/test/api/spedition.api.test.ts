@@ -68,8 +68,8 @@ describe('Routes API', () => {
             vehicleId
             driverId
             trailerId
-            departureDate
-            returnDate
+            departureTime
+            arrivalTime
             cargoDescription
             price
             currency
