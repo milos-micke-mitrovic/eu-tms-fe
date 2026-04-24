@@ -31,9 +31,11 @@ export const GET_ROUTE = gql`
         phone
       }
       trailerId
+      trailerRegNumber
       departureTime
       arrivalTime
       cargoDescription
+      cargoType
       cargoWeightKg
       cargoVolumeM3
       price
@@ -53,6 +55,11 @@ export const GET_ROUTE = gql`
         plannedDeparture
         actualDeparture
         notes
+        status
+        companyName
+        contactName
+        contactPhone
+        hasProof
       }
       expenses {
         id

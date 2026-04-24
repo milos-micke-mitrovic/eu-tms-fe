@@ -12,6 +12,8 @@
     "departure": "Polazak",
     "arrival": "Dolazak",
     "cargo": "Roba",
+    "cargoType": "Tip robe",
+    "trailerRegNumber": "Prikolica (reg. br.)",
     "weight": "Težina (kg)",
     "volume": "Zapremina (m³)",
     "price": "Cena",
@@ -36,6 +38,15 @@
     "zipCode": "Poštanski broj",
     "plannedArrival": "Planirani dolazak",
     "plannedDeparture": "Planirani odlazak",
+    "companyName": "Firma",
+    "contactName": "Kontakt osoba",
+    "contactPhone": "Telefon",
+    "status": {
+      "PENDING": "Čeka",
+      "IN_PROGRESS": "U toku",
+      "COMPLETED": "Završeno",
+      "SKIPPED": "Preskočeno"
+    },
     "types": {
       "LOADING": "Utovar",
       "UNLOADING": "Istovar",

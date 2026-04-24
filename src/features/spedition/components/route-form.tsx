@@ -48,9 +48,11 @@ const defaultValues: RouteFormData = {
   vehicleId: null,
   driverId: null,
   trailerId: null,
+  trailerRegNumber: '',
   departureTime: '',
   arrivalTime: '',
   cargoDescription: '',
+  cargoType: '',
   cargoWeightKg: null,
   cargoVolumeM3: null,
   price: null,
@@ -137,9 +139,11 @@ export function RouteForm({ open, onClose, route }: RouteFormProps) {
             ? Number(src.driver.id)
             : null,
         trailerId: src.trailerId ? Number(src.trailerId) : null,
+        trailerRegNumber: src.trailerRegNumber ?? '',
         departureTime: src.departureTime ?? '',
         arrivalTime: src.arrivalTime ?? '',
         cargoDescription: src.cargoDescription ?? '',
+        cargoType: src.cargoType ?? '',
         cargoWeightKg: src.cargoWeightKg ?? null,
         cargoVolumeM3: src.cargoVolumeM3 ?? null,
         price: src.price ?? null,
@@ -157,6 +161,9 @@ export function RouteForm({ open, onClose, route }: RouteFormProps) {
             plannedArrival?: string
             plannedDeparture?: string
             notes?: string
+            companyName?: string | null
+            contactName?: string | null
+            contactPhone?: string | null
           }) => ({
             stopOrder: s.stopOrder,
             stopType: s.stopType,
@@ -167,6 +174,9 @@ export function RouteForm({ open, onClose, route }: RouteFormProps) {
             plannedArrival: s.plannedArrival ?? '',
             plannedDeparture: s.plannedDeparture ?? '',
             notes: s.notes ?? '',
+            companyName: s.companyName ?? '',
+            contactName: s.contactName ?? '',
+            contactPhone: s.contactPhone ?? '',
           })
         ),
       })
@@ -185,6 +195,7 @@ export function RouteForm({ open, onClose, route }: RouteFormProps) {
       vehicleId: data.vehicleId ?? null,
       driverId: data.driverId ?? null,
       trailerId: data.trailerId ?? null,
+      trailerRegNumber: data.trailerRegNumber || undefined,
       departureTime: data.departureTime
         ? new Date(data.departureTime).toISOString()
         : undefined,
@@ -192,6 +203,7 @@ export function RouteForm({ open, onClose, route }: RouteFormProps) {
         ? new Date(data.arrivalTime).toISOString()
         : undefined,
       cargoDescription: data.cargoDescription,
+      cargoType: data.cargoType || undefined,
       cargoWeightKg: data.cargoWeightKg ?? undefined,
       cargoVolumeM3: data.cargoVolumeM3 ?? undefined,
       price: data.price ?? undefined,
@@ -212,6 +224,9 @@ export function RouteForm({ open, onClose, route }: RouteFormProps) {
           ? `${s.plannedDeparture}T00:00:00Z`
           : undefined,
         notes: s.notes || undefined,
+        companyName: s.companyName || undefined,
+        contactName: s.contactName || undefined,
+        contactPhone: s.contactPhone || undefined,
       })),
     }
     try {
@@ -333,24 +348,39 @@ export function RouteForm({ open, onClose, route }: RouteFormProps) {
                     )}
                   />
                 </div>
-                <FormField
-                  control={form.control}
-                  name="trailerId"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>{t('common:actions.trailer')}</FormLabel>
-                      <Select
-                        options={trailerOptions}
-                        value={field.value ? String(field.value) : undefined}
-                        onChange={(v) => field.onChange(v ? Number(v) : null)}
-                        clearable
-                        placeholder={t('common:select.placeholder')}
-                        searchable
-                      />
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                  <FormField
+                    control={form.control}
+                    name="trailerId"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>{t('common:actions.trailer')}</FormLabel>
+                        <Select
+                          options={trailerOptions}
+                          value={field.value ? String(field.value) : undefined}
+                          onChange={(v) => field.onChange(v ? Number(v) : null)}
+                          clearable
+                          placeholder={t('common:select.placeholder')}
+                          searchable
+                        />
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="trailerRegNumber"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>{t('routes.trailerRegNumber')}</FormLabel>
+                        <FormControl>
+                          <Input {...field} value={field.value ?? ''} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
               </div>
             </div>
 
@@ -370,6 +400,19 @@ export function RouteForm({ open, onClose, route }: RouteFormProps) {
                           {...field}
                           value={field.value ?? ''}
                         />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="cargoType"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>{t('routes.cargoType')}</FormLabel>
+                      <FormControl>
+                        <Input {...field} value={field.value ?? ''} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -636,6 +679,44 @@ export function RouteForm({ open, onClose, route }: RouteFormProps) {
                         )}
                       />
                     </div>
+                    <FormField
+                      control={form.control}
+                      name={`stops.${index}.companyName`}
+                      render={({ field: f }) => (
+                        <FormItem>
+                          <FormLabel>{t('stops.companyName')}</FormLabel>
+                          <FormControl>
+                            <Input {...f} value={f.value ?? ''} />
+                          </FormControl>
+                        </FormItem>
+                      )}
+                    />
+                    <div className="grid grid-cols-2 gap-3">
+                      <FormField
+                        control={form.control}
+                        name={`stops.${index}.contactName`}
+                        render={({ field: f }) => (
+                          <FormItem>
+                            <FormLabel>{t('stops.contactName')}</FormLabel>
+                            <FormControl>
+                              <Input {...f} value={f.value ?? ''} />
+                            </FormControl>
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={form.control}
+                        name={`stops.${index}.contactPhone`}
+                        render={({ field: f }) => (
+                          <FormItem>
+                            <FormLabel>{t('stops.contactPhone')}</FormLabel>
+                            <FormControl>
+                              <Input {...f} value={f.value ?? ''} />
+                            </FormControl>
+                          </FormItem>
+                        )}
+                      />
+                    </div>
                   </div>
                 ))}
                 <Button
@@ -654,6 +735,9 @@ export function RouteForm({ open, onClose, route }: RouteFormProps) {
                       plannedArrival: '',
                       plannedDeparture: '',
                       notes: '',
+                      companyName: '',
+                      contactName: '',
+                      contactPhone: '',
                     })
                   }
                 >

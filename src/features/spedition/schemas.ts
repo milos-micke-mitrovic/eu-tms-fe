@@ -18,6 +18,9 @@ export const stopSchema = z.object({
   plannedArrival: z.string().optional().nullable(),
   plannedDeparture: z.string().optional().nullable(),
   notes: z.string().optional().nullable(),
+  companyName: z.string().optional().nullable(),
+  contactName: z.string().optional().nullable(),
+  contactPhone: z.string().optional().nullable(),
 })
 
 export const routeSchema = z.object({
@@ -26,9 +29,11 @@ export const routeSchema = z.object({
   vehicleId: z.coerce.number().positive().optional().nullable(),
   driverId: z.coerce.number().positive().optional().nullable(),
   trailerId: z.coerce.number().positive().optional().nullable(),
+  trailerRegNumber: z.string().optional().nullable(),
   departureTime: z.string().optional().nullable(),
   arrivalTime: z.string().optional().nullable(),
   cargoDescription: z.string().min(1),
+  cargoType: z.string().optional().nullable(),
   cargoWeightKg: z.coerce.number().positive().optional().nullable(),
   cargoVolumeM3: z.coerce.number().positive().optional().nullable(),
   price: z.coerce.number().min(0).optional().nullable(),

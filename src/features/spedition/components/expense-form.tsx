@@ -177,13 +177,16 @@ export function ExpenseForm({
   }, [expense])
 
   const onSubmit = async (data: ExpenseFormData) => {
+    // Never send amountRsd client-side — the backend is the single source of
+    // truth for FX conversion. If RSD is selected we omit exchangeRate too,
+    // letting the server short-circuit to amountRsd = amount with rate = 1.
+    const isRsd = data.currency === 'RSD'
     const request: ExpenseRequest = {
       routeId: Number(routeId),
       category: data.category,
       amount: data.amount,
       currency: data.currency,
-      exchangeRate: data.exchangeRate ?? undefined,
-      amountRsd: calculatedRsd ?? undefined,
+      exchangeRate: isRsd ? undefined : (data.exchangeRate ?? undefined),
       description: data.description || undefined,
       expenseDate: data.expenseDate,
     }

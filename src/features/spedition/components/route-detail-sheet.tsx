@@ -184,6 +184,10 @@ export function RouteDetailSheet({
                         }
                       />
                       <InfoRow
+                        label={t('routes.trailerRegNumber')}
+                        value={route.trailerRegNumber}
+                      />
+                      <InfoRow
                         label={t('routes.driver')}
                         value={
                           route.driver
@@ -212,6 +216,10 @@ export function RouteDetailSheet({
                       <InfoRow
                         label={t('routes.cargo')}
                         value={route.cargoDescription}
+                      />
+                      <InfoRow
+                        label={t('routes.cargoType')}
+                        value={route.cargoType}
                       />
                       <InfoRow
                         label={t('routes.weight')}
@@ -369,10 +377,30 @@ export function RouteDetailSheet({
                               <Caption className="text-muted-foreground">
                                 {stop.countryCode}
                               </Caption>
+                              {stop.status && (
+                                <Badge variant="outline" className="text-xs">
+                                  {t(`stops.status.${stop.status}`)}
+                                </Badge>
+                              )}
+                              {stop.hasProof && (
+                                <Badge className="text-xs">POD/POL</Badge>
+                              )}
                             </div>
+                            {stop.companyName && (
+                              <Caption className="text-muted-foreground">
+                                {stop.companyName}
+                              </Caption>
+                            )}
                             {stop.address && (
                               <Caption className="text-muted-foreground">
                                 {stop.address}
+                              </Caption>
+                            )}
+                            {(stop.contactName || stop.contactPhone) && (
+                              <Caption className="text-muted-foreground">
+                                {[stop.contactName, stop.contactPhone]
+                                  .filter(Boolean)
+                                  .join(' · ')}
                               </Caption>
                             )}
                             {stop.plannedArrival && (

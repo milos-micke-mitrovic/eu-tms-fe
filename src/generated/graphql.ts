@@ -709,6 +709,7 @@ export type QueryVehiclesArgs = {
 export type Route = {
   arrivalTime?: Maybe<Scalars['DateTime']['output']>
   cargoDescription?: Maybe<Scalars['String']['output']>
+  cargoType?: Maybe<Scalars['String']['output']>
   cargoVolumeM3?: Maybe<Scalars['BigDecimal']['output']>
   cargoWeightKg?: Maybe<Scalars['BigDecimal']['output']>
   createdAt?: Maybe<Scalars['DateTime']['output']>
@@ -730,6 +731,7 @@ export type Route = {
   stops: Array<RouteStop>
   totalExpenseRsd?: Maybe<Scalars['BigDecimal']['output']>
   trailerId?: Maybe<Scalars['ID']['output']>
+  trailerRegNumber?: Maybe<Scalars['String']['output']>
   updatedAt?: Maybe<Scalars['DateTime']['output']>
   vehicle?: Maybe<Vehicle>
   vehicleId?: Maybe<Scalars['ID']['output']>
@@ -779,11 +781,16 @@ export type RouteStop = {
   actualDeparture?: Maybe<Scalars['DateTime']['output']>
   address?: Maybe<Scalars['String']['output']>
   city?: Maybe<Scalars['String']['output']>
+  companyName?: Maybe<Scalars['String']['output']>
+  contactName?: Maybe<Scalars['String']['output']>
+  contactPhone?: Maybe<Scalars['String']['output']>
   countryCode: Scalars['String']['output']
+  hasProof: Scalars['Boolean']['output']
   id: Scalars['ID']['output']
   notes?: Maybe<Scalars['String']['output']>
   plannedArrival?: Maybe<Scalars['DateTime']['output']>
   plannedDeparture?: Maybe<Scalars['DateTime']['output']>
+  status: Scalars['String']['output']
   stopOrder: Scalars['Int']['output']
   stopType: Scalars['String']['output']
   zipCode?: Maybe<Scalars['String']['output']>
@@ -1793,9 +1800,11 @@ export type GetRouteQuery = {
     vehicleId?: string | null
     driverId?: string | null
     trailerId?: string | null
+    trailerRegNumber?: string | null
     departureTime?: string | null
     arrivalTime?: string | null
     cargoDescription?: string | null
+    cargoType?: string | null
     cargoWeightKg?: number | null
     cargoVolumeM3?: number | null
     price?: number | null
@@ -1835,6 +1844,11 @@ export type GetRouteQuery = {
       plannedDeparture?: string | null
       actualDeparture?: string | null
       notes?: string | null
+      status: string
+      companyName?: string | null
+      contactName?: string | null
+      contactPhone?: string | null
+      hasProof: boolean
     }>
     expenses: Array<{
       id: string

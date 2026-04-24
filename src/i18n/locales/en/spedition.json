@@ -12,6 +12,8 @@
     "departure": "Departure",
     "arrival": "Arrival",
     "cargo": "Cargo",
+    "cargoType": "Cargo type",
+    "trailerRegNumber": "Trailer (reg. no.)",
     "weight": "Weight (kg)",
     "volume": "Volume (m³)",
     "price": "Price",
@@ -36,6 +38,15 @@
     "zipCode": "Zip code",
     "plannedArrival": "Planned arrival",
     "plannedDeparture": "Planned departure",
+    "companyName": "Company",
+    "contactName": "Contact name",
+    "contactPhone": "Phone",
+    "status": {
+      "PENDING": "Pending",
+      "IN_PROGRESS": "In progress",
+      "COMPLETED": "Completed",
+      "SKIPPED": "Skipped"
+    },
     "types": {
       "LOADING": "Loading",
       "UNLOADING": "Unloading",
