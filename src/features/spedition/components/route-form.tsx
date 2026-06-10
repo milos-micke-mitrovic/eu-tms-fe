@@ -11,6 +11,7 @@ import {
 } from '@/shared/ui/overlay/sheet'
 import { Button } from '@/shared/ui/button'
 import { Input } from '@/shared/ui/input'
+import { NumberInput } from '@/shared/ui/number-input'
 import { Textarea } from '@/shared/ui/textarea'
 import { Select } from '@/shared/ui/select'
 import { AutocompleteInput } from '@/shared/ui/select/autocomplete-input'
@@ -426,14 +427,9 @@ export function RouteForm({ open, onClose, route }: RouteFormProps) {
                       <FormItem>
                         <FormLabel>{t('routes.weight')}</FormLabel>
                         <FormControl>
-                          <Input
-                            type="number"
-                            value={field.value ?? ''}
-                            onChange={(e) =>
-                              field.onChange(
-                                e.target.value ? Number(e.target.value) : null
-                              )
-                            }
+                          <NumberInput
+                            value={field.value}
+                            onChange={field.onChange}
                           />
                         </FormControl>
                         <FormMessage />
@@ -447,15 +443,10 @@ export function RouteForm({ open, onClose, route }: RouteFormProps) {
                       <FormItem>
                         <FormLabel>{t('routes.volume')}</FormLabel>
                         <FormControl>
-                          <Input
-                            type="number"
+                          <NumberInput
                             step="0.1"
-                            value={field.value ?? ''}
-                            onChange={(e) =>
-                              field.onChange(
-                                e.target.value ? Number(e.target.value) : null
-                              )
-                            }
+                            value={field.value}
+                            onChange={field.onChange}
                           />
                         </FormControl>
                         <FormMessage />
@@ -516,15 +507,10 @@ export function RouteForm({ open, onClose, route }: RouteFormProps) {
                       <FormItem>
                         <FormLabel>{t('routes.price')}</FormLabel>
                         <FormControl>
-                          <Input
-                            type="number"
+                          <NumberInput
                             step="0.01"
-                            value={field.value ?? ''}
-                            onChange={(e) =>
-                              field.onChange(
-                                e.target.value ? Number(e.target.value) : null
-                              )
-                            }
+                            value={field.value}
+                            onChange={field.onChange}
                           />
                         </FormControl>
                         <FormMessage />
@@ -553,14 +539,9 @@ export function RouteForm({ open, onClose, route }: RouteFormProps) {
                       <FormItem>
                         <FormLabel>{t('routes.distance')}</FormLabel>
                         <FormControl>
-                          <Input
-                            type="number"
-                            value={field.value ?? ''}
-                            onChange={(e) =>
-                              field.onChange(
-                                e.target.value ? Number(e.target.value) : null
-                              )
-                            }
+                          <NumberInput
+                            value={field.value}
+                            onChange={field.onChange}
                           />
                         </FormControl>
                         <FormMessage />

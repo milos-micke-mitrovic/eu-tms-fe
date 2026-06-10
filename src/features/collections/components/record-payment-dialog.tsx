@@ -13,6 +13,7 @@ import {
 } from '@/shared/ui/overlay/dialog'
 import { Button } from '@/shared/ui/button'
 import { Input } from '@/shared/ui/input'
+import { NumberInput } from '@/shared/ui/number-input'
 import { Textarea } from '@/shared/ui/textarea'
 import { Select } from '@/shared/ui/select'
 import { DatePicker } from '@/shared/ui/date-time/date-picker'
@@ -66,7 +67,7 @@ export function RecordPaymentDialog({
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     resolver: zodResolver(paymentSchema) as any,
     defaultValues: {
-      amount: remaining > 0 ? remaining : 0,
+      amount: remaining > 0 ? remaining : undefined,
       paymentDate: new Date().toISOString().split('T')[0],
       paymentMethod: 'BANK_TRANSFER',
       referenceNumber: '',
@@ -77,7 +78,7 @@ export function RecordPaymentDialog({
   useEffect(() => {
     if (open) {
       form.reset({
-        amount: remaining > 0 ? remaining : 0,
+        amount: remaining > 0 ? remaining : undefined,
         paymentDate: new Date().toISOString().split('T')[0],
         paymentMethod: 'BANK_TRANSFER',
         referenceNumber: '',
@@ -169,7 +170,11 @@ export function RecordPaymentDialog({
             render={({ field }) => (
               <FormItem>
                 <FormLabel>{t('payment.amount')}</FormLabel>
-                <Input type="number" step="0.01" {...field} />
+                <NumberInput
+                  step="0.01"
+                  value={field.value}
+                  onChange={field.onChange}
+                />
                 <FormMessage />
               </FormItem>
             )}

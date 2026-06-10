@@ -105,6 +105,7 @@ src/
 15. Edit forms fetch full detail data (not just list item fields) to populate all fields
 16. Charts (Recharts): use custom `content` tooltips with `bg-popover` for dark mode, always set `cursor={false}`
 17. Row highlight: `useHighlightRow()` hook — highlights row on dashboard navigation or after closing detail drawer
+18. Number fields: use `<NumberInput value={field.value} onChange={field.onChange} />` (`@/shared/ui/number-input`), never `<Input type="number">`. Default numeric fields to `undefined` (not `0`) so they start empty with a placeholder. NumberInput emits `undefined` when cleared (no "zombie zero") and preserves partially-typed decimals. Exception: specialized clamped steppers (e.g. tachograph h/m duration picker) where `0` is a meaningful state.
 
 ## Sidebar Navigation (13 items)
 

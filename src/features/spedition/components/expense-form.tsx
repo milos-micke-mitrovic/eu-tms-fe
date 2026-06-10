@@ -11,6 +11,7 @@ import {
 } from '@/shared/ui/overlay/dialog'
 import { Button, IconButton } from '@/shared/ui/button'
 import { Input } from '@/shared/ui/input'
+import { NumberInput } from '@/shared/ui/number-input'
 import { Select } from '@/shared/ui/select'
 import { DatePicker } from '@/shared/ui/date-time/date-picker'
 import {
@@ -70,7 +71,7 @@ export function ExpenseForm({
     resolver: zodResolver(expenseSchema) as any,
     defaultValues: {
       category: '',
-      amount: 0,
+      amount: undefined,
       currency: 'RSD',
       exchangeRate: null,
       description: '',
@@ -91,7 +92,7 @@ export function ExpenseForm({
     } else {
       form.reset({
         category: '',
-        amount: 0,
+        amount: undefined,
         currency: 'RSD',
         exchangeRate: null,
         description: '',
@@ -244,11 +245,10 @@ export function ExpenseForm({
                 <FormItem>
                   <FormLabel>{t('expenses.amount')}</FormLabel>
                   <FormControl>
-                    <Input
-                      type="number"
+                    <NumberInput
                       step="0.01"
-                      value={field.value || ''}
-                      onChange={(e) => field.onChange(Number(e.target.value))}
+                      value={field.value}
+                      onChange={field.onChange}
                     />
                   </FormControl>
                   <FormMessage />
@@ -315,15 +315,10 @@ export function ExpenseForm({
                       )}
                     </div>
                     <FormControl>
-                      <Input
-                        type="number"
+                      <NumberInput
                         step="0.0001"
-                        value={field.value ?? ''}
-                        onChange={(e) =>
-                          field.onChange(
-                            e.target.value ? Number(e.target.value) : null
-                          )
-                        }
+                        value={field.value}
+                        onChange={field.onChange}
                         readOnly={!manualOverride}
                         disabled={isRateLoading}
                         className={

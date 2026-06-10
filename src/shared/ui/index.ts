@@ -1,6 +1,7 @@
 // Simple components (root level)
 export { Button, IconButton, buttonVariants } from './button'
 export { Input } from './input'
+export { NumberInput, type NumberInputProps } from './number-input'
 export { Checkbox } from './checkbox'
 export { Label } from './label'
 export { RadioGroup, type RadioOption } from './radio-group'

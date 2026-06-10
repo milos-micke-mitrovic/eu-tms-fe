@@ -11,6 +11,7 @@ import {
 } from '@/shared/ui/overlay/sheet'
 import { Button } from '@/shared/ui/button'
 import { Input } from '@/shared/ui/input'
+import { NumberInput } from '@/shared/ui/number-input'
 import { Textarea } from '@/shared/ui/textarea'
 import { Select } from '@/shared/ui/select'
 import { AutocompleteInput } from '@/shared/ui/select/autocomplete-input'
@@ -53,13 +54,22 @@ type InvoiceFormProps = {
   invoice?: InvoiceRow | null
 }
 
+// A fresh blank line item. unitPrice starts empty (not 0) so the field shows its
+// placeholder; the cast satisfies the strict item type while the input is empty.
+const makeEmptyItem = (): InvoiceFormData['items'][number] => ({
+  description: '',
+  quantity: 1,
+  unit: 'kom',
+  unitPrice: undefined as unknown as number,
+})
+
 const defaultValues: InvoiceFormData = {
   partnerId: 0,
   invoiceDate: '',
   dueDate: '',
   currency: 'RSD',
   vatRate: 20,
-  items: [{ description: '', quantity: 1, unit: 'kom', unitPrice: 0 }],
+  items: [makeEmptyItem()],
   relatedRouteIds: '',
   notes: '',
 }
@@ -103,7 +113,7 @@ export function InvoiceForm({ open, onClose, invoice }: InvoiceFormProps) {
         dueDate: invoice.dueDate,
         currency: invoice.currency,
         vatRate: 20,
-        items: [{ description: '', quantity: 1, unit: 'kom', unitPrice: 0 }],
+        items: [makeEmptyItem()],
         relatedRouteIds: '',
         notes: '',
       })
@@ -261,13 +271,10 @@ export function InvoiceForm({ open, onClose, invoice }: InvoiceFormProps) {
                       <FormItem>
                         <FormLabel>PDV (%)</FormLabel>
                         <FormControl>
-                          <Input
-                            type="number"
+                          <NumberInput
                             min={0}
-                            value={field.value ?? 20}
-                            onChange={(e) =>
-                              field.onChange(Number(e.target.value))
-                            }
+                            value={field.value}
+                            onChange={field.onChange}
                           />
                         </FormControl>
                         <FormMessage />
@@ -290,14 +297,7 @@ export function InvoiceForm({ open, onClose, invoice }: InvoiceFormProps) {
                   type="button"
                   variant="outline"
                   size="sm"
-                  onClick={() =>
-                    append({
-                      description: '',
-                      quantity: 1,
-                      unit: 'kom',
-                      unitPrice: 0,
-                    })
-                  }
+                  onClick={() => append(makeEmptyItem())}
                 >
                   <Plus className="mr-1 size-4" />
                   {t('invoices.addItem')}
@@ -340,14 +340,11 @@ export function InvoiceForm({ open, onClose, invoice }: InvoiceFormProps) {
                                     {t('invoices.quantity')}
                                   </FormLabel>
                                   <FormControl>
-                                    <Input
-                                      type="number"
+                                    <NumberInput
                                       min={0}
                                       step="0.01"
-                                      value={f.value ?? ''}
-                                      onChange={(e) =>
-                                        f.onChange(Number(e.target.value))
-                                      }
+                                      value={f.value}
+                                      onChange={f.onChange}
                                     />
                                   </FormControl>
                                   <FormMessage />
@@ -376,14 +373,11 @@ export function InvoiceForm({ open, onClose, invoice }: InvoiceFormProps) {
                                     {t('invoices.unitPrice')}
                                   </FormLabel>
                                   <FormControl>
-                                    <Input
-                                      type="number"
+                                    <NumberInput
                                       min={0}
                                       step="0.01"
-                                      value={f.value ?? ''}
-                                      onChange={(e) =>
-                                        f.onChange(Number(e.target.value))
-                                      }
+                                      value={f.value}
+                                      onChange={f.onChange}
                                     />
                                   </FormControl>
                                   <FormMessage />

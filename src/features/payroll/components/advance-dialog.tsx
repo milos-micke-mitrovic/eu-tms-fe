@@ -11,7 +11,7 @@ import {
   DialogTitle,
 } from '@/shared/ui/overlay/dialog'
 import { Button } from '@/shared/ui/button'
-import { Input } from '@/shared/ui/input'
+import { NumberInput } from '@/shared/ui/number-input'
 import { Textarea } from '@/shared/ui/textarea'
 import { Select } from '@/shared/ui/select'
 import { DatePicker } from '@/shared/ui/date-time/date-picker'
@@ -60,7 +60,7 @@ export function AdvanceDialog({
     resolver: zodResolver(advanceSchema) as any,
     defaultValues: {
       driverId,
-      amountRsd: 0,
+      amountRsd: undefined,
       advanceDate: format(new Date(), 'yyyy-MM-dd'),
       advanceType: 'ADVANCE',
       description: null,
@@ -168,14 +168,9 @@ export function AdvanceDialog({
                   <FormItem>
                     <FormLabel required>{t('advance.amount')}</FormLabel>
                     <FormControl>
-                      <Input
-                        type="number"
-                        value={field.value ?? ''}
-                        onChange={(e) =>
-                          field.onChange(
-                            e.target.value ? Number(e.target.value) : 0
-                          )
-                        }
+                      <NumberInput
+                        value={field.value}
+                        onChange={field.onChange}
                         disabled={isSettled}
                       />
                     </FormControl>

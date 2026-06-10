@@ -10,7 +10,7 @@ import {
   SheetTitle,
 } from '@/shared/ui/overlay/sheet'
 import { Button } from '@/shared/ui/button'
-import { Input } from '@/shared/ui/input'
+import { NumberInput } from '@/shared/ui/number-input'
 import { Textarea } from '@/shared/ui/textarea'
 import { DatePicker } from '@/shared/ui/date-time/date-picker'
 import { ConfirmDialog } from '@/shared/ui/overlay/confirm-dialog'
@@ -59,7 +59,7 @@ export function SalaryConfigSheet({
     resolver: zodResolver(salaryConfigSchema) as any,
     defaultValues: {
       driverId,
-      baseSalaryRsd: 0,
+      baseSalaryRsd: undefined,
       hourlyRateRsd: null,
       overtimeRateMultiplier: 1.5,
       perKmRateRsd: null,
@@ -173,14 +173,9 @@ export function SalaryConfigSheet({
                   <FormItem>
                     <FormLabel required>{t('config.baseSalary')}</FormLabel>
                     <FormControl>
-                      <Input
-                        type="number"
-                        value={field.value ?? ''}
-                        onChange={(e) =>
-                          field.onChange(
-                            e.target.value ? Number(e.target.value) : 0
-                          )
-                        }
+                      <NumberInput
+                        value={field.value}
+                        onChange={field.onChange}
                       />
                     </FormControl>
                     <FormMessage />
@@ -195,14 +190,9 @@ export function SalaryConfigSheet({
                     <FormItem>
                       <FormLabel>{t('config.hourlyRate')}</FormLabel>
                       <FormControl>
-                        <Input
-                          type="number"
-                          value={field.value ?? ''}
-                          onChange={(e) =>
-                            field.onChange(
-                              e.target.value ? Number(e.target.value) : null
-                            )
-                          }
+                        <NumberInput
+                          value={field.value}
+                          onChange={field.onChange}
                         />
                       </FormControl>
                       <FormMessage />
@@ -216,15 +206,10 @@ export function SalaryConfigSheet({
                     <FormItem>
                       <FormLabel>{t('config.overtimeMultiplier')}</FormLabel>
                       <FormControl>
-                        <Input
-                          type="number"
+                        <NumberInput
                           step="0.1"
-                          value={field.value ?? ''}
-                          onChange={(e) =>
-                            field.onChange(
-                              e.target.value ? Number(e.target.value) : null
-                            )
-                          }
+                          value={field.value}
+                          onChange={field.onChange}
                         />
                       </FormControl>
                       <FormMessage />
@@ -243,14 +228,9 @@ export function SalaryConfigSheet({
                     <FormItem>
                       <FormLabel>{t('config.perKmRate')}</FormLabel>
                       <FormControl>
-                        <Input
-                          type="number"
-                          value={field.value ?? ''}
-                          onChange={(e) =>
-                            field.onChange(
-                              e.target.value ? Number(e.target.value) : null
-                            )
-                          }
+                        <NumberInput
+                          value={field.value}
+                          onChange={field.onChange}
                         />
                       </FormControl>
                       <FormMessage />
@@ -264,14 +244,9 @@ export function SalaryConfigSheet({
                     <FormItem>
                       <FormLabel>{t('config.bonusPerRoute')}</FormLabel>
                       <FormControl>
-                        <Input
-                          type="number"
-                          value={field.value ?? ''}
-                          onChange={(e) =>
-                            field.onChange(
-                              e.target.value ? Number(e.target.value) : null
-                            )
-                          }
+                        <NumberInput
+                          value={field.value}
+                          onChange={field.onChange}
                         />
                       </FormControl>
                       <FormMessage />

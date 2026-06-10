@@ -11,6 +11,7 @@ import {
 } from '@/shared/ui/overlay/sheet'
 import { Button } from '@/shared/ui/button'
 import { Input } from '@/shared/ui/input'
+import { NumberInput } from '@/shared/ui/number-input'
 import { Select } from '@/shared/ui/select'
 import {
   Form,
@@ -177,15 +178,10 @@ export function TrailerForm({ open, onClose, trailer }: TrailerFormProps) {
                   <FormItem>
                     <FormLabel>{t('trailers.length')}</FormLabel>
                     <FormControl>
-                      <Input
-                        type="number"
+                      <NumberInput
                         step="0.1"
-                        value={field.value ?? ''}
-                        onChange={(e) =>
-                          field.onChange(
-                            e.target.value ? Number(e.target.value) : null
-                          )
-                        }
+                        value={field.value}
+                        onChange={field.onChange}
                       />
                     </FormControl>
                     <FormMessage />
@@ -199,14 +195,9 @@ export function TrailerForm({ open, onClose, trailer }: TrailerFormProps) {
                   <FormItem>
                     <FormLabel>{t('trailers.capacity')}</FormLabel>
                     <FormControl>
-                      <Input
-                        type="number"
-                        value={field.value ?? ''}
-                        onChange={(e) =>
-                          field.onChange(
-                            e.target.value ? Number(e.target.value) : null
-                          )
-                        }
+                      <NumberInput
+                        value={field.value}
+                        onChange={field.onChange}
                       />
                     </FormControl>
                     <FormMessage />
@@ -220,14 +211,9 @@ export function TrailerForm({ open, onClose, trailer }: TrailerFormProps) {
                   <FormItem>
                     <FormLabel>{t('trailers.year')}</FormLabel>
                     <FormControl>
-                      <Input
-                        type="number"
-                        value={field.value ?? ''}
-                        onChange={(e) =>
-                          field.onChange(
-                            e.target.value ? Number(e.target.value) : null
-                          )
-                        }
+                      <NumberInput
+                        value={field.value}
+                        onChange={field.onChange}
                       />
                     </FormControl>
                     <FormMessage />

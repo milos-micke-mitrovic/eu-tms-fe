@@ -11,6 +11,7 @@ import {
 } from '@/shared/ui/overlay/dialog'
 import { Button } from '@/shared/ui/button'
 import { Input } from '@/shared/ui/input'
+import { NumberInput } from '@/shared/ui/number-input'
 import { Select } from '@/shared/ui/select'
 import {
   Form,
@@ -34,7 +35,7 @@ export function FuelTankForm({ open, onClose }: FuelTankFormProps) {
     resolver: zodResolver(tankSchema) as any,
     defaultValues: {
       name: '',
-      capacityLiters: 0,
+      capacityLiters: undefined,
       fuelType: 'DIESEL',
       location: '',
     },
@@ -90,10 +91,9 @@ export function FuelTankForm({ open, onClose }: FuelTankFormProps) {
                 <FormItem>
                   <FormLabel required>{t('capacity')}</FormLabel>
                   <FormControl>
-                    <Input
-                      type="number"
-                      value={field.value || ''}
-                      onChange={(e) => field.onChange(Number(e.target.value))}
+                    <NumberInput
+                      value={field.value}
+                      onChange={field.onChange}
                     />
                   </FormControl>
                   <FormMessage />

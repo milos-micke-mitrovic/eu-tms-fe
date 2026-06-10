@@ -11,6 +11,7 @@ import {
 } from '@/shared/ui/overlay/sheet'
 import { Button } from '@/shared/ui/button'
 import { Input } from '@/shared/ui/input'
+import { NumberInput } from '@/shared/ui/number-input'
 import { Select } from '@/shared/ui/select'
 import {
   Form,
@@ -210,15 +211,10 @@ export function VehicleForm({ open, onClose, vehicleId }: VehicleFormProps) {
                   <FormItem>
                     <FormLabel>{t('vehicles.year')}</FormLabel>
                     <FormControl>
-                      <Input
-                        type="number"
+                      <NumberInput
                         placeholder="2024"
-                        value={field.value ?? ''}
-                        onChange={(e) =>
-                          field.onChange(
-                            e.target.value ? Number(e.target.value) : null
-                          )
-                        }
+                        value={field.value}
+                        onChange={field.onChange}
                       />
                     </FormControl>
                     <FormMessage />
@@ -319,14 +315,9 @@ export function VehicleForm({ open, onClose, vehicleId }: VehicleFormProps) {
                   <FormItem>
                     <FormLabel>{t('vehicles.capacity')}</FormLabel>
                     <FormControl>
-                      <Input
-                        type="number"
-                        value={field.value ?? ''}
-                        onChange={(e) =>
-                          field.onChange(
-                            e.target.value ? Number(e.target.value) : null
-                          )
-                        }
+                      <NumberInput
+                        value={field.value}
+                        onChange={field.onChange}
                       />
                     </FormControl>
                     <FormMessage />
@@ -340,15 +331,10 @@ export function VehicleForm({ open, onClose, vehicleId }: VehicleFormProps) {
                   <FormItem>
                     <FormLabel>{t('vehicles.volume')}</FormLabel>
                     <FormControl>
-                      <Input
-                        type="number"
+                      <NumberInput
                         step="0.1"
-                        value={field.value ?? ''}
-                        onChange={(e) =>
-                          field.onChange(
-                            e.target.value ? Number(e.target.value) : null
-                          )
-                        }
+                        value={field.value}
+                        onChange={field.onChange}
                       />
                     </FormControl>
                     <FormMessage />
@@ -365,15 +351,10 @@ export function VehicleForm({ open, onClose, vehicleId }: VehicleFormProps) {
                   <FormItem>
                     <FormLabel>{t('vehicles.consumption')}</FormLabel>
                     <FormControl>
-                      <Input
-                        type="number"
+                      <NumberInput
                         step="0.1"
-                        value={field.value ?? ''}
-                        onChange={(e) =>
-                          field.onChange(
-                            e.target.value ? Number(e.target.value) : null
-                          )
-                        }
+                        value={field.value}
+                        onChange={field.onChange}
                       />
                     </FormControl>
                     <FormMessage />
@@ -387,14 +368,9 @@ export function VehicleForm({ open, onClose, vehicleId }: VehicleFormProps) {
                   <FormItem>
                     <FormLabel>{t('vehicles.odometer')}</FormLabel>
                     <FormControl>
-                      <Input
-                        type="number"
-                        value={field.value ?? ''}
-                        onChange={(e) =>
-                          field.onChange(
-                            e.target.value ? Number(e.target.value) : null
-                          )
-                        }
+                      <NumberInput
+                        value={field.value}
+                        onChange={field.onChange}
                       />
                     </FormControl>
                     <FormMessage />

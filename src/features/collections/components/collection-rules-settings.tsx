@@ -13,6 +13,7 @@ import {
 } from '@/shared/ui/overlay/dialog'
 import { Button } from '@/shared/ui/button'
 import { Input } from '@/shared/ui/input'
+import { NumberInput } from '@/shared/ui/number-input'
 import { Textarea } from '@/shared/ui/textarea'
 import { Select } from '@/shared/ui/select'
 import { Switch } from '@/shared/ui/switch'
@@ -224,7 +225,11 @@ export function CollectionRulesSettings() {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>{t('rules.daysAfterDueLabel')}</FormLabel>
-                  <Input type="number" min={1} {...field} />
+                  <NumberInput
+                    min={1}
+                    value={field.value}
+                    onChange={field.onChange}
+                  />
                   <FormMessage />
                 </FormItem>
               )}

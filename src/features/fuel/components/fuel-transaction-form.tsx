@@ -11,6 +11,7 @@ import {
 } from '@/shared/ui/overlay/dialog'
 import { Button } from '@/shared/ui/button'
 import { Input } from '@/shared/ui/input'
+import { NumberInput } from '@/shared/ui/number-input'
 import { Badge } from '@/shared/ui/badge'
 import { Select } from '@/shared/ui/select'
 import { DatePicker } from '@/shared/ui/date-time/date-picker'
@@ -61,7 +62,7 @@ export function FuelTransactionForm({
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     resolver: zodResolver(transactionSchema) as any,
     defaultValues: {
-      liters: 0,
+      liters: undefined,
       pricePerLiter: null,
       vehicleId: null,
       driverId: null,
@@ -118,11 +119,10 @@ export function FuelTransactionForm({
               <FormItem>
                 <FormLabel>{t('liters')}</FormLabel>
                 <FormControl>
-                  <Input
-                    type="number"
+                  <NumberInput
                     step="0.1"
-                    value={field.value || ''}
-                    onChange={(e) => field.onChange(Number(e.target.value))}
+                    value={field.value}
+                    onChange={field.onChange}
                   />
                 </FormControl>
                 <FormMessage />
@@ -136,15 +136,10 @@ export function FuelTransactionForm({
               <FormItem>
                 <FormLabel>{t('pricePerLiter')}</FormLabel>
                 <FormControl>
-                  <Input
-                    type="number"
+                  <NumberInput
                     step="0.01"
-                    value={field.value ?? ''}
-                    onChange={(e) =>
-                      field.onChange(
-                        e.target.value ? Number(e.target.value) : null
-                      )
-                    }
+                    value={field.value}
+                    onChange={field.onChange}
                   />
                 </FormControl>
                 <FormMessage />
@@ -207,14 +202,9 @@ export function FuelTransactionForm({
                   <FormItem>
                     <FormLabel>{t('odometer')}</FormLabel>
                     <FormControl>
-                      <Input
-                        type="number"
-                        value={field.value ?? ''}
-                        onChange={(e) =>
-                          field.onChange(
-                            e.target.value ? Number(e.target.value) : null
-                          )
-                        }
+                      <NumberInput
+                        value={field.value}
+                        onChange={field.onChange}
                       />
                     </FormControl>
                     <FormMessage />

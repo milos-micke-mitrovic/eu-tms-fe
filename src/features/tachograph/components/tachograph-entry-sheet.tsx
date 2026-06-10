@@ -12,6 +12,7 @@ import {
 } from '@/shared/ui/overlay/sheet'
 import { Button } from '@/shared/ui/button'
 import { Input } from '@/shared/ui/input'
+import { NumberInput } from '@/shared/ui/number-input'
 import { Select } from '@/shared/ui/select'
 import { DatePicker } from '@/shared/ui/date-time/date-picker'
 import { ConfirmDialog } from '@/shared/ui/overlay/confirm-dialog'
@@ -482,14 +483,9 @@ export function TachographEntrySheet({
                     <FormItem>
                       <FormLabel>{t('entry.startOdometer')}</FormLabel>
                       <FormControl>
-                        <Input
-                          type="number"
-                          value={field.value ?? ''}
-                          onChange={(e) =>
-                            field.onChange(
-                              e.target.value ? Number(e.target.value) : null
-                            )
-                          }
+                        <NumberInput
+                          value={field.value}
+                          onChange={field.onChange}
                         />
                       </FormControl>
                       <FormMessage />
@@ -503,14 +499,9 @@ export function TachographEntrySheet({
                     <FormItem>
                       <FormLabel>{t('entry.endOdometer')}</FormLabel>
                       <FormControl>
-                        <Input
-                          type="number"
-                          value={field.value ?? ''}
-                          onChange={(e) =>
-                            field.onChange(
-                              e.target.value ? Number(e.target.value) : null
-                            )
-                          }
+                        <NumberInput
+                          value={field.value}
+                          onChange={field.onChange}
                         />
                       </FormControl>
                       <FormMessage />

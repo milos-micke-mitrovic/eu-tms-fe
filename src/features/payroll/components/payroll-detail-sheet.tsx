@@ -28,6 +28,7 @@ import {
 } from '@/shared/ui/overlay/dialog'
 import { Button } from '@/shared/ui/button'
 import { Input } from '@/shared/ui/input'
+import { NumberInput } from '@/shared/ui/number-input'
 import { Textarea } from '@/shared/ui/textarea'
 import { Badge } from '@/shared/ui/badge'
 import { ConfirmDialog } from '@/shared/ui/overlay/confirm-dialog'
@@ -441,14 +442,9 @@ export function PayrollDetailSheet({
                     <FormItem>
                       <FormLabel>{t('adjustment.otherBonus')}</FormLabel>
                       <FormControl>
-                        <Input
-                          type="number"
-                          value={field.value ?? ''}
-                          onChange={(e) =>
-                            field.onChange(
-                              e.target.value ? Number(e.target.value) : null
-                            )
-                          }
+                        <NumberInput
+                          value={field.value}
+                          onChange={field.onChange}
                         />
                       </FormControl>
                       <FormMessage />
@@ -482,14 +478,9 @@ export function PayrollDetailSheet({
                     <FormItem>
                       <FormLabel>{t('adjustment.otherDeduction')}</FormLabel>
                       <FormControl>
-                        <Input
-                          type="number"
-                          value={field.value ?? ''}
-                          onChange={(e) =>
-                            field.onChange(
-                              e.target.value ? Number(e.target.value) : null
-                            )
-                          }
+                        <NumberInput
+                          value={field.value}
+                          onChange={field.onChange}
                         />
                       </FormControl>
                       <FormMessage />
@@ -523,14 +514,9 @@ export function PayrollDetailSheet({
                     <FormItem>
                       <FormLabel>{t('adjustment.tax')}</FormLabel>
                       <FormControl>
-                        <Input
-                          type="number"
-                          value={field.value ?? ''}
-                          onChange={(e) =>
-                            field.onChange(
-                              e.target.value ? Number(e.target.value) : null
-                            )
-                          }
+                        <NumberInput
+                          value={field.value}
+                          onChange={field.onChange}
                         />
                       </FormControl>
                       <FormMessage />
@@ -546,14 +532,9 @@ export function PayrollDetailSheet({
                         {t('adjustment.socialContributions')}
                       </FormLabel>
                       <FormControl>
-                        <Input
-                          type="number"
-                          value={field.value ?? ''}
-                          onChange={(e) =>
-                            field.onChange(
-                              e.target.value ? Number(e.target.value) : null
-                            )
-                          }
+                        <NumberInput
+                          value={field.value}
+                          onChange={field.onChange}
                         />
                       </FormControl>
                       <FormMessage />
