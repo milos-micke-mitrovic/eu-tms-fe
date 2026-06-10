@@ -119,7 +119,9 @@
     "close": "Close",
     "retry": "Retry",
     "parseError": "Error reading DDD file",
-    "importError": "Import error"
+    "importError": "Import error",
+    "selectDriverHint": "Select a driver to enable import.",
+    "driverAutoMatched": "Driver auto-matched from the card."
   },
   "dashboard": {
     "title": "Dashboard",

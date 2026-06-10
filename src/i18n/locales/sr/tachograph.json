@@ -119,7 +119,9 @@
     "close": "Zatvori",
     "retry": "Pokušaj ponovo",
     "parseError": "Greška pri čitanju DDD fajla",
-    "importError": "Greška pri importu"
+    "importError": "Greška pri importu",
+    "selectDriverHint": "Izaberite vozača da biste omogućili import.",
+    "driverAutoMatched": "Vozač automatski prepoznat sa kartice."
   },
   "dashboard": {
     "title": "Dashboard",

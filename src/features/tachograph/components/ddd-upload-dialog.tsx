@@ -54,12 +54,29 @@ export function DddUploadDialog({
     label: `${d.firstName} ${d.lastName}`,
   }))
 
+  // True when the driver was auto-selected from the DDD card holder name.
+  const [autoMatched, setAutoMatched] = useState(false)
+
+  // Find the active driver whose name matches the DDD card holder, if any.
+  const matchDriverByCardHolder = (cardHolderName: string | null) => {
+    if (!cardHolderName) return null
+    const holder = cardHolderName.trim().toLowerCase()
+    return (
+      (driversData?.drivers?.content ?? []).find((d) => {
+        const full = `${d.firstName} ${d.lastName}`.trim().toLowerCase()
+        const reversed = `${d.lastName} ${d.firstName}`.trim().toLowerCase()
+        return full === holder || reversed === holder
+      }) ?? null
+    )
+  }
+
   const reset = () => {
     setStep(1)
     setFile(null)
     setPreview(null)
     setImportResult(null)
     setSelectedDriverId(defaultDriverId ?? null)
+    setAutoMatched(false)
   }
 
   const handleClose = () => {
@@ -84,6 +101,15 @@ export function DddUploadDialog({
     if (!file) return
     const result = await previewMutation.mutateAsync(file)
     setPreview(result)
+    // Auto-select the driver matching the card holder so the Import button
+    // isn't left disabled when the match is obvious.
+    if (!selectedDriverId) {
+      const match = matchDriverByCardHolder(result.cardHolderName)
+      if (match) {
+        setSelectedDriverId(Number(match.id))
+        setAutoMatched(true)
+      }
+    }
     setStep(2)
   }
 
@@ -208,18 +234,32 @@ export function DddUploadDialog({
             {/* Driver select */}
             <div>
               <Caption className="text-muted-foreground mb-1">
-                {t('ddd.selectDriver')}
+                {t('ddd.selectDriver')}{' '}
+                <span className="text-destructive">*</span>
               </Caption>
               <Select
                 options={driverOptions}
                 value={selectedDriverId ? String(selectedDriverId) : undefined}
-                onChange={(v) => setSelectedDriverId(Number(v))}
+                onChange={(v) => {
+                  setSelectedDriverId(Number(v))
+                  setAutoMatched(false)
+                }}
                 searchable
                 placeholder={t('entry.selectDriver')}
               />
               {preview.cardHolderName && (
                 <Caption className="text-muted-foreground mt-1">
                   {t('ddd.cardHolder')}: {preview.cardHolderName}
+                </Caption>
+              )}
+              {autoMatched && (
+                <Caption className="text-success mt-1">
+                  {t('ddd.driverAutoMatched')}
+                </Caption>
+              )}
+              {!selectedDriverId && (
+                <Caption className="text-warning mt-1">
+                  {t('ddd.selectDriverHint')}
                 </Caption>
               )}
             </div>
